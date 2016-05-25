@@ -1,0 +1,32 @@
+#!/bin/sh
+
+# ./install
+
+# type brew > /dev/null 2>&1
+# if [ $? -ne 0 ]; then
+#   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+#   eval $(/opt/homebrew/bin/brew shellenv)
+# fi
+
+# if [ ! -d ~/Workspaces/dotfiles ]; then
+#   cd ~
+#   mkdir -p ~/Workspaces
+#   git clone https://github.com/YuG1224/dotfiles.git
+# fi
+
+# cd ~/Workspaces/dotfiles/packages/zsh/.zsh_plugins
+# curl -OSL 'https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/lib/directories.zsh'
+# curl -OSL 'https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/lib/history.zsh'
+# curl -OSL 'https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/git/git.plugin.zsh'
+
+# if [ ! -d ~/.starship ]; then
+#   mkdir -p ~/.starship
+# fi
+
+brew bundle -v --file=~/Workspaces/dotfiles/Brewfile
+
+stow -R -v -d ~/Workspaces/dotfiles/packages -t ~ zsh ssh
+
+cd $HOME
+
+exec $SHELL -l
