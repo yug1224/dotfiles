@@ -55,6 +55,7 @@ alias lla='exa -lbFa --time-style=full-iso --git --color-scale'
 # alias lt='exa --tree --level=2'
 
 alias history='history 1'
+alias b='brew'
 alias g='git'
 alias n='npm'
 alias y='yarn'
