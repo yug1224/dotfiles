@@ -1,10 +1,10 @@
 {
   "author": "Yuji Yamaguchi <yuji@yuji.local>",
   "devDependencies": {
-    "@secretlint/secretlint-rule-preset-recommend": "^5.1.0",
-    "husky": "^7.0.4",
-    "lint-staged": "^12.3.5",
-    "secretlint": "^5.1.0"
+    "@secretlint/secretlint-rule-preset-recommend": "^5.2.3",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
+    "secretlint": "^5.2.3"
   },
   "husky": {
     "hooks": {

@@ -1,0 +1,19 @@
+{
+  "recommendations": [
+    "aaron-bond.better-comments",
+    "dbaeumer.vscode-eslint",
+    "editorconfig.editorconfig",
+    "esbenp.prettier-vscode",
+    "firsttris.vscode-jest-runner",
+    "gruntfuggly.todo-tree",
+    "ms-ceintl.vscode-language-pack-ja",
+    "ms-vsliveshare.vsliveshare-pack",
+    "streetsidesoftware.code-spell-checker",
+    "stylelint.vscode-stylelint",
+    "vscode-icons-team.vscode-icons",
+    "vue.volar",
+    "vue.vscode-typescript-vue-plugin",
+    "misterj.vue-volar-extention-pack",
+    "foxundermoon.shell-format"
+  ]
+}
