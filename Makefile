@@ -18,4 +18,4 @@ node:
 
 .PHONY: all
 all:
-	install brew stow
+	install brew stow node
