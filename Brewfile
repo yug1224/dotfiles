@@ -33,6 +33,7 @@ cask 'krisp'
 cask 'lyrics-master'
 cask 'macx-dvd-ripper-pro'
 cask 'microsoft-edge'
+cask 'microsoft-teams'
 cask 'visual-studio-code'
 cask 'zoom'
 
@@ -42,6 +43,7 @@ mas "Compressor", id: 424390742
 mas "Final Cut Pro", id: 424389933
 mas "Keynote", id: 409183694
 mas "LINE", id: 539883307
+mas "Meeter Zoom, Teams & Co.のために。", id: 1510445899
 mas "Motion", id: 434290957
 mas "Numbers", id: 409203825
 mas "Pages", id: 409201541

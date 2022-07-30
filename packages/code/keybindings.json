@@ -19,5 +19,12 @@
     "key": "shift+cmd+;",
     "command": "workbench.action.focusActiveEditorGroup",
     "when": "terminalFocus"
+  },
+  {
+    // tabを入力したい時
+    "key": "ctrl+t",
+    "command": "type",
+    "args": { "text": "\t" },
+    "when": "editorTextFocus"
   }
 ]
