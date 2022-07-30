@@ -13,4 +13,5 @@ stow:
 	stow -R -v -d ~/Workspaces/dotfiles/packages -t ~/Library/Application\ Support/Code/User code
 
 .PHONY: all
-all: install brew stow
+all:
+	install brew stow
