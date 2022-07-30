@@ -20,5 +20,9 @@
   "main": "index.js",
   "name": "dotfiles",
   "repository": "https://github.com/YuG1224/dotfiles.git",
-  "version": "1.0.0"
+  "version": "1.0.0",
+  "volta": {
+    "node": "16.16.0",
+    "npm": "8.15.1"
+  }
 }
