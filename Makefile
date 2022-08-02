@@ -15,6 +15,3 @@ stow:
 .PHONY: node
 node:
 	npm install
-
-all:
-	brew prezto stow node
