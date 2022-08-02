@@ -20,7 +20,6 @@ prompt kylewest
 # brew
 export PATH="/opt/homebrew/opt/openssl@1.1/bin:$PATH"
 
-
 if type brew &>/dev/null; then
   FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
 
@@ -31,18 +30,16 @@ source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 LISTMAX=1000
 
-
 # if [ -r ~/.zshrc ]; then echo 'export GPG_TTY=$(tty)' >> ~/.zshrc; \
 #   else echo 'export GPG_TTY=$(tty)' >> ~/.zprofile; fi
 export GPG_TTY=$(tty)
 
 # deno
-export PATH="/Users/yuji/.deno/bin:$PATH"
+export PATH="$HOME/.deno/bin:$PATH"
 
 # volta
 export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
-
 
 # general use
 alias ls='exa'
