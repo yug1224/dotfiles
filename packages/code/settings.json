@@ -111,7 +111,18 @@
       "underline": false
     }
   ],
-  "cSpell.userWords": ["csstype", "unplugin"],
+  "cSpell.userWords": [
+    "csstype",
+    "dontshownewversionmessage",
+    "esbenp",
+    "liveshare",
+    "menlo",
+    "plemoljp",
+    "polacode",
+    "unplugin",
+    "vetur",
+    "vsicons"
+  ],
   "deno.enable": true,
   "deno.lint": true,
   "editor.bracketPairColorization.enabled": true,
@@ -138,6 +149,7 @@
   // アノテーションコメントの一覧ツリー表示、ツリー表示させたいタグがあれば追加する
   "todo-tree.general.tags": ["BUG", "HACK", "FIXME", "TODO", "XXX"],
   "todo-tree.highlights.enabled": false,
+  "vetur.ignoreProjectWarning": true,
   "vetur.validation.script": false,
   "vetur.validation.style": false,
   "vetur.validation.template": false,
