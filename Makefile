@@ -1,7 +1,7 @@
 .PHONY: install
 install:
 	@sudo true
-	curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh | bash
+	./install.sh
 
 .PHONY: brew
 brew:
@@ -16,6 +16,5 @@ stow:
 node:
 	npm install
 
-.PHONY: all
 all:
-	install brew stow node
+	brew prezto stow node
