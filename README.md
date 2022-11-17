@@ -1,12 +1,10 @@
 # dotfiles
 
-## Installation
+## Usage
 
 ```sh
 make install
 ```
-
-## Usage
 
 ## Contributing
 
