@@ -8,6 +8,9 @@
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -136,6 +139,11 @@
   "editor.unicodeHighlight.allowedCharacters": {
     "〇": true
   },
+  "eslint.workingDirectories": [
+    {
+      "mode": "auto"
+    }
+  ],
   "files.insertFinalNewline": true,
   "html.format.endWithNewline": true,
   "i18n-ally.annotations": false,
@@ -144,18 +152,18 @@
   "i18n-ally.sourceLanguage": "ja",
   "liveshare.presence": true,
   "npm.keybindingsChangedWarningShown": true,
-  "polacode.transparentBackground": true,
   "prettier.singleQuote": true,
   // アノテーションコメントの一覧ツリー表示、ツリー表示させたいタグがあれば追加する
   "todo-tree.general.tags": ["BUG", "HACK", "FIXME", "TODO", "XXX"],
   "todo-tree.highlights.enabled": false,
+  "typescript.referencesCodeLens.enabled": true,
   "vetur.ignoreProjectWarning": true,
   "vetur.validation.script": false,
   "vetur.validation.style": false,
   "vetur.validation.template": false,
   "vsicons.dontShowNewVersionMessage": true,
   "window.zoomLevel": 1,
-  "workbench.colorTheme": "Tokyo Night",
+  "workbench.colorTheme": "Tomorrow Night Blue",
   "workbench.iconTheme": "vscode-icons",
   "workbench.startupEditor": "none"
 }

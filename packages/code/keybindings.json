@@ -22,9 +22,15 @@
   },
   {
     // tabを入力したい時
-    "key": "ctrl+t",
+    "key": "shift+ctrl+t",
     "command": "type",
     "args": { "text": "\t" },
     "when": "editorTextFocus"
+  },
+  {
+    // エクスプローラーにいるとき、ディレクトリを全部閉じる
+    "key": "shift+cmd+left",
+    "command": "workbench.files.action.collapseExplorerFolders",
+    "when": "explorerViewletFocus"
   }
 ]
