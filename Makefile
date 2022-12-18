@@ -9,7 +9,7 @@ brew:
 
 .PHONY: stow
 stow:
-	stow -R -v -d ~/Workspaces/dotfiles/packages -t ~ zsh ssh
+	stow -R -v -d ~/Workspaces/dotfiles/packages -t ~ ssh tig zsh
 	stow -R -v -d ~/Workspaces/dotfiles/packages -t ~/Library/Application\ Support/Code/User code
 
 .PHONY: node
