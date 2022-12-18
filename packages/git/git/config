@@ -1,0 +1,11 @@
+[user]
+	signingkey = 1709BA423646DB4A
+	useConfigOnly = true
+[commit]
+	gpgsign = true
+[core]
+	editor = vim
+	precomposeunicode = true
+	ignorecase = false
+[fetch]
+	prune = true

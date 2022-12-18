@@ -2,8 +2,10 @@
 
 ## Usage
 
-```sh
+```zsh
 make install
+make brew
+make stow
 ```
 
 ## Contributing

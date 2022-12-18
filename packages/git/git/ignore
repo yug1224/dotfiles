@@ -191,7 +191,3 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
-
-packages/ssh/.ssh/01_github/id_ed25519
-packages/ssh/.ssh/01_github/id_ed25519.pub
-packages/ssh/.ssh/known_hosts

@@ -167,5 +167,13 @@
   "window.zoomLevel": 1,
   "workbench.colorTheme": "Tomorrow Night Blue",
   "workbench.iconTheme": "vscode-icons",
-  "workbench.startupEditor": "none"
+  "workbench.startupEditor": "none",
+  "gitConfigUser.profiles": [
+    {
+      "label": "Yuji Yamaguchi",
+      "email": "yuji.yamaguchi24@gmail.com",
+      "userName": "Yuji Yamaguchi",
+      "selected": true
+    }
+  ]
 }
