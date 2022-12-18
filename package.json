@@ -22,7 +22,7 @@
   "repository": "https://github.com/YuG1224/dotfiles.git",
   "version": "1.0.0",
   "volta": {
-    "node": "16.16.0",
-    "npm": "8.16.0"
+    "node": "18.12.1",
+    "npm": "9.2.0"
   }
 }

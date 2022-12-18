@@ -17,9 +17,9 @@
   "[jsonc]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "[markdown]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
+  // "[markdown]": {
+  //   "editor.defaultFormatter": "esbenp.prettier-vscode"
+  // },
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -128,6 +128,7 @@
   ],
   "deno.enable": true,
   "deno.lint": true,
+  "deno.unstable": true,
   "editor.bracketPairColorization.enabled": true,
   "editor.codeActionsOnSave": {},
   "editor.fontFamily": "PlemolJP Console, Menlo, Monaco, 'Courier New', monospace",
@@ -150,6 +151,7 @@
   "i18n-ally.displayLanguage": "ja",
   "i18n-ally.localesPaths": ["src/locales"],
   "i18n-ally.sourceLanguage": "ja",
+  "japanese-proofreading.maxNumberOfProblems": 500,
   "liveshare.presence": true,
   "npm.keybindingsChangedWarningShown": true,
   "prettier.singleQuote": true,

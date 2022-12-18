@@ -1,15 +1,16 @@
 # ./Brewfile
 
 tap "homebrew/bundle"
-tap "homebrew/cask"
 tap "homebrew/cask-fonts"
+tap "homebrew/cask"
 tap "homebrew/core"
 
+brew 'bat'
 brew 'brew-cask-completion'
 brew 'coreutils'
 brew 'deno'
-brew 'exa'
 brew 'emacs'
+brew 'exa'
 brew 'ffmpeg'
 brew 'gh'
 brew 'gibo'
@@ -19,6 +20,7 @@ brew 'imagemagick'
 brew 'jq'
 brew 'mas'
 brew 'peco'
+brew 'pup'
 brew 'stow'
 brew 'switchaudio-osx'
 brew 'tig'

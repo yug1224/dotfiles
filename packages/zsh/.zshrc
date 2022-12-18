@@ -22,7 +22,6 @@ export PATH="/opt/homebrew/opt/openssl@1.1/bin:$PATH"
 
 if type brew &>/dev/null; then
   FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
-
   autoload -Uz compinit
   compinit
 fi
@@ -41,7 +40,7 @@ export PATH="$HOME/.deno/bin:$PATH"
 export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
 
-# general use
+# alias
 alias ls='exa'
 alias lsa='exa -a'
 alias ll='exa -lbF --time-style=full-iso --git --color-scale'
@@ -51,7 +50,9 @@ alias lla='exa -lbFa --time-style=full-iso --git --color-scale'
 # alias lS='exa -1'
 # alias lt='exa --tree --level=2'
 
-alias history='history 1'
+alias cat='bat'
+
+alias h='history 1'
 alias b='brew'
 alias g='git'
 alias n='npm'
