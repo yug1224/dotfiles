@@ -5,12 +5,7 @@
     "secretlint": "^7.0.7"
   },
   "license": "MIT",
-  "main": "index.js",
   "name": "dotfiles",
-  "repository": "https://github.com/YuG1224/dotfiles.git",
-  "version": "1.0.0",
-  "volta": {
-    "node": "18.18.0",
-    "npm": "10.1.0"
-  }
+  "repository": "https://github.com/yug1224/dotfiles.git",
+  "version": "1.0.0"
 }
