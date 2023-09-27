@@ -1435,6 +1435,24 @@
         "options": {
           "full_name": "raycast"
         }
+      },
+      "font-plemol-jp-hs": {
+        "version": "1.6.0",
+        "options": {
+          "full_name": "font-plemol-jp-hs"
+        }
+      },
+      "font-plemol-jp-nf": {
+        "version": "1.6.0",
+        "options": {
+          "full_name": "font-plemol-jp-nf"
+        }
+      },
+      "font-plemol-jp": {
+        "version": "1.6.0",
+        "options": {
+          "full_name": "font-plemol-jp"
+        }
       }
     },
     "tap": {
