@@ -52,6 +52,7 @@ alias g='git'
 alias n='npm'
 alias y='yarn'
 alias v='volta'
+alias lh='lefthook'
 
 alias gsw='(){
   git fetch origin $1 && git switch -fC $1 origin/$1
@@ -59,3 +60,4 @@ alias gsw='(){
 export PATH="/opt/homebrew/opt/go@1.18/bin:$PATH"
 
 source ~/.zsh_plugins/gibo-completion.zsh
+source ~/.zsh_plugins/lefthook-completion.zsh

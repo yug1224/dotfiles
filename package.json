@@ -1,28 +1,16 @@
 {
   "author": "Yuji Yamaguchi <yuji.yamaguchi24@gmail.com>",
   "devDependencies": {
-    "@secretlint/secretlint-rule-preset-recommend": "^5.2.3",
-    "husky": "^8.0.1",
-    "lint-staged": "^13.0.3",
-    "secretlint": "^5.2.3"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
+    "@secretlint/secretlint-rule-preset-recommend": "^7.0.7",
+    "secretlint": "^7.0.7"
   },
   "license": "MIT",
-  "lint-staged": {
-    "*": [
-      "secretlint --secretlintignore .gitignore \"**/*\""
-    ]
-  },
   "main": "index.js",
   "name": "dotfiles",
   "repository": "https://github.com/YuG1224/dotfiles.git",
   "version": "1.0.0",
   "volta": {
-    "node": "18.12.1",
-    "npm": "9.2.0"
+    "node": "18.18.0",
+    "npm": "10.1.0"
   }
 }

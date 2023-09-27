@@ -1,0 +1,4 @@
+pre-commit:
+  commands:
+    secretlint:
+      run: npx secretlint --secretlintignore .gitignore {staged_files}

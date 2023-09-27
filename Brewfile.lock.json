@@ -1281,6 +1281,50 @@
             }
           }
         }
+      },
+      "lefthook": {
+        "version": "1.5.0",
+        "bottle": {
+          "rebuild": 0,
+          "root_url": "https://ghcr.io/v2/homebrew/core",
+          "files": {
+            "arm64_ventura": {
+              "cellar": ":any_skip_relocation",
+              "url": "https://ghcr.io/v2/homebrew/core/lefthook/blobs/sha256:f4711808f39f69b1f45143b73545197813dc6171c7ac5912e28fea7d83806d54",
+              "sha256": "f4711808f39f69b1f45143b73545197813dc6171c7ac5912e28fea7d83806d54"
+            },
+            "arm64_monterey": {
+              "cellar": ":any_skip_relocation",
+              "url": "https://ghcr.io/v2/homebrew/core/lefthook/blobs/sha256:28cb2a184f147ba02e1da3497681b1e40f0a95bfbce159edf9e41316f471a934",
+              "sha256": "28cb2a184f147ba02e1da3497681b1e40f0a95bfbce159edf9e41316f471a934"
+            },
+            "arm64_big_sur": {
+              "cellar": ":any_skip_relocation",
+              "url": "https://ghcr.io/v2/homebrew/core/lefthook/blobs/sha256:7ea0e8557c7c67d6e28f105058bf4c7ac20636d7a48cfcaf869c2322913dc38b",
+              "sha256": "7ea0e8557c7c67d6e28f105058bf4c7ac20636d7a48cfcaf869c2322913dc38b"
+            },
+            "ventura": {
+              "cellar": ":any_skip_relocation",
+              "url": "https://ghcr.io/v2/homebrew/core/lefthook/blobs/sha256:2d0d2bf3ad0395e080c97500633ec70a2d42f74604624af749fe2411f5facec7",
+              "sha256": "2d0d2bf3ad0395e080c97500633ec70a2d42f74604624af749fe2411f5facec7"
+            },
+            "monterey": {
+              "cellar": ":any_skip_relocation",
+              "url": "https://ghcr.io/v2/homebrew/core/lefthook/blobs/sha256:449f5292cb8cb4c629531be95bed883efe4ce8429f00545a93d15f1070563897",
+              "sha256": "449f5292cb8cb4c629531be95bed883efe4ce8429f00545a93d15f1070563897"
+            },
+            "big_sur": {
+              "cellar": ":any_skip_relocation",
+              "url": "https://ghcr.io/v2/homebrew/core/lefthook/blobs/sha256:e529981c1049cc5e31a7668e87c217b983e334742f01c30b93b512ee1bff1cbc",
+              "sha256": "e529981c1049cc5e31a7668e87c217b983e334742f01c30b93b512ee1bff1cbc"
+            },
+            "x86_64_linux": {
+              "cellar": ":any_skip_relocation",
+              "url": "https://ghcr.io/v2/homebrew/core/lefthook/blobs/sha256:f3cff50f3d609ca9f2c210f3451dccd24e30b7e29171f46e3fe2f85a5fc3eb22",
+              "sha256": "f3cff50f3d609ca9f2c210f3451dccd24e30b7e29171f46e3fe2f85a5fc3eb22"
+            }
+          }
+        }
       }
     },
     "cask": {
@@ -1413,7 +1457,7 @@
     "mas": {
       "LINE": {
         "id": "539883307",
-        "version": "8.0.0"
+        "version": "8.3.0"
       },
       "AmorphousDiskMark": {
         "id": "1168254295",
@@ -1422,11 +1466,11 @@
       "Apple Configurator 2": null,
       "Compressor": {
         "id": "424390742",
-        "version": "4.6.5"
+        "version": "4.6.6"
       },
       "Final Cut Pro": {
         "id": "424389933",
-        "version": "10.6.7"
+        "version": "10.6.9"
       },
       "GarageBand": {
         "id": "682658836",
@@ -1438,23 +1482,23 @@
       },
       "Keynote": {
         "id": "409183694",
-        "version": "13.1"
+        "version": "13.2"
       },
       "Motion": {
         "id": "434290957",
-        "version": "5.6.5"
+        "version": "5.6.6"
       },
       "Numbers": {
         "id": "409203825",
-        "version": "13.1"
+        "version": "13.2"
       },
       "Pages": {
         "id": "409201541",
-        "version": "13.1"
+        "version": "13.2"
       },
       "Slack": {
         "id": "803453959",
-        "version": "4.33.73"
+        "version": "4.34.119"
       },
       "TweetDeck": {
         "id": "485812721",
