@@ -1,10 +1,3 @@
-#
-# Executes commands at the start of an interactive session.
-#
-# Authors:
-#   Sorin Ionescu <sorin.ionescu@gmail.com>
-#
-
 # Source Prezto.
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
@@ -41,10 +34,11 @@ export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
 
 # alias
-alias ls='exa'
-alias lsa='exa -a'
-alias ll='exa -lbF --time-style=full-iso --git --color-scale'
-alias lla='exa -lbFa --time-style=full-iso --git --color-scale'
+alias ls='eza'
+alias lsa='eza -a'
+alias ll='eza -lbF --time-style=full-iso --git --color-scale'
+alias lla='eza -lbFa --time-style=full-iso --git --color-scale'
+alias date='gdate'
 
 # # speciality views
 # alias lS='exa -1'
@@ -63,3 +57,5 @@ alias gsw='(){
   git fetch origin $1 && git switch -fC $1 origin/$1
 }'
 export PATH="/opt/homebrew/opt/go@1.18/bin:$PATH"
+
+source ~/.zsh_plugins/gibo-completion.zsh

@@ -17,11 +17,11 @@
   "[jsonc]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  // "[markdown]": {
-  //   "editor.defaultFormatter": "esbenp.prettier-vscode"
-  // },
+  "[markdown]": {
+    "editor.defaultFormatter": "denoland.vscode-deno"
+  },
   "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "denoland.vscode-deno"
   },
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -115,8 +115,12 @@
     }
   ],
   "cSpell.userWords": [
+    "abortable",
+    "connpass",
     "csstype",
+    "denoland",
     "dontshownewversionmessage",
+    "dotfiles",
     "esbenp",
     "liveshare",
     "menlo",
@@ -124,9 +128,14 @@
     "polacode",
     "unplugin",
     "vetur",
-    "vsicons"
+    "vsicons",
+    "Yamaguchi",
+    "Yuji"
   ],
   "deno.enable": true,
+  "deno.inlayHints.functionLikeReturnTypes.enabled": false,
+  "deno.inlayHints.parameterNames.enabled": "none",
+  "deno.inlayHints.variableTypes.enabled": false,
   "deno.lint": true,
   "deno.unstable": true,
   "editor.bracketPairColorization.enabled": true,
@@ -134,6 +143,7 @@
   "editor.fontFamily": "PlemolJP Console, Menlo, Monaco, 'Courier New', monospace",
   "editor.fontSize": 14,
   "editor.formatOnSave": true,
+  "editor.inlineSuggest.enabled": true,
   "editor.renderControlCharacters": true,
   "editor.renderWhitespace": "all",
   "editor.tabSize": 2,
@@ -146,6 +156,18 @@
     }
   ],
   "files.insertFinalNewline": true,
+  "gitConfigUser.profiles": [
+    {
+      "email": "yuji.yamaguchi24@gmail.com",
+      "label": "Yuji Yamaguchi",
+      "selected": true,
+      "userName": "Yuji Yamaguchi"
+    }
+  ],
+  "github.copilot.enable": {
+    "*": true,
+    "markdown": true
+  },
   "html.format.endWithNewline": true,
   "i18n-ally.annotations": false,
   "i18n-ally.displayLanguage": "ja",
@@ -155,25 +177,18 @@
   "liveshare.presence": true,
   "npm.keybindingsChangedWarningShown": true,
   "prettier.singleQuote": true,
+  "reactSnippets.settings.typescript": false,
   // アノテーションコメントの一覧ツリー表示、ツリー表示させたいタグがあれば追加する
   "todo-tree.general.tags": ["BUG", "HACK", "FIXME", "TODO", "XXX"],
   "todo-tree.highlights.enabled": false,
   "typescript.referencesCodeLens.enabled": true,
+  "typescript.validate.enable": false,
   "vetur.ignoreProjectWarning": true,
   "vetur.validation.script": false,
   "vetur.validation.style": false,
   "vetur.validation.template": false,
   "vsicons.dontShowNewVersionMessage": true,
   "window.zoomLevel": 1,
-  "workbench.colorTheme": "Tomorrow Night Blue",
   "workbench.iconTheme": "vscode-icons",
-  "workbench.startupEditor": "none",
-  "gitConfigUser.profiles": [
-    {
-      "label": "Yuji Yamaguchi",
-      "email": "yuji.yamaguchi24@gmail.com",
-      "userName": "Yuji Yamaguchi",
-      "selected": true
-    }
-  ]
+  "workbench.startupEditor": "none"
 }

@@ -1,5 +1,5 @@
 {
-  "author": "Yuji Yamaguchi <yuji@yuji.local>",
+  "author": "Yuji Yamaguchi <yuji.yamaguchi24@gmail.com>",
   "devDependencies": {
     "@secretlint/secretlint-rule-preset-recommend": "^5.2.3",
     "husky": "^8.0.1",
