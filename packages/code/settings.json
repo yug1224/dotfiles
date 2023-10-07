@@ -18,7 +18,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[markdown]": {
-    "editor.defaultFormatter": "denoland.vscode-deno"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[typescript]": {
     "editor.defaultFormatter": "denoland.vscode-deno"
@@ -27,7 +27,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[vue]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "Vue.volar"
   },
   // アノテーションコメントのハイライト設定
   // 基本5種（*, ?, !, //, todo）に加えて、4種（bug, hack, fixme, xxx）を設定しておく
@@ -118,28 +118,40 @@
     "abortable",
     "connpass",
     "csstype",
+    "deno",
     "denoland",
     "dontshownewversionmessage",
     "dotfiles",
     "esbenp",
+    "githubactions",
+    "hrbrain",
+    "lefthook",
     "liveshare",
     "menlo",
     "plemoljp",
     "polacode",
+    "qiita",
     "unplugin",
     "vetur",
     "vsicons",
     "Yamaguchi",
-    "Yuji"
+    "Yuji",
+    "Zenn"
   ],
+  "deno.codeLens.implementations": true,
+  "deno.codeLens.references": true,
+  "deno.codeLens.referencesAllFunctions": true,
   "deno.enable": true,
   "deno.inlayHints.functionLikeReturnTypes.enabled": false,
   "deno.inlayHints.parameterNames.enabled": "none",
   "deno.inlayHints.variableTypes.enabled": false,
   "deno.lint": true,
+  "deno.suggest.imports.hosts": {
+    "https://deno.land": true
+  },
   "deno.unstable": true,
+  "diffEditor.maxComputationTime": 0,
   "editor.bracketPairColorization.enabled": true,
-  "editor.codeActionsOnSave": {},
   "editor.fontFamily": "PlemolJP Console, Menlo, Monaco, 'Courier New', monospace",
   "editor.fontSize": 14,
   "editor.formatOnSave": true,
@@ -150,12 +162,15 @@
   "editor.unicodeHighlight.allowedCharacters": {
     "〇": true
   },
+  "editor.unicodeHighlight.nonBasicASCII": false,
   "eslint.workingDirectories": [
     {
       "mode": "auto"
     }
   ],
   "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": true,
   "gitConfigUser.profiles": [
     {
       "email": "yuji.yamaguchi24@gmail.com",
@@ -166,29 +181,37 @@
   ],
   "github.copilot.enable": {
     "*": true,
-    "markdown": true
+    "markdown": true,
+    "plaintext": true,
+    "scminput": false,
+    "yaml": true
   },
+  "go.toolsManagement.autoUpdate": true,
   "html.format.endWithNewline": true,
   "i18n-ally.annotations": false,
   "i18n-ally.displayLanguage": "ja",
   "i18n-ally.localesPaths": ["src/locales"],
   "i18n-ally.sourceLanguage": "ja",
   "japanese-proofreading.maxNumberOfProblems": 500,
+  "javascript.preferGoToSourceDefinition": false,
   "liveshare.presence": true,
   "npm.keybindingsChangedWarningShown": true,
+  // settings.jsonに書いても効かないので、別途GUIから設定する
+  // "prettier.prettierPath": "/PATH/TO/dotfiles/node_modules/prettier/index.cjs",
+  "prettier.resolveGlobalModules": true,
   "prettier.singleQuote": true,
+  "prettier.semi": false,
+  "prettier.trailingComma": "all",
   "reactSnippets.settings.typescript": false,
   // アノテーションコメントの一覧ツリー表示、ツリー表示させたいタグがあれば追加する
   "todo-tree.general.tags": ["BUG", "HACK", "FIXME", "TODO", "XXX"],
   "todo-tree.highlights.enabled": false,
+  "typescript.preferGoToSourceDefinition": false,
   "typescript.referencesCodeLens.enabled": true,
   "typescript.validate.enable": false,
-  "vetur.ignoreProjectWarning": true,
-  "vetur.validation.script": false,
-  "vetur.validation.style": false,
-  "vetur.validation.template": false,
   "vsicons.dontShowNewVersionMessage": true,
-  "window.zoomLevel": 1,
-  "workbench.iconTheme": "vscode-icons",
+  "window.zoomLevel": 0,
+  "workbench.colorTheme": "Default Dark+",
+  "workbench.iconTheme": "bearded-icons",
   "workbench.startupEditor": "none"
 }
