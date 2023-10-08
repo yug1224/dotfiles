@@ -7,8 +7,8 @@ brew 'bat'
 brew 'brew-cask-completion'
 brew 'coreutils'
 brew 'deno'
-brew 'docker'
 brew 'docker-compose'
+brew 'docker'
 brew 'eza'
 brew 'ffmpeg'
 brew 'gh'
@@ -47,10 +47,8 @@ mas 'Compressor', id: 424390742
 mas 'Final Cut Pro', id: 424389933
 mas 'Keynote', id: 409183694
 mas 'LINE', id: 539883307
-mas 'Meeter Zoom, Teams & Co.のために。', id: 1510445899
 mas 'Motion', id: 434290957
 mas 'Numbers', id: 409203825
 mas 'Pages', id: 409201541
 mas 'Slack', id: 803453959
-mas 'TweetDeck', id: 485812721
 mas 'Xcode', id: 497799835
