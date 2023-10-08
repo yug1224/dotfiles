@@ -196,7 +196,7 @@
   "javascript.preferGoToSourceDefinition": false,
   "liveshare.presence": true,
   "npm.keybindingsChangedWarningShown": true,
-  // settings.jsonに書いても効かないので、別途GUIから設定する
+  // dotfilesの置き場所に合わせて設定する
   // "prettier.prettierPath": "/PATH/TO/dotfiles/node_modules/prettier/index.cjs",
   "prettier.resolveGlobalModules": true,
   "prettier.singleQuote": true,
