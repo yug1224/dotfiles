@@ -5,7 +5,7 @@ install:
 
 .PHONY: brew
 brew:
-	brew bundle -v --file=~/Workspaces/dotfiles/Brewfile
+	brew bundle -v --file=./Brewfile
 
 .PHONY: stow
 stow:
