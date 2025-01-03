@@ -9,3 +9,16 @@
 	ignorecase = false
 [fetch]
 	prune = true
+[rebase]
+	autostash = true
+[diff]
+	tool = difftastic
+	external = difft
+[difftool]
+	prompt = false
+[difftool "difftastic"]
+	cmd = difft "$LOCAL" "$REMOTE"
+[pager]
+	difftool = true
+[init]
+	defaultBranch = main

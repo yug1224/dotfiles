@@ -1,4 +1,7 @@
 {
+  "[astro]": {
+    "editor.defaultFormatter": "astro-build.astro-vscode"
+  },
   "[css]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -21,7 +24,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[typescript]": {
-    "editor.defaultFormatter": "denoland.vscode-deno"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -114,6 +117,21 @@
       "underline": false
     }
   ],
+  "cloudcode.duetAI.inlineSuggestions.enableAuto": true,
+  "cloudcode.duetAI.languages": [
+    "astro",
+    "css",
+    "gitignore",
+    "html",
+    "javascript",
+    "javascriptreact",
+    "json",
+    "jsonc",
+    "markdown",
+    "typescript",
+    "typescriptreact",
+    "vue"
+  ],
   "cSpell.userWords": [
     "abortable",
     "connpass",
@@ -196,11 +214,9 @@
   "javascript.preferGoToSourceDefinition": false,
   "liveshare.presence": true,
   "npm.keybindingsChangedWarningShown": true,
-  // dotfilesの置き場所に合わせて設定する
-  // "prettier.prettierPath": "/PATH/TO/dotfiles/node_modules/prettier/index.cjs",
   "prettier.resolveGlobalModules": true,
-  "prettier.singleQuote": true,
   "prettier.semi": false,
+  "prettier.singleQuote": true,
   "prettier.trailingComma": "all",
   "reactSnippets.settings.typescript": false,
   // アノテーションコメントの一覧ツリー表示、ツリー表示させたいタグがあれば追加する
@@ -210,7 +226,6 @@
   "typescript.referencesCodeLens.enabled": true,
   "typescript.validate.enable": false,
   "vsicons.dontShowNewVersionMessage": true,
-  "window.zoomLevel": 0,
   "workbench.colorTheme": "Default Dark+",
   "workbench.iconTheme": "bearded-icons",
   "workbench.startupEditor": "none"
