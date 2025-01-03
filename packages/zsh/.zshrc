@@ -36,8 +36,8 @@ export PATH="$VOLTA_HOME/bin:$PATH"
 # alias
 alias ls='eza'
 alias lsa='eza -a'
-alias ll='eza -lbF --time-style=full-iso --git --color-scale'
-alias lla='eza -lbFa --time-style=full-iso --git --color-scale'
+alias ll='eza -lbF --time-style=full-iso --git'
+alias lla='eza -lbFa --time-style=full-iso --git'
 alias date='gdate'
 
 # # speciality views
@@ -47,13 +47,14 @@ alias date='gdate'
 alias cat='bat'
 alias sed='gsed'
 
-alias h='history 1'
 alias b='brew'
+alias c='code'
 alias g='git'
-alias n='npm'
-alias y='yarn'
-alias v='volta'
+alias h='history 1'
 alias lh='lefthook'
+alias n='npm'
+alias v='volta'
+alias y='yarn'
 
 alias gsw='(){
   git fetch origin $1 && git switch -fC $1 origin/$1
