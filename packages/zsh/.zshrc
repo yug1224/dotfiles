@@ -33,6 +33,9 @@ export PATH="$HOME/.deno/bin:$PATH"
 export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
 
+# curl
+export PATH="/opt/homebrew/opt/curl/bin:$PATH"
+
 # alias
 alias ls='eza'
 alias lsa='eza -a'
@@ -55,6 +58,7 @@ alias lh='lefthook'
 alias n='npm'
 alias v='volta'
 alias y='yarn'
+alias c='code'
 
 alias gsw='(){
   git fetch origin $1 && git switch -fC $1 origin/$1
@@ -71,6 +75,7 @@ function chpwd_volta_install() {
     # .node-versionから内容を読み取る
     content=$(cat .node-version)
     volta install node@$content --quiet
+    volta install npm@bundled --quiet
   fi
 
   # .nvmrcが存在するかチェック
@@ -124,9 +129,23 @@ function chpwd_volta_install() {
       volta install node@$content --quiet
       ;;
     esac
+    volta install npm@bundled --quiet
   fi
 }
 add-zsh-hook chpwd chpwd_volta_install
+
+function chpwd_yarn_install() {
+  # yarn.lock が存在するかチェック
+  if [[ -e "yarn.lock" ]]; then
+    FROM=$(git rev-parse --abbrev-ref HEAD)
+    TO=$(git rev-parse --abbrev-ref ${-1})
+    DIFF=$(git diff --name-only $FROM $TO yarn.lock)
+    if [[ -n $DIFF ]]; then
+      yarn install
+    fi
+  fi
+}
+add-zsh-hook chpwd chpwd_lefthook_install
 
 function chpwd_lefthook_install() {
   # .git/info/lefthook.checksum が存在するかチェック

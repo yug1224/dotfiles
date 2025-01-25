@@ -23,6 +23,20 @@
   "[markdown]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  "[terraform-vars]": {
+    "editor.codeActionsOnSave": {
+      "source.formatAll.terraform": "explicit"
+    },
+    "editor.defaultFormatter": "hashicorp.terraform",
+    "editor.formatOnSave": false
+  },
+  "[terraform]": {
+    "editor.codeActionsOnSave": {
+      "source.formatAll.terraform": "explicit"
+    },
+    "editor.defaultFormatter": "hashicorp.terraform",
+    "editor.formatOnSave": true
+  },
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -30,7 +44,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[vue]": {
-    "editor.defaultFormatter": "Vue.volar"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   // アノテーションコメントのハイライト設定
   // 基本5種（*, ?, !, //, todo）に加えて、4種（bug, hack, fixme, xxx）を設定しておく
@@ -122,19 +136,30 @@
     "astro",
     "css",
     "gitignore",
+    "go",
     "html",
     "javascript",
     "javascriptreact",
     "json",
     "jsonc",
+    "makefile",
     "markdown",
+    "sass",
+    "scss",
+    "terraform",
     "typescript",
     "typescriptreact",
-    "vue"
+    "vue",
+    "yaml"
   ],
+  "cloudcode.enableSkaffoldSkipUnreachableDirs": true,
   "cSpell.userWords": [
     "abortable",
+    "astro",
+    "astrojs",
+    "codegen",
     "connpass",
+    "contentful",
     "csstype",
     "deno",
     "denoland",
@@ -149,6 +174,7 @@
     "plemoljp",
     "polacode",
     "qiita",
+    "tsconfigs",
     "unplugin",
     "vetur",
     "vsicons",
@@ -156,10 +182,10 @@
     "Yuji",
     "Zenn"
   ],
-  "deno.codeLens.implementations": true,
-  "deno.codeLens.references": true,
-  "deno.codeLens.referencesAllFunctions": true,
-  "deno.enable": true,
+  "deno.codeLens.implementations": false,
+  "deno.codeLens.references": false,
+  "deno.codeLens.referencesAllFunctions": false,
+  "deno.enable": false,
   "deno.inlayHints.functionLikeReturnTypes.enabled": false,
   "deno.inlayHints.parameterNames.enabled": "none",
   "deno.inlayHints.variableTypes.enabled": false,
@@ -168,7 +194,9 @@
     "https://deno.land": true
   },
   "deno.unstable": true,
+  "diffEditor.codeLens": true,
   "diffEditor.maxComputationTime": 0,
+  "editor.accessibilitySupport": "off",
   "editor.bracketPairColorization.enabled": true,
   "editor.fontFamily": "PlemolJP Console, Menlo, Monaco, 'Courier New', monospace",
   "editor.fontSize": 14,
@@ -181,6 +209,9 @@
     "〇": true
   },
   "editor.unicodeHighlight.nonBasicASCII": false,
+  "eslint.packageManager": "yarn",
+  "eslint.probe": ["javascript", "javascriptreact", "typescript", "typescriptreact", "html", "vue", "markdown", "astro"],
+  "eslint.useESLintClass": true,
   "eslint.workingDirectories": [
     {
       "mode": "auto"
@@ -189,6 +220,8 @@
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
   "files.trimTrailingWhitespace": true,
+  "geminicodeassist.inlineSuggestions.enableAuto": false,
+  "geminicodeassist.project": "hrb-workstations",
   "gitConfigUser.profiles": [
     {
       "email": "yuji.yamaguchi24@gmail.com",
@@ -219,12 +252,16 @@
   "prettier.singleQuote": true,
   "prettier.trailingComma": "all",
   "reactSnippets.settings.typescript": false,
+  // textlintの設定
+  "textlint.configPath": "/Users/yamaguchiyuji/Workspaces/yug1224/textlint-rule-preset-yug1224/.textlintrc",
+  "textlint.nodePath": "/Users/yamaguchiyuji//Workspaces/yug1224/textlint-rule-preset-yug1224",
+  "textlint.run": "onType",
   // アノテーションコメントの一覧ツリー表示、ツリー表示させたいタグがあれば追加する
   "todo-tree.general.tags": ["BUG", "HACK", "FIXME", "TODO", "XXX"],
   "todo-tree.highlights.enabled": false,
-  "typescript.preferGoToSourceDefinition": false,
+  "typescript.preferGoToSourceDefinition": true,
   "typescript.referencesCodeLens.enabled": true,
-  "typescript.validate.enable": false,
+  "typescript.validate.enable": true,
   "vsicons.dontShowNewVersionMessage": true,
   "workbench.colorTheme": "Default Dark+",
   "workbench.iconTheme": "bearded-icons",
