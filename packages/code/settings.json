@@ -152,6 +152,8 @@
     "yaml"
   ],
   "cloudcode.enableSkaffoldSkipUnreachableDirs": true,
+  "cloudcode.duetAI.project": "",
+  "cloudcode.project": "",
   "cSpell.userWords": [
     "abortable",
     "astro",
@@ -220,7 +222,7 @@
   "files.trimFinalNewlines": true,
   "files.trimTrailingWhitespace": true,
   "geminicodeassist.inlineSuggestions.enableAuto": true,
-  "geminicodeassist.project": "hrb-workstations",
+  "geminicodeassist.project": "",
   "gitConfigUser.profiles": [
     {
       "email": "yuji.yamaguchi24@gmail.com",
