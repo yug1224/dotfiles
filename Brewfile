@@ -2,7 +2,6 @@
 
 tap 'homebrew/bundle'
 tap 'homebrew/cask-fonts'
-tap 'homebrew/cask-versions'
 tap 'homebrew/services'
 
 brew 'automake'
@@ -50,23 +49,23 @@ cask 'google-japanese-ime'
 cask 'keeper-password-manager'
 cask 'krisp'
 cask 'microsoft-auto-update'
-cask 'macx-dvd-ripper-pro'
+# cask 'macx-dvd-ripper-pro'
 cask 'microsoft-edge'
 cask 'raycast'
 cask 'visual-studio-code'
 cask 'zoom'
 
-mas 'AmorphousDiskMark', id: 1168254295
-mas 'Apple Configurator 2', id: 1037126344
-mas 'Compressor', id: 424390742
-mas 'Final Cut Pro', id: 424389933
-mas 'Keynote', id: 409183694
-mas 'LINE', id: 539883307
-mas 'Motion', id: 434290957
-mas 'Numbers', id: 409203825
-mas 'Pages', id: 409201541
-mas 'Slack', id: 803453959
-mas 'Xcode', id: 497799835
+# mas 'AmorphousDiskMark', id: 1168254295
+# mas 'Apple Configurator 2', id: 1037126344
+# mas 'Compressor', id: 424390742
+# mas 'Final Cut Pro', id: 424389933
+# mas 'Keynote', id: 409183694
+# mas 'LINE', id: 539883307
+# mas 'Motion', id: 434290957
+# mas 'Numbers', id: 409203825
+# mas 'Pages', id: 409201541
+# mas 'Slack', id: 803453959
+# mas 'Xcode', id: 497799835
 
 vscode 'aaron-bond.better-comments'
 vscode 'alexcvzz.vscode-sqlite'

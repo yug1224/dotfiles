@@ -131,7 +131,6 @@
       "underline": false
     }
   ],
-  "cloudcode.duetAI.inlineSuggestions.enableAuto": true,
   "cloudcode.duetAI.languages": [
     "astro",
     "css",
@@ -220,7 +219,7 @@
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
   "files.trimTrailingWhitespace": true,
-  "geminicodeassist.inlineSuggestions.enableAuto": false,
+  "geminicodeassist.inlineSuggestions.enableAuto": true,
   "geminicodeassist.project": "hrb-workstations",
   "gitConfigUser.profiles": [
     {
@@ -247,14 +246,15 @@
   "javascript.preferGoToSourceDefinition": false,
   "liveshare.presence": true,
   "npm.keybindingsChangedWarningShown": true,
+  "prettier.prettierPath": "",
   "prettier.resolveGlobalModules": true,
-  "prettier.semi": false,
+  "prettier.semi": true,
   "prettier.singleQuote": true,
   "prettier.trailingComma": "all",
   "reactSnippets.settings.typescript": false,
   // textlintの設定
-  "textlint.configPath": "/Users/yamaguchiyuji/Workspaces/yug1224/textlint-rule-preset-yug1224/.textlintrc",
-  "textlint.nodePath": "/Users/yamaguchiyuji//Workspaces/yug1224/textlint-rule-preset-yug1224",
+  "textlint.configPath": "",
+  "textlint.nodePath": "",
   "textlint.run": "onType",
   // アノテーションコメントの一覧ツリー表示、ツリー表示させたいタグがあれば追加する
   "todo-tree.general.tags": ["BUG", "HACK", "FIXME", "TODO", "XXX"],
