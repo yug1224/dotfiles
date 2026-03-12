@@ -7,7 +7,6 @@
 	editor = vim
 	precomposeunicode = true
 	ignorecase = false
-	pager = delta
 [interactive]
 	diffFilter = delta --color-only
 [delta]
@@ -23,13 +22,11 @@
 	autostash = true
 [diff]
 	colorMoved = default
-	tool = difftastic
-	external = difft
 [difftool]
 	prompt = false
 [difftool "difftastic"]
 	cmd = difft "$LOCAL" "$REMOTE"
 [pager]
-	difftool = true
+	difftool = false
 [init]
 	defaultBranch = main

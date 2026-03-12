@@ -1,0 +1,115 @@
+---
+description: ブランチ名規約
+globs:
+alwaysApply: false
+---
+
+このルールを適用したら、「Applied Branch Name Rule!」と出力してください。
+
+# ブランチ名規約
+
+## 基本原則
+
+- **英字小文字**: すべて小文字で記述
+- **ハイフン区切り**: 単語はハイフン（-）で区切る
+- **簡潔に**: 変更内容が一目でわかる名前
+- **Notion ID**: タスクと紐付ける場合は先頭に付与（推奨）
+
+---
+
+## フォーマット
+
+### 基本形式
+
+```
+<type>/<description>
+```
+
+### Notion IDを含める場合（推奨）
+
+```
+<type>/<notion-id>-<description>
+```
+
+**例**:
+
+```
+feat/device-filter
+feat/DC-1234-device-filter
+fix/DC-5678-mdm-sync-error
+refactor/DC-9012-query-service-separation
+```
+
+---
+
+## タイプ（Type）
+
+| Type         | 説明                     |
+| ------------ | ------------------------ |
+| **feat**     | 新機能の追加             |
+| **fix**      | バグ修正                 |
+| **refactor** | 動作を変えないコード改善 |
+| **perf**     | パフォーマンス改善       |
+| **docs**     | ドキュメント変更         |
+| **style**    | フォーマット変更         |
+| **test**     | テスト追加・修正         |
+| **chore**    | ビルド・ツール変更       |
+
+---
+
+## 実践例
+
+### ✅ Good
+
+```
+feat/device-list-filtering
+feat/DC-1234-device-list-filtering
+fix/DC-5678-boolean-null-handling
+refactor/separate-query-service
+chore/update-prisma
+```
+
+### ❌ Bad
+
+```
+feature/DeviceListFiltering
+```
+
+→ 大文字を使用している、typeが長い
+
+```
+fix_bug
+```
+
+→ アンダースコア使用、何のバグか不明
+
+```
+DC-1234
+```
+
+→ typeなし、descriptionなし
+
+```
+update
+```
+
+→ typeなし、変更内容が不明確
+
+---
+
+## よく使うパターン
+
+| パターン           | 基本形式                     | Notion ID付き                        |
+| ------------------ | ---------------------------- | ------------------------------------ |
+| 機能追加           | `feat/user-authentication`   | `feat/DC-1234-user-authentication`   |
+| バグ修正           | `fix/login-validation`       | `fix/DC-5678-login-validation`       |
+| リファクタリング   | `refactor/device-api`        | `refactor/DC-9012-device-api`        |
+| 依存関係更新       | `chore/deps-update`          | `chore/deps-update`                  |
+| ドキュメント更新   | `docs/update-readme`         | `docs/DC-3456-update-readme`         |
+| 緊急修正（Hotfix） | `fix/security-vulnerability` | `fix/DC-7890-security-vulnerability` |
+
+---
+
+## 参考
+
+- [Conventional Commits](https://www.conventionalcommits.org/ja/)

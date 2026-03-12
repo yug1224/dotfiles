@@ -3,25 +3,25 @@
     "editor.defaultFormatter": "astro-build.astro-vscode"
   },
   "[css]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[html]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[javascriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[jsonc]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[markdown]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[terraform-vars]": {
     "editor.codeActionsOnSave": {
@@ -38,16 +38,14 @@
     "editor.formatOnSave": true
   },
   "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[vue]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
-  // アノテーションコメントのハイライト設定
-  // 基本5種（*, ?, !, //, todo）に加えて、4種（bug, hack, fixme, xxx）を設定しておく
   "better-comments.tags": [
     {
       "backgroundColor": "transparent",
@@ -131,29 +129,6 @@
       "underline": false
     }
   ],
-  "cloudcode.duetAI.languages": [
-    "astro",
-    "css",
-    "gitignore",
-    "go",
-    "html",
-    "javascript",
-    "javascriptreact",
-    "json",
-    "jsonc",
-    "makefile",
-    "markdown",
-    "sass",
-    "scss",
-    "terraform",
-    "typescript",
-    "typescriptreact",
-    "vue",
-    "yaml"
-  ],
-  "cloudcode.enableSkaffoldSkipUnreachableDirs": true,
-  "cloudcode.duetAI.project": "",
-  "cloudcode.project": "",
   "cSpell.userWords": [
     "abortable",
     "astro",
@@ -183,6 +158,34 @@
     "Yuji",
     "Zenn"
   ],
+  "cloudcode.duetAI.languages": [
+    "astro",
+    "css",
+    "gitignore",
+    "go",
+    "html",
+    "javascript",
+    "javascriptreact",
+    "json",
+    "jsonc",
+    "makefile",
+    "markdown",
+    "sass",
+    "scss",
+    "terraform",
+    "typescript",
+    "typescriptreact",
+    "vue",
+    "yaml"
+  ],
+  "cloudcode.duetAI.project": "",
+  "cloudcode.enableSkaffoldSkipUnreachableDirs": true,
+  "cloudcode.project": "",
+  "cursor.agent_layout_browser_beta_setting": true,
+  "cursor.composer.shouldChimeAfterChatFinishes": true,
+  "cursor.cpp.disabledLanguages": ["scminput"],
+  "cursor.enable_agent_window_setting": false,
+  "datadog.connection.oauth.setup.domain": "ap1.datadoghq.com",
   "deno.codeLens.implementations": false,
   "deno.codeLens.references": false,
   "deno.codeLens.referencesAllFunctions": false,
@@ -203,6 +206,7 @@
   "editor.fontSize": 14,
   "editor.formatOnSave": true,
   "editor.inlineSuggest.enabled": true,
+  "editor.largeFileOptimizations": false,
   "editor.renderControlCharacters": true,
   "editor.renderWhitespace": "all",
   "editor.tabSize": 2,
@@ -218,11 +222,24 @@
       "mode": "auto"
     }
   ],
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.patterns": {
+    "*.cts": "${capture}.typegen.ts",
+    "*.js": "${capture}.js.map, ${capture}.min.js, ${capture}.d.ts",
+    "*.jsx": "${capture}.js",
+    "*.mts": "${capture}.typegen.ts",
+    "*.ts": "${capture}.js, ${capture}.typegen.ts",
+    "*.tsx": "${capture}.ts, ${capture}.typegen.ts",
+    "package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml, bun.lockb, bun.lock",
+    "tsconfig.json": "tsconfig.*.json"
+  },
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
   "files.trimTrailingWhitespace": true,
   "geminicodeassist.inlineSuggestions.enableAuto": true,
   "geminicodeassist.project": "",
+  "git-worktree-manager.worktreePathTemplate": "$BASE_PATH-worktree",
+  "git-worktree-manager.worktreeSubdirectoryTemplate": "worktree-$INDEX",
   "gitConfigUser.profiles": [
     {
       "email": "yuji.yamaguchi24@gmail.com",
@@ -247,16 +264,14 @@
   "japanese-proofreading.maxNumberOfProblems": 500,
   "javascript.preferGoToSourceDefinition": false,
   "liveshare.presence": true,
+  "makefile.configureOnOpen": false,
   "npm.keybindingsChangedWarningShown": true,
-  "prettier.prettierPath": "",
-  "prettier.resolveGlobalModules": true,
-  "prettier.semi": true,
-  "prettier.singleQuote": true,
-  "prettier.trailingComma": "all",
+  "oxc.fmt.configPath": "/Users/yujiyamaguchi/Workspaces/yug1224/dotfiles/packages/oxfmt/.oxfmtrc.json",
+  "oxc.path.oxfmt": "/Users/yujiyamaguchi/Workspaces/yug1224/dotfiles/node_modules/oxfmt/dist/cli.js",
   "reactSnippets.settings.typescript": false,
   // textlintの設定
-  "textlint.configPath": "",
-  "textlint.nodePath": "",
+  "textlint.configPath": "/Users/yujiyamaguchi/Workspaces/yug1224/textlint-rule-preset-yug1224/.textlintrc",
+  "textlint.nodePath": "/Users/yujiyamaguchi/Workspaces/yug1224/textlint-rule-preset-yug1224/node_modules",
   "textlint.run": "onType",
   // アノテーションコメントの一覧ツリー表示、ツリー表示させたいタグがあれば追加する
   "todo-tree.general.tags": ["BUG", "HACK", "FIXME", "TODO", "XXX"],
@@ -265,7 +280,8 @@
   "typescript.referencesCodeLens.enabled": true,
   "typescript.validate.enable": true,
   "vsicons.dontShowNewVersionMessage": true,
-  "workbench.colorTheme": "Default Dark+",
-  "workbench.iconTheme": "bearded-icons",
-  "workbench.startupEditor": "none"
+  "window.commandCenter": true,
+  "workbench.iconTheme": "vscode-icons",
+  "workbench.startupEditor": "none",
+  "diffEditor.ignoreTrimWhitespace": false
 }
