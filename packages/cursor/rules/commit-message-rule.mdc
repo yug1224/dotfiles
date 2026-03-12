@@ -1,0 +1,149 @@
+---
+description: コミットメッセージ規約
+globs:
+alwaysApply: false
+---
+
+このルールを適用したら、「Applied Commit Message Rule!」と出力してください。
+
+# コミットメッセージ規約
+
+## 基本原則
+
+- **1コミット = 1論理的変更**: コミットは小さく、目的を1つに絞る
+- **「なぜ」を説明する**: 「何を」変更したかではなく、「なぜ」変更したかを記述する
+- **日本語で記述**: コミットメッセージは日本語で書く（技術用語は英語可）
+
+---
+
+## フォーマット
+
+```
+<type>(<scope>): <subject>
+
+<body>
+```
+
+### ヘッダー（必須）
+
+- **50文字以内**
+- type: 小文字、scope: kebab-case
+- 末尾にピリオド不要
+
+```
+feat(device-list): フィルタリング機能を追加
+fix(mdm-intune): デバイス同期時のnullエラーを修正
+```
+
+### ボディ（推奨）
+
+- ヘッダーとの間に1行空ける
+- 句点で適切に改行
+- 「なぜ」と「何が変わったか」を説明
+- 主な変更点を箇条書き
+
+```
+- @IsOptional()と@IsBoolean()デコレータを削除
+- フロントエンドでisNilによる安全なチェックを実装
+```
+
+---
+
+## タイプ（Type）
+
+| Type         | 説明                               |
+| ------------ | ---------------------------------- |
+| **feat**     | 新機能の追加                       |
+| **fix**      | バグ修正                           |
+| **refactor** | 動作を変えないコード改善           |
+| **perf**     | パフォーマンス改善                 |
+| **docs**     | ドキュメント変更                   |
+| **style**    | フォーマット変更（意味に影響なし） |
+| **test**     | テスト追加・修正                   |
+| **chore**    | ビルド・ツール変更                 |
+
+**選択のコツ**:
+
+- ユーザーに影響がある変更 → `feat` / `fix`
+- 動作が変わらない改善 → `refactor`
+- 迷ったらコミットを分割
+
+---
+
+## スコープ（Scope）
+
+変更が影響する範囲を示す（kebab-case）。プロジェクト構造に応じて命名。
+
+**例**:
+
+- フロントエンド: `device-list`, `form-factory`, `api-client`
+- バックエンド: `device-api`, `mdm-intune`, `auth`
+- インフラ: `cdk-stack`, `github-actions`
+- 共通: `deps`, `ci`, `config`
+
+スコープが不明確な場合は省略可能。
+
+---
+
+## 実践例
+
+### ✅ Good
+
+```
+feat(device-list): フィルタリング機能を追加
+
+- CategoryFilterコンポーネントを実装
+- APIクエリパラメータにcategoryを追加
+```
+
+```
+fix(mdm-intune): boolean型フィールドのnull値問題を修正
+
+- @IsOptional()デコレータを削除
+- フロントエンドでisNil()チェックを実装
+```
+
+### ❌ Bad
+
+```
+fix: バグ修正
+```
+
+→ スコープなし、何のバグか不明、理由なし
+
+```
+feat: デバイス一覧とユーザー管理を追加
+```
+
+→ 複数の変更を1コミットに含めている
+
+```
+refactor(device): コードを整理
+```
+
+→ 「なぜ」がない、何が改善されたか不明
+
+---
+
+## コミット前チェックリスト
+
+- [ ] `git diff --staged | cat` でステージング内容を確認
+- [ ] 1コミット = 1論理的変更
+- [ ] ヘッダー50文字以内
+- [ ] 「なぜ」を説明している
+- [ ] テストとLintが通る
+
+### よく使うコマンド
+
+```bash
+git diff --staged | cat  # ステージング確認
+git add -p               # 対話的にステージング
+git commit --amend       # コミット修正（push前のみ）
+```
+
+---
+
+## 参考
+
+- [Conventional Commits](https://www.conventionalcommits.org/ja/)
+- [Angular Commit Guidelines](https://github.com/angular/angular/blob/main/CONTRIBUTING.md#commit)

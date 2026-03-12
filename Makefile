@@ -13,6 +13,7 @@ stow:
 	stow -R -v -d ./packages -t ~/.config git mise
 	stow -R -v -d ./packages -t ~/Library/Application\ Support/Code/User code
 	stow -R -v -d ./packages -t ~/Library/Application\ Support/Cursor/User code
+	stow -R -v -d ./packages -t ~/.cursor cursor
 
 .PHONY: node
 node:
