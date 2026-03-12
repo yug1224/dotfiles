@@ -1,3 +1,9 @@
 [tools]
 deno = "latest"
 node = "latest"
+"npm:@fission-ai/openspec" = "latest"
+"npm:rimraf" = "latest"
+pnpm = "latest"
+
+[settings]
+idiomatic_version_file_enable_tools = ["node"]

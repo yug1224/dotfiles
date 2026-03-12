@@ -36,18 +36,17 @@ alias ll='eza -lbF --time-style=full-iso --git'
 alias lla='eza -lbFa --time-style=full-iso --git'
 alias date='gdate'
 
-alias cat='bat'
+alias cat='bat --paging=never'
 alias sed='gsed'
 
 alias b='brew'
-alias c='code'
+alias c='cursor'
 alias g='git'
 alias h='history 1'
 alias lh='lefthook'
 alias m='mise'
 alias n='npm'
 alias y='yarn'
-alias c='code'
 
 alias gsw='(){
   git fetch origin $1 && git switch -fC $1 origin/$1
