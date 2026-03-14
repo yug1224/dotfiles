@@ -30,3 +30,5 @@
 	difftool = false
 [init]
 	defaultBranch = main
+[include]
+	path = config.local
