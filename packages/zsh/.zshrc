@@ -123,3 +123,5 @@ function chpwd_lefthook_install() {
   fi
 }
 add-zsh-hook chpwd chpwd_lefthook_install
+
+[ -f ~/.zshrc.local ] && source ~/.zshrc.local
