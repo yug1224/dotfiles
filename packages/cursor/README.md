@@ -54,23 +54,6 @@ stow -t ~/.cursor cursor
 
 デプロイ後のパスは `~/.cursor/` になるため、コマンドやスキル内でのルール参照は `~/.cursor/rules/...` の絶対パスを使用する。
 
-## ローカル設定の規約
+## ローカルルール
 
-環境固有・プロジェクト固有の設定は `*.local.*` サフィックスを付けて管理する。
-
-- `*.local.*` ファイルは `.gitignore` により git 管理外
-- 共通ファイルと同じディレクトリに配置する（サブディレクトリ不要）
-- ファイルが存在しない環境でもエラーにならない
-
-### 例
-
-```
-rules/
-├── commit-message-rule.mdc          # 共通（git 管理）
-├── coding-rule.local.mdc            # ローカル（git 管理外）
-└── pr-review-rule.local.mdc         # ローカル（git 管理外）
-
-commands/
-├── magi.md                           # 共通（git 管理）
-└── pr-review.local.md                # ローカル（git 管理外）
-```
+プロジェクト固有のルールは `*.local.mdc` で `rules/` に配置できる。`*.local.*` ファイルは `.gitignore` により git 管理外。
