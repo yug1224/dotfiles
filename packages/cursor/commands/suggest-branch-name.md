@@ -15,75 +15,87 @@ description: 変更内容からブランチ名を松竹梅で提案する
 
 ## Steps
 
-1. **規約の読み込み**
+### 1. 規約の読み込み
 
-   `~/.cursor/rules/branch-name-rule.mdc` を Read ツールで読み込み、ブランチ名規約を把握する。
+`~/.cursor/rules/branch-name-rule.mdc` を Read ツールで読み込み、ブランチ名規約を把握する。
 
-2. **情報の収集**
+### 2. 情報の収集
 
-   以下の情報源を可能な範囲で収集する。
+以下の情報源を可能な範囲で**並列に**収集する。
 
-   a. **Notion チケット情報**（引数がある場合のみ）
-   引数に Notion チケット ID（例: `DC-1234`）または Notion URL が渡された場合のみ、Notion MCP を使ってチケットの目的・背景・タイトルを取得する。
-   引数がなければこのステップはスキップする。
+a. **現在のブランチと作業状態**
 
-   b. **ステージング内容**
-   ```bash
-   git diff --staged
-   ```
-   ステージングされた変更があれば、変更内容から目的を推測する補助情報として活用する。
+```bash
+git branch --show-current
+git status --short
+```
 
-   c. **コンテキスト情報**
-   ユーザーが `@` で添付したファイルや会話中で提供した情報があれば、それも考慮する。
+現在のブランチ名が既に規約に準拠している場合は、その旨を補足する。
 
-   d. **フォールバック**
-   上記のいずれからも変更内容が判断できない場合は、ユーザーに何を変更・実装するかを質問する。
+b. **変更内容**
 
-3. **変更の分析**
+```bash
+git --no-pager diff --stat
+git --no-pager diff --staged --stat
+```
 
-   収集した情報を総合して以下を判断する。
+unstaged / staged の変更があれば、変更内容から目的を推測する補助情報として活用する。diff が大きい場合は `--stat` の概要のみで判断する。
 
-   - 変更の種別（type）を特定する（feat / fix / refactor / perf / docs / style / test / chore）
-   - 適切な kebab-case の description を導出する
-   - Notion ID が提供された場合はそれを含める
+c. **Notion チケット情報**（引数がある場合のみ）
+引数に Notion チケット ID または Notion URL が渡された場合のみ、Notion MCP を使ってチケットの目的・背景・タイトルを取得する。
+引数がなければこのステップはスキップする。
 
-4. **松竹梅の3パターンを生成**
+d. **コンテキスト情報**
+ユーザーが `@` で添付したファイルや会話中で提供した情報があれば、それも考慮する。
 
-   参照ルールに基づき、以下の3段階で提案する。
+e. **フォールバック**
+上記のいずれからも変更内容が判断できない場合は、ユーザーに何を変更・実装するかを質問する。
 
-   - **松（詳細 + Notion ID）**: `type/notion-id-descriptive-name`（変更内容が詳細にわかる名前）
-   - **竹（標準 + Notion ID）**: `type/notion-id-name`（標準的な長さの名前）
-   - **梅（簡潔）**: `type/short-name`（Notion ID なし、最小限の名前）
+### 3. 変更の分析
 
-   Notion ID が提供されていない場合は、松・竹は ID なしの詳細度の違いとして提案する。
+収集した情報を総合して以下を判断する。
 
-5. **Markdown形式で出力**
+- 変更の種別（type）を特定する（feat / fix / refactor / perf / docs / style / test / chore）
+- 適切な kebab-case の description を導出する
+- チケット ID が提供された場合はそれを含める
 
-   下記フォーマットに従って出力する。コードブロック内のブランチ名はそのままコピー可能にする。
+### 4. 松竹梅の3パターンを生成
+
+参照ルールに基づき、以下の3段階で提案する。全体で50文字以内を目安とする。
+
+- **松（詳細）**: `type/ticket-id-descriptive-name`（変更内容が詳細にわかる名前）
+- **竹（標準）**: `type/ticket-id-name`（標準的な長さの名前）
+- **梅（簡潔）**: `type/short-name`（最小限の名前）
+
+チケット ID が提供されていない場合は、松・竹・梅すべて ID なしの詳細度の違いとして提案する。
+
+### 5. Markdown形式で出力
+
+下記フォーマットに従って出力する。コードブロック内のブランチ名はそのままコピー可能にする。
 
 ---
 
 ## 出力フォーマット
 
-### Notion ID がある場合
+### チケット ID がある場合
 
 ```markdown
 ## Branch Name 提案
 
-### 松（詳細 + Notion ID）
+### 松（詳細）
 
 変更内容が具体的にわかる命名
 
 \`\`\`
-type/DC-XXXX-descriptive-branch-name
+type/PROJ-XXXX-descriptive-branch-name
 \`\`\`
 
-### 竹（標準 + Notion ID）
+### 竹（標準）
 
 標準的な長さの命名
 
 \`\`\`
-type/DC-XXXX-branch-name
+type/PROJ-XXXX-branch-name
 \`\`\`
 
 ### 梅（簡潔）
@@ -95,7 +107,7 @@ type/short-name
 \`\`\`
 ```
 
-### Notion ID がない場合
+### チケット ID がない場合
 
 ```markdown
 ## Branch Name 提案
@@ -132,6 +144,7 @@ type/short-name
 - すべて英字小文字で記述する
 - 単語はハイフン（-）で区切る（アンダースコア不可）
 - type は規約で定義された8種のみ使用する
+- 全体で50文字以内を目安とする
 - 松と梅の文字数差が明確になるよう、粒度に差をつける
 - type の選択理由を簡潔に補足する
 - Notion MCP は引数で ID/URL が渡された場合のみ使用し、渡されなければ呼び出さない

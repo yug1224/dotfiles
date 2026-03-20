@@ -129,6 +129,29 @@
       "underline": false
     }
   ],
+  "cloudcode.duetAI.languages": [
+    "astro",
+    "css",
+    "gitignore",
+    "go",
+    "html",
+    "javascript",
+    "javascriptreact",
+    "json",
+    "jsonc",
+    "makefile",
+    "markdown",
+    "sass",
+    "scss",
+    "terraform",
+    "typescript",
+    "typescriptreact",
+    "vue",
+    "yaml"
+  ],
+  "cloudcode.duetAI.project": "",
+  "cloudcode.enableSkaffoldSkipUnreachableDirs": true,
+  "cloudcode.project": "",
   "cSpell.userWords": [
     "abortable",
     "astro",
@@ -158,29 +181,6 @@
     "Yuji",
     "Zenn"
   ],
-  "cloudcode.duetAI.languages": [
-    "astro",
-    "css",
-    "gitignore",
-    "go",
-    "html",
-    "javascript",
-    "javascriptreact",
-    "json",
-    "jsonc",
-    "makefile",
-    "markdown",
-    "sass",
-    "scss",
-    "terraform",
-    "typescript",
-    "typescriptreact",
-    "vue",
-    "yaml"
-  ],
-  "cloudcode.duetAI.project": "",
-  "cloudcode.enableSkaffoldSkipUnreachableDirs": true,
-  "cloudcode.project": "",
   "cursor.agent_layout_browser_beta_setting": true,
   "cursor.composer.shouldChimeAfterChatFinishes": true,
   "cursor.cpp.disabledLanguages": ["scminput"],
@@ -199,6 +199,7 @@
   },
   "deno.unstable": true,
   "diffEditor.codeLens": true,
+  "diffEditor.ignoreTrimWhitespace": false,
   "diffEditor.maxComputationTime": 0,
   "editor.accessibilitySupport": "off",
   "editor.bracketPairColorization.enabled": true,
@@ -282,6 +283,5 @@
   "vsicons.dontShowNewVersionMessage": true,
   "window.commandCenter": true,
   "workbench.iconTheme": "vscode-icons",
-  "workbench.startupEditor": "none",
-  "diffEditor.ignoreTrimWhitespace": false
+  "workbench.startupEditor": "none"
 }
