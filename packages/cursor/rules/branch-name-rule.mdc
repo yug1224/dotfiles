@@ -1,6 +1,6 @@
 ---
 description: ブランチ名規約
-globs:
+globs: []
 alwaysApply: false
 ---
 
@@ -12,8 +12,8 @@ alwaysApply: false
 
 - **英字小文字**: すべて小文字で記述
 - **ハイフン区切り**: 単語はハイフン（-）で区切る
-- **簡潔に**: 変更内容が一目でわかる名前
-- **Notion ID**: タスクと紐付ける場合は先頭に付与（推奨）
+- **簡潔に**: 変更内容が一目でわかる名前（**全体で50文字以内**を目安）
+- **チケット ID**: タスクと紐付ける場合は description の先頭に付与（任意）
 
 ---
 
@@ -25,19 +25,19 @@ alwaysApply: false
 <type>/<description>
 ```
 
-### Notion IDを含める場合（推奨）
+### チケット ID を含める場合（任意）
 
 ```
-<type>/<notion-id>-<description>
+<type>/<ticket-id>-<description>
 ```
 
 **例**:
 
 ```
-feat/device-filter
-feat/DC-1234-device-filter
-fix/DC-5678-mdm-sync-error
-refactor/DC-9012-query-service-separation
+feat/user-filter
+feat/PROJ-1234-user-filter
+fix/PROJ-5678-api-null-error
+refactor/PROJ-9012-query-service-separation
 ```
 
 ---
@@ -62,20 +62,20 @@ refactor/DC-9012-query-service-separation
 ### ✅ Good
 
 ```
-feat/device-list-filtering
-feat/DC-1234-device-list-filtering
-fix/DC-5678-boolean-null-handling
+feat/user-list-filtering
+feat/PROJ-1234-user-list-filtering
+fix/PROJ-5678-null-response-handling
 refactor/separate-query-service
-chore/update-prisma
+chore/update-dependencies
 ```
 
 ### ❌ Bad
 
 ```
-feature/DeviceListFiltering
+feature/UserListFiltering
 ```
 
-→ 大文字を使用している、typeが長い
+→ 大文字を使用している、type が長い（`feature` → `feat`）
 
 ```
 fix_bug
@@ -84,29 +84,29 @@ fix_bug
 → アンダースコア使用、何のバグか不明
 
 ```
-DC-1234
+PROJ-1234
 ```
 
-→ typeなし、descriptionなし
+→ type なし、description なし
 
 ```
 update
 ```
 
-→ typeなし、変更内容が不明確
+→ type なし、変更内容が不明確
 
 ---
 
 ## よく使うパターン
 
-| パターン           | 基本形式                     | Notion ID付き                        |
-| ------------------ | ---------------------------- | ------------------------------------ |
-| 機能追加           | `feat/user-authentication`   | `feat/DC-1234-user-authentication`   |
-| バグ修正           | `fix/login-validation`       | `fix/DC-5678-login-validation`       |
-| リファクタリング   | `refactor/device-api`        | `refactor/DC-9012-device-api`        |
-| 依存関係更新       | `chore/deps-update`          | `chore/deps-update`                  |
-| ドキュメント更新   | `docs/update-readme`         | `docs/DC-3456-update-readme`         |
-| 緊急修正（Hotfix） | `fix/security-vulnerability` | `fix/DC-7890-security-vulnerability` |
+| パターン           | 基本形式                     | チケット ID 付き                          |
+| ------------------ | ---------------------------- | ---------------------------------------- |
+| 機能追加           | `feat/user-authentication`   | `feat/PROJ-1234-user-authentication`     |
+| バグ修正           | `fix/login-validation`       | `fix/PROJ-5678-login-validation`         |
+| リファクタリング   | `refactor/user-api`          | `refactor/PROJ-9012-user-api`            |
+| 依存関係更新       | `chore/deps-update`          | `chore/deps-update`                      |
+| ドキュメント更新   | `docs/update-readme`         | `docs/PROJ-3456-update-readme`           |
+| 緊急修正（Hotfix） | `fix/security-vulnerability` | `fix/PROJ-7890-security-vulnerability`   |
 
 ---
 

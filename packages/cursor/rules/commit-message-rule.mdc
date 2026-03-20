@@ -1,6 +1,6 @@
 ---
 description: コミットメッセージ規約
-globs:
+globs: []
 alwaysApply: false
 ---
 
@@ -22,17 +22,19 @@ alwaysApply: false
 <type>(<scope>): <subject>
 
 <body>
+
+<footer>
 ```
 
 ### ヘッダー（必須）
 
-- **50文字以内**
+- **ヘッダー全体で72文字以内**（subject 部分は50文字以内を目安）
 - type: 小文字、scope: kebab-case
 - 末尾にピリオド不要
 
 ```
-feat(device-list): フィルタリング機能を追加
-fix(mdm-intune): デバイス同期時のnullエラーを修正
+feat(user-list): フィルタリング機能を追加
+fix(api-client): API応答のnull値エラーを修正
 ```
 
 ### ボディ（推奨）
@@ -43,8 +45,21 @@ fix(mdm-intune): デバイス同期時のnullエラーを修正
 - 主な変更点を箇条書き
 
 ```
-- @IsOptional()と@IsBoolean()デコレータを削除
-- フロントエンドでisNilによる安全なチェックを実装
+- カテゴリ選択UIを実装
+- APIクエリパラメータにcategoryを追加
+```
+
+### フッター（任意）
+
+- ボディとの間に1行空ける
+- Issue / チケットの参照や破壊的変更の明示に使用
+
+```
+Closes #123
+```
+
+```
+BREAKING CHANGE: レスポンスの `items` フィールドを `data` にリネーム
 ```
 
 ---
@@ -76,8 +91,8 @@ fix(mdm-intune): デバイス同期時のnullエラーを修正
 
 **例**:
 
-- フロントエンド: `device-list`, `form-factory`, `api-client`
-- バックエンド: `device-api`, `mdm-intune`, `auth`
+- フロントエンド: `user-list`, `form-factory`, `api-client`
+- バックエンド: `user-api`, `auth`, `notification`
 - インフラ: `cdk-stack`, `github-actions`
 - 共通: `deps`, `ci`, `config`
 
@@ -90,17 +105,26 @@ fix(mdm-intune): デバイス同期時のnullエラーを修正
 ### ✅ Good
 
 ```
-feat(device-list): フィルタリング機能を追加
+feat(user-list): フィルタリング機能を追加
 
-- CategoryFilterコンポーネントを実装
+- カテゴリ選択UIを実装
 - APIクエリパラメータにcategoryを追加
 ```
 
 ```
-fix(mdm-intune): boolean型フィールドのnull値問題を修正
+fix(api-client): null値レスポンスのハンドリングを修正
 
-- @IsOptional()デコレータを削除
-- フロントエンドでisNil()チェックを実装
+- レスポンスのnullチェックを追加
+- フォールバック値の設定ロジックを実装
+```
+
+```
+feat(auth): OAuth2認証フローを追加
+
+- Google OAuth2のコールバック処理を実装
+- セッション管理ミドルウェアを追加
+
+Closes #123
 ```
 
 ### ❌ Bad
@@ -112,13 +136,13 @@ fix: バグ修正
 → スコープなし、何のバグか不明、理由なし
 
 ```
-feat: デバイス一覧とユーザー管理を追加
+feat: 一覧画面とユーザー管理を追加
 ```
 
 → 複数の変更を1コミットに含めている
 
 ```
-refactor(device): コードを整理
+refactor(user): コードを整理
 ```
 
 → 「なぜ」がない、何が改善されたか不明
@@ -127,18 +151,20 @@ refactor(device): コードを整理
 
 ## コミット前チェックリスト
 
-- [ ] `git diff --staged | cat` でステージング内容を確認
+- [ ] `git --no-pager diff --staged` でステージング内容を確認
 - [ ] 1コミット = 1論理的変更
-- [ ] ヘッダー50文字以内
+- [ ] ヘッダー全体72文字以内（subject 50文字以内）
 - [ ] 「なぜ」を説明している
+- [ ] 破壊的変更がある場合は `BREAKING CHANGE:` を記載
 - [ ] テストとLintが通る
 
 ### よく使うコマンド
 
 ```bash
-git diff --staged | cat  # ステージング確認
-git add -p               # 対話的にステージング
-git commit --amend       # コミット修正（push前のみ）
+git --no-pager diff --staged        # ステージング確認
+git --no-pager diff --staged --stat # ステージング概要
+git add -p                          # 対話的にステージング
+git commit --amend                  # コミット修正（push前のみ）
 ```
 
 ---

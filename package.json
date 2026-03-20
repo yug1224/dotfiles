@@ -1,12 +1,12 @@
 {
+  "name": "dotfiles",
+  "version": "1.0.0",
+  "license": "MIT",
   "author": "Yuji Yamaguchi <yuji.yamaguchi24@gmail.com>",
+  "repository": "https://github.com/yug1224/dotfiles.git",
   "devDependencies": {
     "@secretlint/secretlint-rule-preset-recommend": "^11.3.1",
-    "oxfmt": "^0.39.0",
+    "oxfmt": "^0.41.0",
     "secretlint": "^11.3.1"
-  },
-  "license": "MIT",
-  "name": "dotfiles",
-  "repository": "https://github.com/yug1224/dotfiles.git",
-  "version": "1.0.0"
+  }
 }
