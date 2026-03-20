@@ -267,8 +267,8 @@
   "liveshare.presence": true,
   "makefile.configureOnOpen": false,
   "npm.keybindingsChangedWarningShown": true,
-  "oxc.fmt.configPath": "/Users/yujiyamaguchi/Workspaces/yug1224/dotfiles/packages/oxfmt/.oxfmtrc.json",
-  "oxc.path.oxfmt": "/Users/yujiyamaguchi/Workspaces/yug1224/dotfiles/node_modules/oxfmt/dist/cli.js",
+  "oxc.fmt.configPath": "${workspaceFolder}/oxfmt.config.ts",
+  "oxc.path.oxfmt": "${workspaceFolder}/node_modules/oxfmt/dist/cli.js",
   "reactSnippets.settings.typescript": false,
   // textlintの設定
   "textlint.configPath": "/Users/yujiyamaguchi/Workspaces/yug1224/textlint-rule-preset-yug1224/.textlintrc",
