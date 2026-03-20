@@ -66,4 +66,4 @@ fi
 eval $(/opt/homebrew/bin/brew shellenv)
 
 # Created by `pipx` on 2024-09-10 08:04:13
-export PATH="$PATH:/Users/yamaguchiyuji/.local/bin"
+export PATH="$PATH:$HOME/.local/bin"
