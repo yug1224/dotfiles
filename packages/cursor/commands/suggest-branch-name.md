@@ -9,7 +9,7 @@ description: 変更内容からブランチ名を松竹梅で提案する
 
 **参照ルール**: `~/.cursor/rules/branch-name-rule.mdc`
 
-**Input**: `/suggest-branch-name` の後に続く引数は、Notion チケット ID または Notion URL（任意）。
+**Input**: `/suggest-branch-name` の後に続く引数は、チケット ID またはチケット URL（任意）。Notion、GitHub Issues、Jira 等のチケットシステムに対応。
 
 ---
 
@@ -41,9 +41,15 @@ git --no-pager diff --staged --stat
 
 unstaged / staged の変更があれば、変更内容から目的を推測する補助情報として活用する。diff が大きい場合は `--stat` の概要のみで判断する。
 
-c. **Notion チケット情報**（引数がある場合のみ）
-引数に Notion チケット ID または Notion URL が渡された場合のみ、Notion MCP を使ってチケットの目的・背景・タイトルを取得する。
-引数がなければこのステップはスキップする。
+c. **チケット情報**（引数がある場合のみ）
+引数にチケット ID または URL が渡された場合のみ、適切な手段でチケットの目的・背景・タイトルを取得する。引数がなければこのステップはスキップする。
+
+チケットシステムの判別と取得方法:
+
+- **Notion**: Notion MCP を使用（URL に `notion.so` / `notion.site` を含む場合、または Notion ページ ID 形式の場合）
+- **GitHub Issues / PR**: GitHub MCP または URL フェッチを使用（URL に `github.com` を含む場合）
+- **その他の URL**: URL フェッチで内容を取得する
+- **ID のみ（URL なし）**: ユーザーに補足情報を確認するか、会話コンテキストから推測する
 
 d. **コンテキスト情報**
 ユーザーが `@` で添付したファイルや会話中で提供した情報があれば、それも考慮する。
@@ -147,4 +153,4 @@ type/short-name
 - 全体で50文字以内を目安とする
 - 松と梅の文字数差が明確になるよう、粒度に差をつける
 - type の選択理由を簡潔に補足する
-- Notion MCP は引数で ID/URL が渡された場合のみ使用し、渡されなければ呼び出さない
+- チケット情報の取得は引数で ID/URL が渡された場合のみ実行し、渡されなければスキップする

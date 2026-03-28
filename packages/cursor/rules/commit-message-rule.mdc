@@ -19,7 +19,7 @@ alwaysApply: false
 ## フォーマット
 
 ```
-<type>(<scope>): <subject>
+<type>(<scope>): <subject> [<ticket-id>]
 
 <body>
 
@@ -31,10 +31,13 @@ alwaysApply: false
 - **ヘッダー全体で72文字以内**（subject 部分は50文字以内を目安）
 - type: 小文字、scope: kebab-case
 - 末尾にピリオド不要
+- `[ticket-id]` は任意。チケット ID 等が判明している場合のみ、半角スペース + 角括弧で subject の末尾に付与する
 
 ```
 feat(user-list): フィルタリング機能を追加
 fix(api-client): API応答のnull値エラーを修正
+feat(user-list): フィルタリング機能を追加 [PROJ-1234]
+fix(api-client): API応答のnull値エラーを修正 [PROJ-5678]
 ```
 
 ### ボディ（推奨）
@@ -127,6 +130,13 @@ feat(auth): OAuth2認証フローを追加
 Closes #123
 ```
 
+```
+feat(user-list): フィルタリング機能を追加 [PROJ-1234]
+
+- カテゴリ選択UIを実装
+- APIクエリパラメータにcategoryを追加
+```
+
 ### ❌ Bad
 
 ```
@@ -155,6 +165,7 @@ refactor(user): コードを整理
 - [ ] 1コミット = 1論理的変更
 - [ ] ヘッダー全体72文字以内（subject 50文字以内）
 - [ ] 「なぜ」を説明している
+- [ ] チケット ID が判明している場合はヘッダー末尾に `[TICKET-ID]` を付与
 - [ ] 破壊的変更がある場合は `BREAKING CHANGE:` を記載
 - [ ] テストとLintが通る
 
