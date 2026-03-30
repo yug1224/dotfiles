@@ -11,7 +11,12 @@ if ! command -v jq &>/dev/null; then
   exit 0
 fi
 
-cmd=$(cat | jq -r '.command // empty')
+cmd=$(cat | jq -r '.command // empty' 2>/dev/null) || cmd=''
+
+if [[ -z "$cmd" ]]; then
+  echo '{"permission":"deny","user_message":"guard-shell.sh: コマンドの解析に失敗","agent_message":"入力が不正です。Cursor Hooks の仕様を確認してください。"}'
+  exit 0
+fi
 
 deny() {
   jq -n --arg u "$1" --arg a "$2" \
