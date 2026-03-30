@@ -30,5 +30,8 @@
 	difftool = false
 [init]
 	defaultBranch = main
+[filter "dotfiles-path"]
+	smudge = DOTFILES=$(git rev-parse --show-toplevel) && sed \"s|__DOTFILES__|$DOTFILES|g\"
+	clean = DOTFILES=$(git rev-parse --show-toplevel) && sed \"s|$DOTFILES|__DOTFILES__|g\"
 [include]
 	path = config.local
