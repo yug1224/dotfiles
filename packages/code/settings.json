@@ -3,10 +3,10 @@
     "editor.defaultFormatter": "astro-build.astro-vscode"
   },
   "[css]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "jkillian.custom-local-formatters"
   },
   "[html]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "jkillian.custom-local-formatters"
   },
   "[javascript]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
@@ -15,13 +15,13 @@
     "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[json]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "jkillian.custom-local-formatters"
   },
   "[jsonc]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "jkillian.custom-local-formatters"
   },
   "[markdown]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "jkillian.custom-local-formatters"
   },
   "[terraform-vars]": {
     "editor.codeActionsOnSave": {
@@ -44,7 +44,7 @@
     "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[vue]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "jkillian.custom-local-formatters"
   },
   "better-comments.tags": [
     {
@@ -181,6 +181,13 @@
     "Yuji",
     "Zenn"
   ],
+  "customLocalFormatters.formatters": [
+    { "command": "__DOTFILES__/node_modules/.bin/oxfmt --stdin-filepath f.css", "languages": ["css"] },
+    { "command": "__DOTFILES__/node_modules/.bin/oxfmt --stdin-filepath f.html", "languages": ["html"] },
+    { "command": "__DOTFILES__/node_modules/.bin/oxfmt --stdin-filepath f.json", "languages": ["json", "jsonc"] },
+    { "command": "__DOTFILES__/node_modules/.bin/oxfmt --stdin-filepath f.md", "languages": ["markdown"] },
+    { "command": "__DOTFILES__/node_modules/.bin/oxfmt --stdin-filepath f.vue", "languages": ["vue"] }
+  ],
   "cursor.agent_layout_browser_beta_setting": true,
   "cursor.composer.shouldChimeAfterChatFinishes": true,
   "cursor.cpp.disabledLanguages": ["scminput"],
@@ -267,12 +274,12 @@
   "liveshare.presence": true,
   "makefile.configureOnOpen": false,
   "npm.keybindingsChangedWarningShown": true,
-  "oxc.fmt.configPath": "${workspaceFolder}/oxfmt.config.ts",
-  "oxc.path.oxfmt": "${workspaceFolder}/node_modules/oxfmt/dist/cli.js",
+  "oxc.fmt.configPath": "__DOTFILES__/oxfmt.config.ts",
+  "oxc.path.oxfmt": "__DOTFILES__/node_modules/oxfmt/dist/cli.js",
   "reactSnippets.settings.typescript": false,
   // textlintの設定
-  "textlint.configPath": "/Users/yujiyamaguchi/Workspaces/yug1224/textlint-rule-preset-yug1224/.textlintrc",
-  "textlint.nodePath": "/Users/yujiyamaguchi/Workspaces/yug1224/textlint-rule-preset-yug1224/node_modules",
+  "textlint.configPath": "__DOTFILES__/../textlint-rule-preset-yug1224/.textlintrc",
+  "textlint.nodePath": "__DOTFILES__/../textlint-rule-preset-yug1224/node_modules",
   "textlint.run": "onType",
   // アノテーションコメントの一覧ツリー表示、ツリー表示させたいタグがあれば追加する
   "todo-tree.general.tags": ["BUG", "HACK", "FIXME", "TODO", "XXX"],
@@ -283,5 +290,6 @@
   "vsicons.dontShowNewVersionMessage": true,
   "window.commandCenter": true,
   "workbench.iconTheme": "vscode-icons",
-  "workbench.startupEditor": "none"
+  "workbench.startupEditor": "none",
+  "workbench.colorTheme": "Default Dark Modern"
 }

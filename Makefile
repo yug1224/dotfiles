@@ -14,6 +14,7 @@ stow:
 	stow -R -v -d ./packages -t ~/Library/Application\ Support/Code/User code
 	stow -R -v -d ./packages -t ~/Library/Application\ Support/Cursor/User code
 	stow -R -v -d ./packages -t ~/.cursor cursor
+	git checkout -- packages/code/settings.json
 
 .PHONY: node
 node:
