@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "hooks": {
+    "beforeShellExecution": [
+      {
+        "command": "./hooks/guard-shell.sh",
+        "matcher": "git |gh ",
+        "failClosed": true
+      }
+    ]
+  }
+}
