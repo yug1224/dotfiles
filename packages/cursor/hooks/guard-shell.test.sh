@@ -27,6 +27,24 @@ if ! echo "$out" | grep -q '"permission":"deny"'; then
 fi
 echo "ok: deny <- jq 未インストール (fail-closed)"
 
+# --- deny: 不正入力 (fail-closed) ---
+
+out="$(printf '' | "$GUARD")"
+if ! echo "$out" | grep -q '"permission":"deny"'; then
+  echo "FAIL: 期待=deny (空の stdin)" >&2
+  echo "  output: $out" >&2
+  exit 1
+fi
+echo "ok: deny <- 空の stdin (fail-closed)"
+
+out="$(printf 'not-json' | "$GUARD")"
+if ! echo "$out" | grep -q '"permission":"deny"'; then
+  echo "FAIL: 期待=deny (不正な JSON)" >&2
+  echo "  output: $out" >&2
+  exit 1
+fi
+echo "ok: deny <- 不正な JSON (fail-closed)"
+
 run_case() {
   local expected="$1" json="$2" label="${3:-$json}"
   local perm
@@ -38,6 +56,11 @@ run_case() {
   fi
   echo "ok: $expected <- $label"
 }
+
+# --- deny: 不正入力 — command キーなし / 空 (fail-closed) ---
+
+run_case deny '{"cwd":"/tmp"}' 'command キーなし (fail-closed)'
+run_case deny '{"command":""}' '空の command (fail-closed)'
 
 # --- deny: 破壊的コマンド ---
 
