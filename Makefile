@@ -14,6 +14,7 @@ stow:
 	stow -R -v -d ./packages -t ~/Library/Application\ Support/Code/User code
 	stow -R -v -d ./packages -t ~/Library/Application\ Support/Cursor/User code
 	stow -R -v -d ./packages -t ~/.cursor cursor
+	# Re-apply smudge filter after stow to replace __DOTFILES__ with the actual repo path
 	git checkout -- packages/code/settings.json
 
 .PHONY: node

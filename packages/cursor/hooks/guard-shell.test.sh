@@ -10,6 +10,23 @@ if ! command -v jq &>/dev/null; then
   exit 0
 fi
 
+# --- deny: jq 未インストール (fail-closed) ---
+
+_path_without_jq() {
+  local IFS=: d result=""
+  for d in $PATH; do
+    [[ -x "$d/jq" ]] || result+="$d:"
+  done
+  echo "${result%:}"
+}
+out="$(printf '{}' | PATH="$(_path_without_jq)" "$GUARD")"
+if ! echo "$out" | grep -q '"permission":"deny"'; then
+  echo "FAIL: 期待=deny (jq 未インストール)" >&2
+  echo "  output: $out" >&2
+  exit 1
+fi
+echo "ok: deny <- jq 未インストール (fail-closed)"
+
 run_case() {
   local expected="$1" json="$2" label="${3:-$json}"
   local perm
@@ -94,6 +111,15 @@ run_case allow '{"command":"git rebase main"}' 'git rebase (Cursor が ask)'
 run_case allow '{"command":"git tag v1.0.0"}' 'git tag (Cursor が ask)'
 run_case allow '{"command":"git -C /tmp status"}' 'git -C <path> status'
 run_case allow '{"command":"git --no-pager diff"}' 'git --no-pager diff'
+
+# --- deny: 複合コマンド（&& / ; / || でつながれた破壊的操作） ---
+
+run_case deny '{"command":"git status && git reset --hard"}' 'compound: && で破壊的コマンド'
+run_case deny '{"command":"git add . && git commit -m \"test\""}' 'compound: && でコミット'
+run_case deny '{"command":"git status; git push"}' 'compound: ; でプッシュ'
+run_case deny '{"command":"git diff && git push --force"}' 'compound: && で force push'
+run_case deny '{"command":"false || git reset --hard"}' 'compound: || で破壊的コマンド'
+run_case deny '{"command":"git status || git push"}' 'compound: || でプッシュ'
 
 # --- allow: gh コマンド（Allowlist / Cursor が制御） ---
 
