@@ -7,7 +7,7 @@ description: 変更内容からブランチ名を松竹梅で提案する
 
 利用可能な情報を総合的に分析し、ブランチ名規約に準拠したブランチ名を松竹梅の3パターンで提案する。
 
-**参照ルール**: `~/.cursor/rules/branch-name-rule.mdc`
+**参照ルール**: `~/.cursor/rules/conventions/branch-name-rule.mdc`
 
 **Input**: `/suggest-branch-name` の後に続く引数は、チケット ID またはチケット URL（任意）。Notion、GitHub Issues、Jira 等のチケットシステムに対応。
 
@@ -17,7 +17,7 @@ description: 変更内容からブランチ名を松竹梅で提案する
 
 ### 1. 規約の読み込み
 
-`~/.cursor/rules/branch-name-rule.mdc` を Read ツールで読み込み、ブランチ名規約を把握する。
+`~/.cursor/rules/conventions/branch-name-rule.mdc` を Read ツールで読み込み、ブランチ名規約を把握する。
 
 ### 2. 情報の収集
 

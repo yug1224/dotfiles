@@ -14,7 +14,7 @@ readonly: true
 - 技術選定（Datastore、処理方式、ミドルウェア）
 - 非機能要件（Availability / Observability / Modifiability / Performance / Security）
 - 品質特性間のトレードオフ分析
-- 詳細チェックリスト: `~/.cursor/rules/nfr-checklist.mdc`
+- 詳細チェックリスト: `~/.cursor/rules/checklists/nfr-checklist.mdc`
 
 ### API 設計
 
@@ -39,7 +39,7 @@ readonly: true
 
 ## 行動原則
 
-`~/.cursor/rules/advisor-behavior-rule.mdc` に従う。加えて以下を実施:
+`~/.cursor/rules/advisor/advisor-behavior-rule.mdc` に従う。加えて以下を実施:
 
 - mermaid 図を必ず含める（flowchart, sequenceDiagram, classDiagram, erDiagram, C4Context を使い分ける）
 - スキーマ変更にはマイグレーション手順とロールバック手順を添える

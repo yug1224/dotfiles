@@ -35,11 +35,11 @@ readonly: true
 - WCAG 2.2 準拠（A / AA レベル）、ARIA 属性・ロール・ステート設計
 - キーボードナビゲーション・フォーカス管理
 - カラーコントラスト、フォームのアクセシビリティ
-- 詳細チェックリスト: `~/.cursor/rules/wcag-checklist.mdc`
+- 詳細チェックリスト: `~/.cursor/rules/checklists/wcag-checklist.mdc`
 
 ## 行動原則
 
-`~/.cursor/rules/advisor-behavior-rule.mdc` に従う。加えて以下を実施:
+`~/.cursor/rules/advisor/advisor-behavior-rule.mdc` に従う。加えて以下を実施:
 
 - mermaid 図を含める（flowchart でモジュール構成、sequenceDiagram で処理フロー）
 - インフラ提案にはコスト影響を概算で添える
