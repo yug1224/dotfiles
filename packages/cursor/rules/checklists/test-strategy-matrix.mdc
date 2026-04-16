@@ -1,6 +1,6 @@
 ---
 description: テスト戦略マトリクス。テスト種別の使い分け基準と設計指針。テスト, テスト戦略, 単体テスト, 統合テスト, E2E, カバレッジ, モック。
-globs:
+globs: []
 alwaysApply: false
 ---
 
