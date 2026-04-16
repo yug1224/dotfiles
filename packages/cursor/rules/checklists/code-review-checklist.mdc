@@ -4,6 +4,8 @@ globs: []
 alwaysApply: false
 ---
 
+このルールを適用したら、「Applied: code-review-checklist」と出力する。
+
 # コードレビュー観点チェックリスト
 
 PR / コード変更のレビュー時に確認すべき観点の一覧。

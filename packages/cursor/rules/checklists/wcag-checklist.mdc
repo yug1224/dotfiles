@@ -4,6 +4,8 @@ globs: []
 alwaysApply: false
 ---
 
+このルールを適用したら、「Applied: wcag-checklist」と出力する。
+
 # WCAG 2.2 AA チェックリスト
 
 アクセシビリティレビュー・設計時に参照する WCAG 2.2 Level AA 達成基準のチェックリスト。Web アプリケーションで特に重要な項目を抽出。

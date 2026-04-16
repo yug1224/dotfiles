@@ -4,6 +4,8 @@ globs: []
 alwaysApply: false
 ---
 
+このルールを適用したら、「Applied: owasp-top10-checklist」と出力する。
+
 # OWASP Top 10 チェックリスト
 
 セキュリティレビュー・設計時に参照する OWASP Top 10 (2021) の各項目に対応するチェックリストと対策パターン。

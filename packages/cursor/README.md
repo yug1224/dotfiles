@@ -375,6 +375,28 @@ Cursor の Auto-run 時に承認なしで実行を許可するコマンド・MCP
 3. Cursor Settings で Allowlist が読み取り専用になっていることを確認する
 4. 本 README を更新する
 
+## 自己申告プロトコル
+
+セッション中にどのルール・コマンドが使われたかを把握するための軽量な仕組み。モデルが応答内に `Applied:` を出力することで、利用コンポーネントを可視化する。モデルが指示に従わないリスクがあるため、「観測可能性の向上」であり「監査証跡」ではないと位置づける。
+
+### ルール
+
+本パッケージが提供するルール（`rules/**/*.mdc`）は frontmatter 直後に以下を記載し、適用時にモデルが出力する:
+
+```
+このルールを適用したら、「Applied: <rule-id>」と出力する。
+```
+
+`<rule-id>` はファイル名から `.mdc` を除いた文字列（例: `branch-name-rule`, `wcag-checklist`）。
+
+### コマンド
+
+コマンドは Step 0 として応答冒頭に `Applied: /command-name` を出力する。
+
+### Advisor エージェント
+
+`advisor-behavior-rule.mdc` はルールでもあるため、先頭の `Applied:` 出力に加え、「トレース報告」セクションに従い分析結果末尾に使用した agents / rules / tools を記載する。
+
 ## デプロイ
 
 ```bash

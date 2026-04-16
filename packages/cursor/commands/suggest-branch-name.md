@@ -15,13 +15,17 @@ description: 変更内容からブランチ名を松竹梅で提案する
 
 ## Steps
 
+### 0. トレース（必須）
+
+応答の冒頭に `Applied: /suggest-branch-name` と出力する。
+
 ### 1. 規約の読み込み
 
 `~/.cursor/rules/conventions/branch-name-rule.mdc` を Read ツールで読み込み、ブランチ名規約を把握する。
 
 ### 2. 情報の収集
 
-以下の情報源を可能な範囲で**並列に**収集する。
+以下の情報源を**並列で**収集する。
 
 a. **現在のブランチと作業状態**
 

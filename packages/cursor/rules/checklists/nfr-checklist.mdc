@@ -4,6 +4,8 @@ globs: []
 alwaysApply: false
 ---
 
+このルールを適用したら、「Applied: nfr-checklist」と出力する。
+
 # 非機能要件チェックリスト
 
 アーキテクチャ設計・レビュー時に確認すべき品質特性の一覧。
