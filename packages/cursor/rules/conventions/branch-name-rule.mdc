@@ -4,7 +4,7 @@ globs: []
 alwaysApply: false
 ---
 
-このルールを適用したら、「Applied Branch Name Rule!」と出力してください。
+このルールを適用したら、「Applied: branch-name-rule」と出力する。
 
 # ブランチ名規約
 

@@ -4,6 +4,8 @@ globs: []
 alwaysApply: false
 ---
 
+このルールを適用したら、「Applied: test-strategy-matrix」と出力する。
+
 # テスト戦略マトリクス
 
 テスト種別の使い分け基準と設計指針の一覧。
