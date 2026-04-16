@@ -47,6 +47,7 @@ alias lh='lefthook'
 alias m='mise'
 alias n='npm'
 alias y='yarn'
+alias gw='gh prw'
 
 alias gsw='(){
   git fetch origin $1 && git switch -fC $1 origin/$1

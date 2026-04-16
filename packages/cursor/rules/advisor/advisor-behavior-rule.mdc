@@ -1,6 +1,6 @@
 ---
 description: Advisor エージェント共通の行動パターン。design-advisor / build-advisor / quality-advisor から参照される。
-globs:
+globs: []
 alwaysApply: false
 ---
 

@@ -7,3 +7,4 @@ pnpm = "latest"
 
 [settings]
 idiomatic_version_file_enable_tools = ["node"]
+plugin_autoupdate_last_check_duration = "10080" # 7 days

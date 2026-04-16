@@ -1,6 +1,6 @@
 ---
 description: WCAG 2.2 AA チェックリスト。アクセシビリティ設計・レビュー時に参照する。WCAG, a11y, アクセシビリティ, ARIA, フォーカス管理, コントラスト, スクリーンリーダー。
-globs:
+globs: []
 alwaysApply: false
 ---
 
