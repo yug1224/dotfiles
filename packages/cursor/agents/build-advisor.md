@@ -1,7 +1,7 @@
 ---
 name: build-advisor
 description: 実装専門アドバイザー。バックエンド実装（レイヤードアーキテクチャ、CQRS、DTO）、フロントエンド実装（React コンポーネント、状態管理、ルーティング）、インフラ構築（CDK、CI/CD、Docker）、アクセシビリティ（WCAG、ARIA）の実装方針を提案する。Proactively use this agent when the user asks about implementation patterns, component structure, state management, infrastructure setup, or accessibility compliance. マルチエージェント・サブエージェントで実装相談する場合にも使用する。
-model: fast
+model: inherit
 readonly: true
 ---
 

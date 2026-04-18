@@ -149,12 +149,95 @@ run_case deny '{"command":"git diff && git push --force"}' 'compound: && で for
 run_case deny '{"command":"false || git reset --hard"}' 'compound: || で破壊的コマンド'
 run_case deny '{"command":"git status || git push"}' 'compound: || でプッシュ'
 
-# --- allow: gh コマンド（Allowlist / Cursor が制御） ---
+# --- deny: gh 破壊的コマンド ---
+
+run_case deny '{"command":"gh pr merge 123"}' 'gh pr merge'
+run_case deny '{"command":"gh pr merge --auto 123"}' 'gh pr merge --auto'
+run_case deny '{"command":"gh repo delete owner/repo"}' 'gh repo delete'
+run_case deny '{"command":"gh release delete v1.0.0"}' 'gh release delete'
+run_case deny '{"command":"gh issue delete 123"}' 'gh issue delete'
+run_case deny '{"command":"gh gist delete abc123"}' 'gh gist delete'
+run_case deny '{"command":"gh run delete 12345"}' 'gh run delete'
+run_case deny '{"command":"gh repo archive owner/repo"}' 'gh repo archive'
+
+# --- ask: gh 書き込みコマンド ---
+
+run_case ask '{"command":"gh pr create"}' 'gh pr create'
+run_case ask '{"command":"gh pr comment 123"}' 'gh pr comment'
+run_case ask '{"command":"gh pr edit 123"}' 'gh pr edit'
+run_case ask '{"command":"gh pr close 123"}' 'gh pr close'
+run_case ask '{"command":"gh pr reopen 123"}' 'gh pr reopen'
+run_case ask '{"command":"gh pr review 123"}' 'gh pr review'
+run_case ask '{"command":"gh pr ready 123"}' 'gh pr ready'
+run_case ask '{"command":"gh pr lock 123"}' 'gh pr lock'
+run_case ask '{"command":"gh pr unlock 123"}' 'gh pr unlock'
+
+run_case ask '{"command":"gh issue create"}' 'gh issue create'
+run_case ask '{"command":"gh issue comment 123"}' 'gh issue comment'
+run_case ask '{"command":"gh issue edit 123"}' 'gh issue edit'
+run_case ask '{"command":"gh issue close 123"}' 'gh issue close'
+run_case ask '{"command":"gh issue reopen 123"}' 'gh issue reopen'
+run_case ask '{"command":"gh issue transfer 123 owner/repo"}' 'gh issue transfer'
+run_case ask '{"command":"gh issue pin 123"}' 'gh issue pin'
+run_case ask '{"command":"gh issue unpin 123"}' 'gh issue unpin'
+run_case ask '{"command":"gh issue lock 123"}' 'gh issue lock'
+run_case ask '{"command":"gh issue unlock 123"}' 'gh issue unlock'
+
+run_case ask '{"command":"gh release create v1.0.0"}' 'gh release create'
+run_case ask '{"command":"gh release edit v1.0.0"}' 'gh release edit'
+run_case ask '{"command":"gh release upload v1.0.0 file.tar.gz"}' 'gh release upload'
+
+run_case ask '{"command":"gh repo create my-repo"}' 'gh repo create'
+run_case ask '{"command":"gh repo edit owner/repo"}' 'gh repo edit'
+run_case ask '{"command":"gh repo fork owner/repo"}' 'gh repo fork'
+run_case ask '{"command":"gh repo rename new-name"}' 'gh repo rename'
+
+run_case ask '{"command":"gh gist create file.txt"}' 'gh gist create'
+run_case ask '{"command":"gh gist edit abc123"}' 'gh gist edit'
+
+run_case ask '{"command":"gh label create bug"}' 'gh label create'
+run_case ask '{"command":"gh label edit bug"}' 'gh label edit'
+run_case ask '{"command":"gh label delete bug"}' 'gh label delete'
+
+run_case ask '{"command":"gh secret set MY_SECRET"}' 'gh secret set'
+run_case ask '{"command":"gh secret delete MY_SECRET"}' 'gh secret delete'
+run_case ask '{"command":"gh secret remove MY_SECRET"}' 'gh secret remove'
+
+run_case ask '{"command":"gh variable set MY_VAR"}' 'gh variable set'
+run_case ask '{"command":"gh variable delete MY_VAR"}' 'gh variable delete'
+
+run_case ask '{"command":"gh workflow run deploy.yml"}' 'gh workflow run'
+run_case ask '{"command":"gh workflow enable deploy.yml"}' 'gh workflow enable'
+run_case ask '{"command":"gh workflow disable deploy.yml"}' 'gh workflow disable'
+
+run_case ask '{"command":"gh run cancel 12345"}' 'gh run cancel'
+run_case ask '{"command":"gh run rerun 12345"}' 'gh run rerun'
+
+run_case ask '{"command":"gh api repos/user/repo/issues -X POST"}' 'gh api -X POST'
+run_case ask '{"command":"gh api repos/user/repo -X DELETE"}' 'gh api -X DELETE'
+run_case ask '{"command":"gh api repos/user/repo --method PUT"}' 'gh api --method PUT'
+run_case ask '{"command":"gh api repos/user/repo -X PATCH"}' 'gh api -X PATCH'
+run_case ask '{"command":"gh api repos/user/repo -f title=test"}' 'gh api -f (implicit POST)'
+run_case ask '{"command":"gh api repos/user/repo -F body=@file.txt"}' 'gh api -F (implicit POST)'
+run_case ask '{"command":"gh api repos/user/repo --field title=test"}' 'gh api --field (implicit POST)'
+run_case ask '{"command":"gh api repos/user/repo --raw-field body=test"}' 'gh api --raw-field (implicit POST)'
+
+# --- allow: gh 読み取りコマンド（Allowlist / Cursor が制御） ---
 
 run_case allow '{"command":"gh pr list"}' 'gh pr list'
 run_case allow '{"command":"gh pr view 123"}' 'gh pr view'
-run_case allow '{"command":"gh pr create"}' 'gh pr create (Cursor が ask)'
-run_case allow '{"command":"gh issue create"}' 'gh issue create (Cursor が ask)'
-run_case allow '{"command":"gh api repos/user/repo"}' 'gh api (Cursor が ask)'
+run_case allow '{"command":"gh pr diff 123"}' 'gh pr diff'
+run_case allow '{"command":"gh pr checks 123"}' 'gh pr checks'
+run_case allow '{"command":"gh pr status"}' 'gh pr status'
+run_case allow '{"command":"gh issue list"}' 'gh issue list'
+run_case allow '{"command":"gh issue view 123"}' 'gh issue view'
+run_case allow '{"command":"gh issue status"}' 'gh issue status'
+run_case allow '{"command":"gh run list"}' 'gh run list'
+run_case allow '{"command":"gh run view 12345"}' 'gh run view'
+run_case allow '{"command":"gh repo view owner/repo"}' 'gh repo view'
+run_case allow '{"command":"gh release list"}' 'gh release list'
+run_case allow '{"command":"gh release view v1.0.0"}' 'gh release view'
+run_case allow '{"command":"gh search repos query"}' 'gh search repos'
+run_case allow '{"command":"gh api repos/user/repo"}' 'gh api (GET, no write flags)'
 
 echo "all tests passed ($GUARD)"
