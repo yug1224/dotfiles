@@ -1,7 +1,5 @@
 ---
-name: /suggest-branch-name
-id: suggest-branch-name
-category: Development
+name: suggest-branch-name
 description: 変更内容からブランチ名を松竹梅で提案する
 ---
 
@@ -10,6 +8,12 @@ description: 変更内容からブランチ名を松竹梅で提案する
 **参照ルール**: `~/.cursor/rules/conventions/branch-name-rule.mdc`
 
 **Input**: `/suggest-branch-name` の後に続く引数は、チケット ID またはチケット URL（任意）。Notion、GitHub Issues、Jira 等のチケットシステムに対応。
+
+**使用例**:
+
+- `/suggest-branch-name`
+- `/suggest-branch-name https://notion.so/xxx`
+- `/suggest-branch-name DC-1234`
 
 ---
 
