@@ -108,6 +108,10 @@ run_case deny '{"command":"git pull --rebase"}' 'git pull --rebase'
 
 run_case deny '{"command":"git clone https://github.com/user/repo"}' 'git clone'
 
+run_case deny '{"command":"git config user.name \"test\""}' 'git config'
+run_case deny '{"command":"git config --global user.email \"test@example.com\""}' 'git config --global'
+run_case deny '{"command":"git status && git config user.name \"test\""}' 'compound: && で git config'
+
 # --- deny: グローバルオプション付き ---
 
 run_case deny '{"command":"git -C /tmp reset --hard"}' 'git -C <path> reset --hard'
