@@ -1,0 +1,7 @@
+---
+description: MAGI ユニット共通の出力フォーマット・確信度基準・行動規範。melchior-1 / balthasar-2 / casper-3 から参照される。
+globs: []
+alwaysApply: false
+---
+
+@~/.config/shared/ai/rules/magi/magi-unit-common-rule.md

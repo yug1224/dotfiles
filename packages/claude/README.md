@@ -1,0 +1,61 @@
+# ~/.claude
+
+Claude Code の設定ファイル群。`stow -t ~/.claude claude` で `~/.claude/` にデプロイされる。
+
+## 方針
+
+- 共有素材（agents 本文、rules、hooks など）は `packages/shared/shared/ai/` に置き、`make stow` で `~/.config/shared/ai/` に展開される。ラッパーからは `@~/.config/shared/ai/...` 絶対パスで取り込む（例: `@~/.config/shared/ai/rules/...`）。
+- Claude Code 固有の設定（`settings.json` の hooks / permissions、`CLAUDE.md`）はこのパッケージに直接記述する
+
+## ディレクトリ構成（順次拡充）
+
+```
+packages/claude/
+├── AGENTS.md → ../shared/shared/ai/AGENTS.md   # 共通規約（symlink）
+├── agents/                       # Claude frontmatter ラッパー
+├── hooks/                        # Claude 用 adapter（共有 guard は ~/.config/shared/ai/hooks/）
+├── settings.json                 # hooks / permissions / model
+├── CLAUDE.md                     # ルール集約
+└── README.md
+```
+
+Claude Code の Agent Skills（`~/.claude/skills/` に `<name>/SKILL.md` を置く形式）は本 dotfiles の `packages/claude` には**現状同梱していない**。利用する場合はローカルで `~/.claude/skills/` に追加するか、必要なら `packages/claude/skills/` を新設して `make stow` で配布する。
+
+## `@`-import の基準（`make stow` 後）
+
+| ラッパー（リポジトリ）                | 共有本文への import 例                    |
+| ------------------------------------- | ----------------------------------------- |
+| `packages/claude/commands/*.md`       | `@~/.config/shared/ai/commands/...`       |
+| `packages/claude/agents/*.md`         | `@~/.config/shared/ai/agents/...`         |
+| `packages/claude/rules/<subdir>/*.md` | `@~/.config/shared/ai/rules/<subdir>/...` |
+| `packages/claude/CLAUDE.md`           | `@~/.config/shared/ai/AGENTS.md`          |
+
+詳細とフックの委譲先は [`packages/shared/shared/ai/README.md`](../shared/shared/ai/README.md) を参照。
+
+## ローカル拡張（`*.local.*`）
+
+[`packages/cursor`](../cursor/README.md) と同様、Git に載せたくない端末専用の定義は **`*.local.md` / `*.local.*`** とする（本パッケージの [`.gitignore`](.gitignore) で除外済み）。
+
+```
+~/.claude/
+├── commands/
+│   ├── magi.md                 ← stow（Git 管理）
+│   └── my-team.local.md        ← ローカル専用コマンド
+├── rules/
+│   └── conventions/
+│       └── my-policy.local.md  ← ローカル専用ルール（Claude は .md ラッパーでも可）
+~/.config/shared/ai/rules/.../
+    └── *.local.md              ← 共有ルール本文から参照する補助（stow で全ツールから見える）
+```
+
+- **共有ルールから参照する補助ファイル**（例: `pr-review-rule.local.md`）は **`~/.config/shared/ai/rules/<subdir>/`**（リポジトリでは `packages/shared/shared/ai/rules/<subdir>/`）に置く。`make stow` で `~/.config/shared/ai/` に展開され、Cursor / Claude のどちらからでも同じパスで参照できる。
+- **`~/.claude/commands/` 直下の `*.local.md`** は Claude 専用のスラッシュコマンドとして追加できる。Git 管理のコマンドと**同名**にしない（挙動が不定になりうる）。
+- Cursor 専用の `.mdc` やフックの詳細は [`packages/cursor/README.md`](../cursor/README.md) の「ローカル拡張」を参照。
+
+## 既存設定との衝突
+
+`~/.claude/settings.json` が既に存在する場合は `make stow` が失敗するため、初回はバックアップ後に削除すること。
+
+```bash
+mv ~/.claude/settings.json ~/.claude/settings.json.bak
+```

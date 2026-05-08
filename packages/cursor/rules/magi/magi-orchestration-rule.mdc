@@ -1,0 +1,7 @@
+---
+description: MAGI 合議オーケストレーション共通ロジック。/magi および /magi-pr-review から参照される。
+globs: []
+alwaysApply: false
+---
+
+@~/.config/shared/ai/rules/magi/magi-orchestration-rule.md
