@@ -291,5 +291,7 @@
   "window.commandCenter": true,
   "workbench.iconTheme": "vscode-icons",
   "workbench.startupEditor": "none",
-  "workbench.colorTheme": "Default Dark Modern"
+  "workbench.colorTheme": "Default Dark Modern",
+  "claudeCode.preferredLocation": "panel",
+  "window.autoDetectColorScheme": false
 }

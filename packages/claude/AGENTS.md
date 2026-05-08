@@ -1,0 +1,1 @@
+../shared/shared/ai/AGENTS.md

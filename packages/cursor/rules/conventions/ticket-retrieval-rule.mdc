@@ -1,0 +1,7 @@
+---
+description: チケット情報の取得手順（Notion / GitHub / その他 URL / ID）。suggest-* コマンド等から参照される。
+globs: []
+alwaysApply: false
+---
+
+@~/.config/shared/ai/rules/conventions/ticket-retrieval-rule.md
