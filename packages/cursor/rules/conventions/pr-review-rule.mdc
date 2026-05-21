@@ -1,0 +1,7 @@
+---
+description: PRレビュールール（汎用）
+globs: []
+alwaysApply: false
+---
+
+@~/.config/shared/ai/rules/conventions/pr-review-rule.md

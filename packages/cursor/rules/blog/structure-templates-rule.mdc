@@ -1,0 +1,7 @@
+---
+description: ブログ記事の構成テンプレート集（記事タイプ別）
+globs: []
+alwaysApply: false
+---
+
+@~/.config/shared/ai/rules/blog/structure-templates-rule.md

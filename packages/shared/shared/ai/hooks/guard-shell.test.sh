@@ -240,4 +240,15 @@ run_case allow '{"command":"gh release view v1.0.0"}' 'gh release view'
 run_case allow '{"command":"gh search repos query"}' 'gh search repos'
 run_case allow '{"command":"gh api repos/user/repo"}' 'gh api (GET, no write flags)'
 
+# --- allow: pnpm exec vitest / oxlint ---
+
+run_case allow '{"command":"pnpm exec vitest"}' 'pnpm exec vitest'
+run_case allow '{"command":"pnpm exec vitest run src/foo.test.ts"}' 'pnpm exec vitest (subcommand + args)'
+run_case allow '{"command":"pnpm exec oxlint"}' 'pnpm exec oxlint'
+
+# --- ask: pnpm exec (other binaries) / dlx ---
+
+run_case ask '{"command":"pnpm exec eslint"}' 'pnpm exec (other binary)'
+run_case ask '{"command":"pnpm dlx create-vite"}' 'pnpm dlx'
+
 echo "all tests passed ($GUARD)"

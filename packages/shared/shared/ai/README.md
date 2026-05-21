@@ -2,6 +2,9 @@
 
 Cursor / Claude Code / Gemini CLI が共通で参照する素材の原本。`make stow` で `~/.config/shared/ai/` に展開される（`packages/shared` パッケージが `~/.config` に stow される）。
 
+- 命名・配置: [CONVENTIONS.md](./CONVENTIONS.md)
+- ローカル上書き（`.local.md`）: 端末固有の手順は **`README.local.md`**（`*.local.*` で gitignore。各自作成・private バックアップ）
+
 ## ディレクトリ構成
 
 ```
@@ -35,8 +38,9 @@ packages/shared/
 
 ## ローカル専用ファイル（`*.local.*`）
 
-- **ツール専用**: `~/.cursor/commands/*.local.md` 等は [`packages/cursor/README.md`](../../cursor/README.md) の「ローカル拡張」を参照（`.gitignore` で `*.local.*` を除外）。
-- **共有ツリー側**: 共有ルールから参照する補助（例: `pr-review-rule.local.md`）は **`shared/ai/rules/` 配下の同じサブディレクトリ**に置く。`make stow` で `~/.config/shared/ai/rules/` に展開され、Cursor / Claude のどちらからでも同じ絶対パスで参照可能。
+- **ツール専用**: `packages/cursor/` / `packages/claude/` の `*.local.*` も同様（`.gitignore` で除外）。運用メモは `README.local.md`。
+- **共有本文**: 汎用 `.md`（Git）と同名の **`.local.md`（gitignore）** を同じディレクトリに置く。Git 側のルール・コマンドは「存在すれば Read」と記載し、無くても動作する。
+- 参照パス: `@~/.config/shared/ai/...`（stow 後）
 
 ## 編集ルール
 
@@ -52,7 +56,7 @@ packages/shared/
 - この dotfiles リポジトリをワークスペースにしている場合: `packages/shared/shared/ai/rules/.../*.md`
 - デプロイ済みの場合: `~/.config/shared/ai/rules/.../*.md`
 
-Cursor の「ルール」として frontmatter（`description` / `globs` / `alwaysApply` 等）付きで読み込まれるファイルは **`~/.cursor/rules/**/_.mdc`** にあり、本文は `@~/.config/shared/ai/rules/.../_.md` と同一である。
+Cursor の「ルール」として frontmatter（`description` / `globs` / `alwaysApply` 等）付きで読み込まれるファイルは **`~/.cursor/rules/**/<name>.mdc`** にあり、本文は `@~/.config/shared/ai/rules/.../<name>.md` と同一である。
 
 Claude Code の `~/.claude/rules/**/*.md` はラッパーであり、中身は同じく `@~/.config/shared/ai/rules/.../*.md` を `@`-import する。
 

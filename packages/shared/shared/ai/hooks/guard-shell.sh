@@ -206,6 +206,24 @@ classify_gh() {
   echo allow
 }
 
+classify_pnpm() {
+  local s="$1"
+
+  # Local linters / test runners. Other pnpm exec can run arbitrary binaries.
+  if [[ "$s" =~ ^pnpm[[:space:]]+exec[[:space:]]+(vitest|oxlint)([[:space:]]|$) ]]; then
+    echo allow
+    return
+  fi
+
+  if [[ "$s" =~ ^pnpm[[:space:]]+exec([[:space:]]|$) ]] \
+    || [[ "$s" =~ ^pnpm[[:space:]]+dlx([[:space:]]|$) ]]; then
+    echo ask
+    return
+  fi
+
+  echo allow
+}
+
 classify_one() {
   local s="$1"
   s=$(printf '%s' "$s" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
@@ -221,6 +239,11 @@ classify_one() {
 
   if [[ "$s" =~ ^git([[:space:]]|$) ]]; then
     classify_git "$s"
+    return
+  fi
+
+  if [[ "$s" =~ ^pnpm([[:space:]]|$) ]]; then
+    classify_pnpm "$s"
     return
   fi
 

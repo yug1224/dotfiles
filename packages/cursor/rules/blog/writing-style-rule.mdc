@@ -1,0 +1,7 @@
+---
+description: ブログ執筆時の文体・構成・トーンのスタイルガイド
+globs: []
+alwaysApply: false
+---
+
+@~/.config/shared/ai/rules/blog/writing-style-rule.md

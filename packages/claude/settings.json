@@ -38,6 +38,8 @@
       "Bash(paste:*)",
       "Bash(pnpm add:*)",
       "Bash(pnpm audit:*)",
+      "Bash(pnpm exec oxlint:*)",
+      "Bash(pnpm exec vitest:*)",
       "Bash(pnpm install:*)",
       "Bash(pnpm list:*)",
       "Bash(pnpm ls:*)",
