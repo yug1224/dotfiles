@@ -37,6 +37,8 @@
     "paste",
     "pnpm add",
     "pnpm audit",
+    "pnpm exec oxlint",
+    "pnpm exec vitest",
     "pnpm install",
     "pnpm list",
     "pnpm ls",

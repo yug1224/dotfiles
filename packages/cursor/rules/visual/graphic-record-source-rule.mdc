@@ -1,0 +1,7 @@
+---
+description: グラフィックレコード画像向けのPR・ADR・開発ログからの情報抽出
+globs: []
+alwaysApply: false
+---
+
+@~/.config/shared/ai/rules/visual/graphic-record-source-rule.md

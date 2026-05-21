@@ -1,0 +1,7 @@
+---
+description: PR概要の記述ルール
+globs: []
+alwaysApply: false
+---
+
+@~/.config/shared/ai/rules/conventions/pr-description-rule.md

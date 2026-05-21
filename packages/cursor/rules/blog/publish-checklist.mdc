@@ -1,0 +1,7 @@
+---
+description: ブログ記事の公開前チェックリスト（PASS/FAIL 判定）
+globs: []
+alwaysApply: false
+---
+
+@~/.config/shared/ai/rules/blog/publish-checklist.md

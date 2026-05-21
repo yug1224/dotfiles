@@ -1,6 +1,6 @@
 要件（Notion チケット / GitHub Issue / 自然言語）を起点に、設計・実装の両面から分析し Must have / Nice to have の実装計画を策定する。ユーザーが「サブエージェントを使って」「マルチエージェントで」等とサブエージェント利用を明示している場合のみ、Task ツールで `design-advisor` と `build-advisor` を起動する。明示がない場合は親エージェントが Step 3 の観点に沿って直接分析する。全ステップが読み取り専用のため、Plan モードでの実行を推奨する。
 
-**参照ルール**: `packages/shared/shared/ai/rules/checklists/nfr-checklist.md`（stow 後は `~/.config/shared/ai/rules/` 等に同パス。Cursor 用ラッパー: `~/.cursor/rules/checklists/nfr-checklist.mdc`。所在の説明は `shared/README.md` の「ルールファイルの所在」）
+**参照ルール**: `@~/.config/shared/ai/rules/checklists/nfr-checklist.md`（Cursor ラッパー: `packages/cursor/rules/checklists/nfr-checklist.mdc`）
 
 **Input**: `/suggest-plan` の後に続く引数は、要件の説明文、チケット ID またはチケット URL（任意）。Notion、GitHub Issues 等のチケットシステムに対応。
 
@@ -24,7 +24,7 @@
 
 a. **チケット情報**（引数がある場合）
 
-`packages/shared/shared/ai/rules/conventions/ticket-retrieval-rule.md`（stow 後 `~/.config/shared/ai/rules/` 等。Cursor ラッパー: `ticket-retrieval-rule.mdc`）に従い、チケットの目的・背景・タイトル・受け入れ条件を取得する。
+`@~/.config/shared/ai/rules/conventions/ticket-retrieval-rule.md` に従い、チケットの目的・背景・タイトル・受け入れ条件を取得する。同ディレクトリの `ticket-retrieval-rule.local.md` があれば併せて Read（無ければスキップ）。
 
 b. **コンテキスト情報**
 
@@ -63,7 +63,7 @@ ls -la
 - アーキテクチャ上の影響（レイヤー構成、モジュール間依存）
 - API 設計（新規エンドポイント / 既存変更の必要性）
 - DB スキーマ変更の必要性（マイグレーション要否）
-- 非機能要件への影響（nfr-checklist の観点。本文は `packages/shared/shared/ai/rules/checklists/nfr-checklist.md`、Cursor では `nfr-checklist.mdc`）
+- 非機能要件への影響（`@~/.config/shared/ai/rules/checklists/nfr-checklist.md` の観点）
 
 **b. 実装分析**
 

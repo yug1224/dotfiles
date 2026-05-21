@@ -1,0 +1,7 @@
+---
+description: グラフィックレコード画像のカラフルGRスタイル（クリーム背景・ゾーン色面・小物禁止・16:9）
+globs: []
+alwaysApply: false
+---
+
+@~/.config/shared/ai/rules/visual/graphic-record-style-rule.md

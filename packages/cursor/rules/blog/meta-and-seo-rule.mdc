@@ -1,0 +1,7 @@
+---
+description: ブログ記事のタイトル・タグ・要約などメタ情報の決定ガイドライン
+globs: []
+alwaysApply: false
+---
+
+@~/.config/shared/ai/rules/blog/meta-and-seo-rule.md

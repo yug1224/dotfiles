@@ -4,7 +4,7 @@
     "beforeShellExecution": [
       {
         "command": "./hooks/guard-shell.sh",
-        "matcher": "git |gh ",
+        "matcher": "git |gh |pnpm ",
         "failClosed": true
       }
     ]
