@@ -1,4 +1,4 @@
-このルールを適用したら、「Applied: publish-checklist」と出力する。
+応答の冒頭に「Applied: publish-checklist」と出力する。
 
 # ブログ記事 公開前チェックリスト
 

@@ -1,4 +1,4 @@
-このルールを適用したら、「Applied: test-strategy-matrix」と出力する。
+応答の冒頭に「Applied: test-strategy-matrix」と出力する。
 
 # テスト戦略マトリクス
 

@@ -470,13 +470,13 @@ Cursor の Auto-run 時に承認なしで実行を許可するコマンド・MCP
 
 ### ルール
 
-本パッケージが提供するルール（`rules/**/*.mdc`）は frontmatter 直後に以下を記載し、適用時にモデルが出力する:
+本パッケージが提供するルール（`rules/**/*.mdc`）は共有本文 1 行目に以下を記載し、適用時にモデルが**応答の冒頭**に出力する:
 
 ```
-このルールを適用したら、「Applied: <rule-id>」と出力する。
+応答の冒頭に「Applied: <rule-id>」と出力する。
 ```
 
-`<rule-id>` はファイル名から `.mdc` を除いた文字列（例: `branch-name-rule`, `wcag-checklist`）。
+`<rule-id>` はファイル名から `.mdc` を除いた文字列（例: `branch-name-rule`, `wcag-checklist`）。`alwaysApply: true` のルール（`token-optimization-rule`）も同一 — 毎応答の冒頭に出力する。
 
 ### コマンド
 

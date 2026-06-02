@@ -1,4 +1,4 @@
-このルールを適用したら、「Applied: writing-style-rule」と出力する。
+応答の冒頭に「Applied: writing-style-rule」と出力する。
 
 # ブログ執筆スタイルガイド
 

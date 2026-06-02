@@ -1,4 +1,4 @@
-このルールを適用したら、「Applied: magi-unit-common-rule」と出力する。
+応答の冒頭に「Applied: magi-unit-common-rule」と出力する。
 
 # MAGI ユニット共通ルール
 

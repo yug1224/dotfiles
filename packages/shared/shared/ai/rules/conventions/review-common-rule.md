@@ -1,4 +1,4 @@
-このルールを適用したら、「Applied: review-common-rule」と出力する。
+応答の冒頭に「Applied: review-common-rule」と出力する。
 
 # レビュー共通ルール
 

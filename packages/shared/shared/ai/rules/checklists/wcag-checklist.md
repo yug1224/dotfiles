@@ -1,4 +1,4 @@
-このルールを適用したら、「Applied: wcag-checklist」と出力する。
+応答の冒頭に「Applied: wcag-checklist」と出力する。
 
 # WCAG 2.2 AA チェックリスト
 

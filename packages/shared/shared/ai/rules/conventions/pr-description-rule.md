@@ -1,4 +1,4 @@
-このルールを適用したら、「Applied: pr-description-rule」と出力する。
+応答の冒頭に「Applied: pr-description-rule」と出力する。
 
 # PR概要の記述ルール
 

@@ -1,4 +1,4 @@
-このルールを適用したら、「Applied: blog-review-rule」と出力する。
+応答の冒頭に「Applied: blog-review-rule」と出力する。
 
 # ブログ記事評価プロンプト v2.2 (0.0-5.0)
 

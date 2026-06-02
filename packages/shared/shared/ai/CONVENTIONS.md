@@ -34,8 +34,9 @@
 
 ### 自己申告（`Applied:`）の rule-id
 
-- **ルール / チェックリスト**: ファイル名から拡張子（`.md`）を除いた文字列（例: `writing-style-rule.md` → `writing-style-rule`）。**`-rule` を二重に付けない**（誤: `writing-style-rule-rule`）。
-- **コマンド**: frontmatter の `name:` および Step 0 の `/command-name` と basename を一致させる。
+- **ルール / チェックリスト**: 共有本文 1 行目に `応答の冒頭に「Applied: <rule-id>」と出力する。` を記載。`<rule-id>` はファイル名から拡張子（`.md`）を除いた文字列（例: `writing-style-rule.md` → `writing-style-rule`）。**`-rule` を二重に付けない**（誤: `writing-style-rule-rule`）。`alwaysApply: true` のルール（例: `token-optimization-rule`）も同一 — 毎応答の冒頭に出力する。
+- **コマンド**: Step 0 に `応答の冒頭に \`Applied: /command-name\` と出力する。`（スラッシュ付き）。frontmatter の `name:`および`/command-name` と basename を一致させる。
+- **対比**: ルールは `Applied: rule-id`（スラッシュなし）、コマンドは `Applied: /command-name`（スラッシュあり）。いずれも **応答の冒頭** に出す。
 - **ラッパー**（`.mdc` / Claude の `rules/**/*.md`）: `Applied:` は **共有本文**にのみ書く。ラッパーは frontmatter + `@~/.config/shared/ai/...` の import のみ（blog / conventions と同型）。
 
 ### レガシー例外（リネームしない）
