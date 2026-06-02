@@ -42,6 +42,14 @@ fi
 
 # --- helpers ---
 
+strip_rtk_prefix() {
+  local s="$1"
+  while [[ "$s" =~ ^rtk[[:space:]]+(.+)$ ]]; do
+    s="${BASH_REMATCH[1]}"
+  done
+  printf '%s' "$s"
+}
+
 normalize_git_cmd() {
   local s="$1"
   local prev=""
@@ -231,6 +239,8 @@ classify_one() {
     echo allow
     return
   fi
+
+  s=$(strip_rtk_prefix "$s")
 
   if [[ "$s" =~ ^gh[[:space:]] ]]; then
     classify_gh "$s"

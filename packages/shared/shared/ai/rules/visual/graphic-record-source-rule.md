@@ -1,4 +1,4 @@
-このルールを適用したら、「Applied: graphic-record-source-rule」と出力する（`/graphic-record-prompt` 実行時はコマンド Step 0 に従い、本行は出さない）。
+応答の冒頭に「Applied: graphic-record-source-rule」と出力する（`/graphic-record-prompt` 実行時はコマンド Step 0 に従い、本行は出さない）。
 
 # グラフィックレコード画像 — ソース抽出仕様
 

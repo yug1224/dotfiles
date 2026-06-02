@@ -1,11 +1,14 @@
 {
-  "[astro]": {
-    "editor.defaultFormatter": "astro-build.astro-vscode"
-  },
   "[css]": {
+    "editor.codeActionsOnSave": {
+      "source.format.oxc": "never"
+    },
     "editor.defaultFormatter": "jkillian.custom-local-formatters"
   },
   "[html]": {
+    "editor.codeActionsOnSave": {
+      "source.format.oxc": "never"
+    },
     "editor.defaultFormatter": "jkillian.custom-local-formatters"
   },
   "[javascript]": {
@@ -15,12 +18,21 @@
     "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[json]": {
+    "editor.codeActionsOnSave": {
+      "source.format.oxc": "never"
+    },
     "editor.defaultFormatter": "jkillian.custom-local-formatters"
   },
   "[jsonc]": {
+    "editor.codeActionsOnSave": {
+      "source.format.oxc": "never"
+    },
     "editor.defaultFormatter": "jkillian.custom-local-formatters"
   },
   "[markdown]": {
+    "editor.codeActionsOnSave": {
+      "source.format.oxc": "never"
+    },
     "editor.defaultFormatter": "jkillian.custom-local-formatters"
   },
   "[terraform-vars]": {
@@ -44,6 +56,9 @@
     "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[vue]": {
+    "editor.codeActionsOnSave": {
+      "source.format.oxc": "never"
+    },
     "editor.defaultFormatter": "jkillian.custom-local-formatters"
   },
   "better-comments.tags": [
@@ -129,29 +144,6 @@
       "underline": false
     }
   ],
-  "cloudcode.duetAI.languages": [
-    "astro",
-    "css",
-    "gitignore",
-    "go",
-    "html",
-    "javascript",
-    "javascriptreact",
-    "json",
-    "jsonc",
-    "makefile",
-    "markdown",
-    "sass",
-    "scss",
-    "terraform",
-    "typescript",
-    "typescriptreact",
-    "vue",
-    "yaml"
-  ],
-  "cloudcode.duetAI.project": "",
-  "cloudcode.enableSkaffoldSkipUnreachableDirs": true,
-  "cloudcode.project": "",
   "cSpell.userWords": [
     "abortable",
     "astro",
@@ -182,37 +174,44 @@
     "Zenn"
   ],
   "customLocalFormatters.formatters": [
-    { "command": "__DOTFILES__/node_modules/.bin/oxfmt --stdin-filepath f.css", "languages": ["css"] },
-    { "command": "__DOTFILES__/node_modules/.bin/oxfmt --stdin-filepath f.html", "languages": ["html"] },
-    { "command": "__DOTFILES__/node_modules/.bin/oxfmt --stdin-filepath f.json", "languages": ["json", "jsonc"] },
-    { "command": "__DOTFILES__/node_modules/.bin/oxfmt --stdin-filepath f.md", "languages": ["markdown"] },
-    { "command": "__DOTFILES__/node_modules/.bin/oxfmt --stdin-filepath f.vue", "languages": ["vue"] }
+    {
+      "command": "__DOTFILES__/packages/code/bin/oxfmt-stdin.sh f.css",
+      "languages": ["css"]
+    },
+    {
+      "command": "__DOTFILES__/packages/code/bin/oxfmt-stdin.sh f.html",
+      "languages": ["html"]
+    },
+    {
+      "command": "__DOTFILES__/packages/code/bin/oxfmt-stdin.sh f.json",
+      "languages": ["json", "jsonc"]
+    },
+    {
+      "command": "__DOTFILES__/packages/code/bin/oxfmt-stdin.sh f.md",
+      "languages": ["markdown"]
+    },
+    {
+      "command": "__DOTFILES__/packages/code/bin/oxfmt-stdin.sh f.vue",
+      "languages": ["vue"]
+    }
   ],
-  "cursor.agent_layout_browser_beta_setting": true,
   "cursor.composer.shouldChimeAfterChatFinishes": true,
   "cursor.cpp.disabledLanguages": ["scminput"],
   "cursor.enable_agent_window_setting": false,
   "datadog.connection.oauth.setup.domain": "ap1.datadoghq.com",
-  "deno.codeLens.implementations": false,
-  "deno.codeLens.references": false,
-  "deno.codeLens.referencesAllFunctions": false,
-  "deno.enable": false,
-  "deno.inlayHints.functionLikeReturnTypes.enabled": false,
-  "deno.inlayHints.parameterNames.enabled": "none",
-  "deno.inlayHints.variableTypes.enabled": false,
-  "deno.lint": true,
-  "deno.suggest.imports.hosts": {
-    "https://deno.land": true
-  },
-  "deno.unstable": true,
+  "datadog.cursor.notification.suppressMcpMigrationMessage": true,
   "diffEditor.codeLens": true,
   "diffEditor.ignoreTrimWhitespace": false,
   "diffEditor.maxComputationTime": 0,
   "editor.accessibilitySupport": "off",
   "editor.bracketPairColorization.enabled": true,
+  "editor.codeActionsOnSave": {
+    "source.format.oxc": "always"
+  },
   "editor.fontFamily": "PlemolJP Console, Menlo, Monaco, 'Courier New', monospace",
   "editor.fontSize": 14,
   "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "file",
   "editor.inlineSuggest.enabled": true,
   "editor.largeFileOptimizations": false,
   "editor.renderControlCharacters": true,
@@ -222,14 +221,6 @@
     "〇": true
   },
   "editor.unicodeHighlight.nonBasicASCII": false,
-  "eslint.packageManager": "yarn",
-  "eslint.probe": ["javascript", "javascriptreact", "typescript", "typescriptreact", "html", "vue", "markdown", "astro"],
-  "eslint.useESLintClass": true,
-  "eslint.workingDirectories": [
-    {
-      "mode": "auto"
-    }
-  ],
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.patterns": {
     "*.cts": "${capture}.typegen.ts",
@@ -244,8 +235,6 @@
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
   "files.trimTrailingWhitespace": true,
-  "geminicodeassist.inlineSuggestions.enableAuto": true,
-  "geminicodeassist.project": "",
   "git-worktree-manager.worktreePathTemplate": "$BASE_PATH-worktree",
   "git-worktree-manager.worktreeSubdirectoryTemplate": "worktree-$INDEX",
   "gitConfigUser.profiles": [
@@ -256,31 +245,16 @@
       "userName": "Yuji Yamaguchi"
     }
   ],
-  "github.copilot.enable": {
-    "*": true,
-    "markdown": true,
-    "plaintext": true,
-    "scminput": false,
-    "yaml": true
-  },
   "go.toolsManagement.autoUpdate": true,
   "html.format.endWithNewline": true,
-  "i18n-ally.annotations": false,
-  "i18n-ally.displayLanguage": "ja",
-  "i18n-ally.localesPaths": ["src/locales"],
-  "i18n-ally.sourceLanguage": "ja",
   "japanese-proofreading.maxNumberOfProblems": 500,
   "javascript.preferGoToSourceDefinition": false,
   "liveshare.presence": true,
   "makefile.configureOnOpen": false,
   "npm.keybindingsChangedWarningShown": true,
   "oxc.fmt.configPath": "__DOTFILES__/oxfmt.config.ts",
-  "oxc.path.oxfmt": "__DOTFILES__/node_modules/oxfmt/dist/cli.js",
+  "oxc.useExecPath": true,
   "reactSnippets.settings.typescript": false,
-  // textlintの設定
-  "textlint.configPath": "__DOTFILES__/../textlint-rule-preset-yug1224/.textlintrc",
-  "textlint.nodePath": "__DOTFILES__/../textlint-rule-preset-yug1224/node_modules",
-  "textlint.run": "onType",
   // アノテーションコメントの一覧ツリー表示、ツリー表示させたいタグがあれば追加する
   "todo-tree.general.tags": ["BUG", "HACK", "FIXME", "TODO", "XXX"],
   "todo-tree.highlights.enabled": false,
@@ -292,6 +266,6 @@
   "workbench.iconTheme": "vscode-icons",
   "workbench.startupEditor": "none",
   "workbench.colorTheme": "Default Dark Modern",
-  "claudeCode.preferredLocation": "panel",
+  "claudeCode.preferredLocation": "sidebar",
   "window.autoDetectColorScheme": false
 }

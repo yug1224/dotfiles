@@ -1,4 +1,4 @@
-このルールを適用したら、「Applied: meta-and-seo-rule」と出力する。
+応答の冒頭に「Applied: meta-and-seo-rule」と出力する。
 
 # ブログ記事メタ情報・SEO ルール
 

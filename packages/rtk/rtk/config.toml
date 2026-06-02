@@ -1,0 +1,12 @@
+# RTK global config — stow to ~/.config/rtk/config.toml
+# Exclude commands from RTK rewrite (must not bypass guard deny rules).
+
+[hooks]
+# Interactive git: guard returns ask; skip RTK rewrite for clearer TTY behavior
+exclude_commands = ["git rebase", "git cherry-pick"]
+
+[limits]
+grep_max_results = 100
+grep_max_per_file = 15
+passthrough_max_chars = 1500
+status_max_files = 10

@@ -5,6 +5,7 @@
 ## 共通規約
 
 @~/.config/shared/ai/AGENTS.md
+@./rules/conventions/token-optimization-rule.md
 
 ## 開発規約
 
@@ -21,3 +22,5 @@
 `~/.claude/agents/` と `~/.claude/commands/` 配下にラッパーを配置している。本文は `packages/shared/shared/ai/{agents,commands}/` の原本を `@`-import（`@~/.config/shared/ai/` 絶対パス）で取り込む。詳細は `@~/.config/shared/ai/AGENTS.md` を参照。
 
 `~/.claude/rules/` 配下のラッパーは `packages/shared/shared/ai/rules/` の原本を `@~/.config/shared/ai/rules/...` で `@`-import する。
+
+@RTK.md

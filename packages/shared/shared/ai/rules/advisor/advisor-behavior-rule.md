@@ -1,4 +1,4 @@
-このルールを適用したら、「Applied: advisor-behavior-rule」と出力する。
+応答の冒頭に「Applied: advisor-behavior-rule」と出力する。
 
 # Advisor 共通行動ルール
 

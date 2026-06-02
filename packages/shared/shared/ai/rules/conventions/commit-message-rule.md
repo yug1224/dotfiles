@@ -1,4 +1,4 @@
-このルールを適用したら、「Applied: commit-message-rule」と出力する。
+応答の冒頭に「Applied: commit-message-rule」と出力する。
 
 # コミットメッセージ規約
 

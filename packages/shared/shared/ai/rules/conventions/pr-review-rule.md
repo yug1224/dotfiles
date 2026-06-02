@@ -1,4 +1,4 @@
-このルールを適用したら、「Applied: pr-review-rule」と出力する。
+応答の冒頭に「Applied: pr-review-rule」と出力する。
 
 # PR レビュールール（汎用）
 
