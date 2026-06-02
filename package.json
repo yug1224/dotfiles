@@ -10,9 +10,10 @@
     "fmt": "oxfmt -c oxfmt.config.ts"
   },
   "devDependencies": {
-    "@secretlint/secretlint-rule-preset-recommend": "^11.3.1",
+    "@secretlint/secretlint-rule-preset-recommend": "^11.7.1",
     "oxfmt": "^0.41.0",
-    "secretlint": "^11.3.1",
+    "oxlint": "^1.66.0",
+    "secretlint": "^11.7.1",
     "typescript": "^5.9.3"
   }
 }

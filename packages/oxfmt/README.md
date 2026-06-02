@@ -18,7 +18,11 @@
 
 ## エディタ（OXC）
 
-[`packages/code/settings.json`](../code/settings.json) の `oxc.fmt.configPath` は `${workspaceFolder}/oxfmt.config.ts` です。**このリポジトリをワークスペースのルートで開き**、`pnpm install` 済みであることが前提です。設定ファイルをリネームしたら `oxc.fmt.configPath` も同じパスに更新してください（自動追従しません）。
+[`packages/code/settings.json`](../code/settings.json) のユーザー設定では、`oxc.fmt.configPath` は `__DOTFILES__/oxfmt.config.ts`（stow 後は dotfiles ルート固定）、`oxc.path.oxfmt` は `__DOTFILES__/node_modules/oxfmt/dist/cli.js` です。**dotfiles リポジトリで `npm install` または `pnpm install` 済み**であることが前提です。
+
+他リポジトリをワークスペースのルートで開く場合は、そのプロジェクトの `.vscode/settings.json` で `"oxc.fmt.configPath": "oxfmt.config.ts"` のように**ワークスペースルートからの相対パス**で指定する（`${workspaceFolder}` は Oxc LSP では展開されない）。**dotfiles リポジトリ自体**は [`packages/code/settings.json`](../code/settings.json)（ユーザー設定）の絶対パスで足りる。設定ファイルをリネームしたら、参照パスも手動で更新してください（自動追従しません）。
+
+保存時フォーマットは [`packages/code/README.md`](../code/README.md) の `editor.formatOnSaveMode` / `source.format.oxc` を参照。
 
 ## 他リポジトリで汎用だけ使う
 

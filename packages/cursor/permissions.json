@@ -85,6 +85,27 @@
     "user-notion:get_page",
     "user-notion:notion-fetch",
     "user-notion:read_page",
-    "user-notion:retrieve_page"
+    "user-notion:retrieve_page",
+    "Playwright:browser_snapshot",
+    "Playwright:browser_take_screenshot",
+    "Playwright:browser_console_messages",
+    "Playwright:browser_network_requests",
+    "Playwright:browser_network_request",
+    "Playwright:browser_tabs",
+    "Playwright:browser_wait_for",
+    "Playwright:browser_navigate",
+    "Playwright:browser_navigate_back",
+    "Playwright:browser_click",
+    "Playwright:browser_type",
+    "Playwright:browser_press_key",
+    "Playwright:browser_fill_form",
+    "Playwright:browser_select_option",
+    "Playwright:browser_hover",
+    "Playwright:browser_drag",
+    "Playwright:browser_drop",
+    "Playwright:browser_file_upload",
+    "Playwright:browser_handle_dialog",
+    "Playwright:browser_resize",
+    "Playwright:browser_close"
   ]
 }

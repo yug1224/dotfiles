@@ -7,6 +7,12 @@
         "matcher": "git |gh |pnpm ",
         "failClosed": true
       }
+    ],
+    "preToolUse": [
+      {
+        "command": "rtk hook cursor",
+        "matcher": "Shell"
+      }
     ]
   }
 }

@@ -82,3 +82,41 @@
 4. `make stow` で反映
 
 詳細は [README.md](./README.md)。端末固有の運用・一覧は gitignore の `README.local.md`（各自作成）。
+
+## RTK（Rust Token Killer）運用
+
+Shell トークン削減用 CLI。[RTK](https://github.com/rtk-ai/rtk) は Claude / Cursor の hook 設定と連携する。hook 順序は **guard → RTK**（変更しない）。
+
+| 項目                | 正本                                              |
+| ------------------- | ------------------------------------------------- |
+| hook 設定（Claude） | `packages/claude/settings.json`                   |
+| hook 設定（Cursor） | `packages/cursor/hooks.json`                      |
+| RTK 利用ガイド      | `packages/shared/shared/ai/docs/RTK.md`           |
+| RTK 除外設定        | `packages/rtk/rtk/config.toml` → `~/.config/rtk/` |
+
+### 初回・更新時のルール
+
+- **`rtk init -g` をそのまま流さない** — `settings.json` / `hooks.json` を直接パッチし、stow 正本と競合する
+- 初回確認・ドキュメント参照のみ: **`rtk init -g --no-patch`**
+- 設定 JSON の正本は本リポジトリ（`make stow` 管理）
+- RTK アップデート後: `rtk init --show` で hook 状態を確認し、`RTK.md` のみ手動同期
+- **`rtk init -g --agent cursor` をそのまま流さない** — `~/.cursor/hooks.json` が通常ファイルとして生成され stow と競合する
+
+### 計測
+
+```bash
+rtk discover --all --since 7   # 漏れ洗い出し（デフォルトは現プロジェクトのみ）
+rtk gain --history
+```
+
+### インストール確認（smoke test）
+
+```bash
+rtk --version    # rtk X.Y.Z が表示されること
+rtk gain         # 統計が表示されること（"command not found" でないこと）
+which rtk        # Homebrew の rtk-ai/rtk であること
+```
+
+トークン節約のエージェント運用ルール（全リポジトリ）: `packages/shared/shared/ai/rules/conventions/token-optimization-rule.md`（Cursor `alwaysApply`, Claude `CLAUDE.md` から import）。
+
+`rtk gain` が失敗する場合、[reachingforthejack/rtk](https://github.com/reachingforthejack/rtk)（Rust Type Kit）が PATH に入っている可能性がある。

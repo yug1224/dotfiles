@@ -1,9 +1,12 @@
 [tools]
 claude-code = "latest"
 deno = "latest"
+gemini = "latest"
 node = "latest"
 "npm:@fission-ai/openspec" = "latest"
 "npm:rimraf" = "latest"
+"npm:oxlint" = "latest"
+"npm:oxfmt" = "latest"
 pnpm = "latest"
 
 [settings]

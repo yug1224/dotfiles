@@ -1,0 +1,7 @@
+---
+description: 全ワークスペース共通のトークン節約運用（Shell/PR/Read/Context7）
+globs: []
+alwaysApply: true
+---
+
+@~/.config/shared/ai/rules/conventions/token-optimization-rule.md

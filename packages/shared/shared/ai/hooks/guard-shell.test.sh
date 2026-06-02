@@ -118,6 +118,14 @@ run_case deny '{"command":"git -C /tmp reset --hard"}' 'git -C <path> reset --ha
 run_case deny '{"command":"git -c user.name=foo commit -m \"x\""}' 'git -c <key>=<val> commit'
 run_case deny '{"command":"git --no-pager push"}' 'git --no-pager push'
 
+# --- deny/allow: RTK プレフィックス付き（rtk git push 等を正しく分類） ---
+
+run_case deny '{"command":"rtk git push"}' 'rtk git push'
+run_case deny '{"command":"rtk git push origin main"}' 'rtk git push origin main'
+run_case allow '{"command":"rtk git status"}' 'rtk git status'
+run_case deny '{"command":"rtk gh pr merge 123"}' 'rtk gh pr merge'
+run_case allow '{"command":"rtk gh pr list"}' 'rtk gh pr list'
+
 # --- allow: フックを通過（Allowlist / Cursor が制御） ---
 
 run_case allow '{"command":"git status"}' 'git status'
