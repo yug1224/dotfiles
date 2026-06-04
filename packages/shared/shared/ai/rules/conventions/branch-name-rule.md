@@ -104,6 +104,14 @@ update
 
 ---
 
+## 関連規約（Git 運用の一貫性）
+
+ブランチの `type` は [コミットメッセージ規約](./commit-message-rule.md) および [PR概要の記述ルール](./pr-description-rule.md)（PR タイトル）と同一 8 種を用い、**同じ変更では `type` を揃える**（例: ブランチ `feat/...` → コミット・PR タイトル `feat(scope): ...`）。
+
+チケット ID の表記はブランチでは `type/PROJ-1234-description`、コミット / PR タイトルでは末尾の `[PROJ-1234]` と異なるが、いずれも任意である。
+
+---
+
 ## 参考
 
 - [Conventional Commits](https://www.conventionalcommits.org/ja/)

@@ -57,8 +57,8 @@ e. **フォールバック**
 
 収集した情報を総合して以下を判断する。
 
-- 変更の種別（type）を特定する（feat / fix / refactor / perf / docs / style / test / chore）
-- 適切な kebab-case の description を導出する
+- 変更の種別（type）を特定する（feat / fix / refactor / perf / docs / style / test / chore）— コミット / PR タイトルの `type` と揃える
+- 適切な kebab-case の description を導出する（コミット / PR の scope 候補としても参照できる）
 - チケット ID が提供された場合はそれを含める
 
 ### 4. Must have / Nice to have の2パターンを生成
@@ -132,4 +132,5 @@ type/descriptive-branch-name
 - 全体で50文字以内を目安とする
 - Must have と Nice to have の粒度に明確な差をつける
 - type の選択理由を簡潔に補足する
+- ブランチの `type` は、同一変更のコミットヘッダー・PR タイトルの `type` と一致させる
 - チケット情報の取得は引数で ID/URL が渡された場合のみ実行し、渡されなければスキップする

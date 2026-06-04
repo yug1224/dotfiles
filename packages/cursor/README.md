@@ -264,16 +264,16 @@ Cursor ルールの定義ファイル（`.mdc` 形式）。エージェントや
 
 #### conventions/ -- 開発規約
 
-| ファイル                    | 説明                                                             |
-| --------------------------- | ---------------------------------------------------------------- |
-| `blog-review-rule.mdc`      | 技術ブログ記事の評価基準（7観点、0.0-5.0 スケール）              |
-| `branch-name-rule.mdc`      | ブランチ名規約（`<type>/<description>` 形式）                    |
-| `commit-message-rule.mdc`   | コミットメッセージ規約（`<type>(<scope>): <subject>` 形式）      |
-| `review-common-rule.mdc`    | PR レビュー・diff レビュー共通の調査手順・観点・出力フォーマット |
-| `pr-review-rule.mdc`        | PR レビュー基準・重要度・テンプレート（汎用）                    |
-| `pr-description-rule.mdc`   | PR Description の構成・テンプレート                              |
-| `development-log-rule.mdc`  | 開発ログの MECE 構成・記載ガイド                                 |
-| `ticket-retrieval-rule.mdc` | チケット情報の取得手順（Notion / GitHub / その他 URL / ID）      |
+| ファイル                    | 説明                                                                 |
+| --------------------------- | -------------------------------------------------------------------- |
+| `blog-review-rule.mdc`      | 技術ブログ記事の評価基準（7観点、0.0-5.0 スケール）                  |
+| `branch-name-rule.mdc`      | ブランチ名規約（`<type>/<description>` 形式）                        |
+| `commit-message-rule.mdc`   | コミットメッセージ規約（`<type>(<scope>): <subject>` 形式）          |
+| `review-common-rule.mdc`    | PR レビュー・diff レビュー共通の調査手順・観点・出力フォーマット     |
+| `pr-review-rule.mdc`        | PR レビュー基準・重要度・テンプレート（汎用）                        |
+| `pr-description-rule.mdc`   | PR Title（`type(scope): subject`）・Description の構成・テンプレート |
+| `development-log-rule.mdc`  | 開発ログの MECE 構成・記載ガイド                                     |
+| `ticket-retrieval-rule.mdc` | チケット情報の取得手順（Notion / GitHub / その他 URL / ID）          |
 
 #### visual/ -- グラフィックレコード
 
