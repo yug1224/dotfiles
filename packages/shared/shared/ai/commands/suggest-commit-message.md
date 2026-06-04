@@ -162,4 +162,5 @@ git commit
 - 破壊的変更がある場合は `BREAKING CHANGE:` フッターの付与を提案する
 - type と scope の選択理由を簡潔に補足する
 - チケット ID が取得できた場合は、ヘッダー末尾に半角スペース + `[TICKET-ID]` を付与する
+- PR 作成時は、提案したヘッダー1行を PR タイトルにそのまま流用できる（[PR概要の記述ルール](../rules/conventions/pr-description-rule.md) の PR タイトルと同一形式）
 - チケット情報の取得は引数で ID/URL が渡された場合のみ実行し、渡されなければスキップする
