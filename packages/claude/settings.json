@@ -39,7 +39,6 @@
       "Bash(pnpm add:*)",
       "Bash(pnpm audit:*)",
       "Bash(pnpm exec oxlint:*)",
-      "Bash(pnpm exec vitest:*)",
       "Bash(pnpm install:*)",
       "Bash(pnpm list:*)",
       "Bash(pnpm ls:*)",
@@ -79,12 +78,7 @@
       "mcp__user-github__search_*",
       "mcp__user-github__actions_get",
       "mcp__user-github__actions_list",
-      "mcp__user-github__*_read",
-      "mcp__user-notion__fetch",
-      "mcp__user-notion__get_page",
-      "mcp__user-notion__notion-fetch",
-      "mcp__user-notion__read_page",
-      "mcp__user-notion__retrieve_page"
+      "mcp__user-github__*_read"
     ],
     "deny": [
       "Bash(git reset --hard:*)",

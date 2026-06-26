@@ -8,6 +8,7 @@ node = "latest"
 "npm:oxlint" = "latest"
 "npm:oxfmt" = "latest"
 pnpm = "latest"
+"npm:greptile" = "latest"
 
 [settings]
 idiomatic_version_file_enable_tools = ["node"]

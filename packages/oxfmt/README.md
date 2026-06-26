@@ -18,9 +18,9 @@
 
 ## エディタ（OXC）
 
-[`packages/code/settings.json`](../code/settings.json) のユーザー設定では、`oxc.fmt.configPath` は `__DOTFILES__/oxfmt.config.ts`（stow 後は dotfiles ルート固定）、`oxc.path.oxfmt` は `__DOTFILES__/node_modules/oxfmt/dist/cli.js` です。**dotfiles リポジトリで `npm install` または `pnpm install` 済み**であることが前提です。
+[`packages/code/settings.json`](../code/settings.json) のユーザー設定では、`oxc.fmt.configPath` は `$HOME/Workspaces/yug1224/dotfiles/oxfmt.config.ts`、`oxc.path.oxfmt` は mise グローバル（`$HOME/.local/share/mise/installs/npm-oxfmt/latest/lib/node_modules/oxfmt/dist/cli.js`）です。**`mise install` で `npm:oxfmt` が入っていること**が前提です（lefthook / `pnpm run fmt` は引き続きローカル `node_modules` の `oxfmt` も使用）。
 
-他リポジトリをワークスペースのルートで開く場合は、そのプロジェクトの `.vscode/settings.json` で `"oxc.fmt.configPath": "oxfmt.config.ts"` のように**ワークスペースルートからの相対パス**で指定する（`${workspaceFolder}` は Oxc LSP では展開されない）。**dotfiles リポジトリ自体**は [`packages/code/settings.json`](../code/settings.json)（ユーザー設定）の絶対パスで足りる。設定ファイルをリネームしたら、参照パスも手動で更新してください（自動追従しません）。
+他リポジトリをワークスペースのルートで開く場合は、そのプロジェクトの `.vscode/settings.json` で `"oxc.fmt.configPath": "oxfmt.config.ts"` のように**ワークスペースルートからの相対パス**で指定する（`${workspaceFolder}` は Oxc LSP では展開されない）。**dotfiles リポジトリ自体**は [`packages/code/settings.json`](../code/settings.json)（ユーザー設定）の `$HOME` パスで足りる。設定ファイルをリネームしたら、参照パスも手動で更新してください（自動追従しません）。
 
 保存時フォーマットは [`packages/code/README.md`](../code/README.md) の `editor.formatOnSaveMode` / `source.format.oxc` を参照。
 

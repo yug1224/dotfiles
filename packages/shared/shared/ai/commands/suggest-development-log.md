@@ -33,7 +33,7 @@ Notion URL が未指定の場合はユーザーに入力を求める。
 
 ### 3. Notion MCPで情報取得
 
-**優先: Notion MCP（`plugin-notion-workspace-notion`）**
+**優先: Notion MCP（`notion`）**
 
 - `notion-fetch` でタスクページの詳細を取得（タイトル、発生事象、対応してほしい内容）
 - 必要に応じて `notion-get-comments` でディスカッション内容を確認

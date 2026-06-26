@@ -2,6 +2,10 @@
 
 Cursor / Claude Code / Gemini CLI が共通で参照する素材の原本。`make stow` で `~/.config/shared/ai/` に展開される（`packages/shared` パッケージが `~/.config` に stow される）。
 
+**RTK 前提**: Shell トークン削減と hook 連携は [docs/RTK.md](./docs/RTK.md) が正本。セットアップ順・hook 配線・stow 衝突はそちらを参照。
+
+**読む順序**: [docs/RTK.md](./docs/RTK.md)（前提）→ [CONVENTIONS.md](./CONVENTIONS.md)（命名）→ [AGENTS.md](./AGENTS.md)（allowlist 同期）
+
 - 命名・配置: [CONVENTIONS.md](./CONVENTIONS.md)
 - ローカル上書き（`.local.md`）: 端末固有の手順は **`README.local.md`**（`*.local.*` で gitignore。各自作成・private バックアップ）
 
@@ -35,56 +39,7 @@ packages/shared/
 | `packages/claude/rules/<subdir>/*.md`  | `@~/.config/shared/ai/rules/<subdir>/...` |
 | `packages/claude/CLAUDE.md`            | `@~/.config/shared/ai/AGENTS.md`          |
 
-**フック**: 判定ロジックの正本は [`shared/ai/hooks/guard-shell.sh`](hooks/guard-shell.sh) のみ（stdin の JSON を解釈し `permission` を返す）。`make stow` で `~/.config/shared/ai/hooks/` に展開される。Cursor は [`packages/cursor/hooks/guard-shell.sh`](../../cursor/hooks/guard-shell.sh) が `$HOME/.config/shared/ai/hooks/guard-shell.sh` へ `exec` する薄ラッパー。Claude は [`packages/claude/hooks/guard-shell.sh`](../../claude/hooks/guard-shell.sh)（adapter）が同じ JSON 形を `$HOME/.config/shared/ai/hooks/guard-shell.sh` にパイプする。RTK hook（`rtk hook claude` / `rtk hook cursor`）は guard の**後**に実行される。
-
-## Shell セキュリティ: deny / ask / allow
-
-3 層で Shell 実行を制御する。正本は guard-shell；allowlist と RTK は補助レイヤ。
-
-```mermaid
-flowchart TD
-  cmd[ShellCommand] --> guard[guard_shell]
-  guard -->|deny| block[Blocked]
-  guard -->|ask| userAsk[UserApproval]
-  guard -->|allow| rtk[rtk_hook]
-  userAsk --> rtk
-  rtk --> allowlist[TerminalAllowlist]
-  allowlist --> exec[Execute]
-```
-
-| レイヤ        | 正本                                                                | 役割                                                                                              |
-| ------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| **guard**     | [`hooks/guard-shell.sh`](hooks/guard-shell.sh)                      | git / gh / pnpm の deny・ask（包括的判定）。`rtk ` プレフィックスを strip して分類                |
-| **RTK**       | `packages/claude/settings.json`, `packages/cursor/hooks.json`       | トークン削減のためコマンドを `rtk` 経由へ書き換え。Claude `permissions.deny` 対象は書き換えしない |
-| **allowlist** | `packages/cursor/permissions.json`, `packages/claude/settings.json` | Auto-run 許可（読み取り専用 terminal / MCP）。RTK 書き換え後は hook が allow を返す               |
-
-### Claude `permissions.deny` と guard の役割分担
-
-| 対象 | Claude settings.deny                         | guard-shell                                                            |
-| ---- | -------------------------------------------- | ---------------------------------------------------------------------- |
-| 目的 | RTK が deny ルールを読み、書き換えをスキップ | 包括的 deny/ask（全 Bash / beforeShellExecution）                      |
-| 範囲 | 破壊的 git/gh の最小セット（13 件）          | git/gh/pnpm の deny・ask・allow 全体                                   |
-| 更新 | deny 追加時は guard と意図を揃える           | 判定変更時は [`guard-shell.test.sh`](hooks/guard-shell.test.sh) を更新 |
-
-### guard 判定表（代表ケース）
-
-| コマンド                                                                                                    | 判定  | 備考                              |
-| ----------------------------------------------------------------------------------------------------------- | ----- | --------------------------------- |
-| `git reset --hard`, `git clean -f`, `git branch -D`                                                         | deny  | 不可逆操作                        |
-| `git commit`, `git push`, `git checkout`, `git fetch`, `git pull`, `git clone`, `git config`, `git restore` | deny  | ユーザー実行推奨                  |
-| `git rebase`                                                                                                | ask   | ユーザー承認                      |
-| `git status`, `git diff`, `git log`, `git show`, `git add`                                                  | allow | allowlist と併用                  |
-| `rtk git push`                                                                                              | deny  | RTK プレフィックス strip 後に分類 |
-| `rtk git status`                                                                                            | allow | 同上                              |
-| `gh pr merge`, `gh repo delete`, `gh (release\|issue\|gist\|run) delete`, `gh repo archive`                 | deny  | 不可逆操作                        |
-| `gh pr list`, `gh pr view`, `gh run list`, `gh api` (GET)                                                   | allow | allowlist と併用                  |
-| `gh pr create`, `gh issue create`, `gh workflow run` 等                                                     | ask   | 書き込み操作                      |
-| `pnpm exec vitest`, `pnpm exec oxlint`                                                                      | allow | プロジェクト linters              |
-| `pnpm exec` (other), `pnpm dlx`                                                                             | ask   | 任意バイナリ                      |
-
-全ケース: [`guard-shell.test.sh`](hooks/guard-shell.test.sh)。Cursor README の詳細表: [`packages/cursor/README.md`](../../cursor/README.md)。
-
-Allowlist 同期: [AGENTS.md](./AGENTS.md) のチェックリスト。検証: `packages/shared/scripts/check-allowlist-sync.sh`, `check-deny-guard-sync.sh`。RTK 運用: [docs/RTK.md](./docs/RTK.md)。
+**フック**: guard 判定の正本は [`hooks/guard-shell.sh`](hooks/guard-shell.sh)。Cursor / Claude は各パッケージの薄ラッパー経由で共有本体を呼ぶ。RTK hook は guard の**後**に実行される。3 層構成（guard / RTK / allowlist）の詳細は [docs/RTK.md](./docs/RTK.md)。guard 判定の代表ケースは [`guard-shell.test.sh`](hooks/guard-shell.test.sh)、詳細表は [`packages/cursor/README.md`](../../cursor/README.md)。Allowlist 同期は [AGENTS.md](./AGENTS.md)。
 
 ## ローカル専用ファイル（`*.local.*`）
 

@@ -217,8 +217,16 @@ classify_gh() {
 classify_pnpm() {
   local s="$1"
 
-  # Local linters / test runners. Other pnpm exec can run arbitrary binaries.
-  if [[ "$s" =~ ^pnpm[[:space:]]+exec[[:space:]]+(vitest|oxlint)([[:space:]]|$) ]]; then
+  # Package scripts / test runners the agent must not run.
+  if [[ "$s" =~ ^pnpm[[:space:]]+(run[[:space:]]+)?(typecheck|test|sql-test|vitest)([[:space:]]|$) ]] \
+    || [[ "$s" =~ ^pnpm[[:space:]]+exec[[:space:]]+vitest([[:space:]]|$) ]] \
+    || [[ "$s" =~ ^pnpm[[:space:]]+dlx[[:space:]]+vitest([[:space:]]|$) ]]; then
+    echo deny
+    return
+  fi
+
+  # Local linter. Other pnpm exec can run arbitrary binaries.
+  if [[ "$s" =~ ^pnpm[[:space:]]+exec[[:space:]]+oxlint([[:space:]]|$) ]]; then
     echo allow
     return
   fi
