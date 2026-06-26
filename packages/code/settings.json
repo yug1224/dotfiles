@@ -175,23 +175,23 @@
   ],
   "customLocalFormatters.formatters": [
     {
-      "command": "__DOTFILES__/packages/code/bin/oxfmt-stdin.sh f.css",
+      "command": "$HOME/Workspaces/yug1224/dotfiles/packages/code/bin/oxfmt-stdin.sh f.css",
       "languages": ["css"]
     },
     {
-      "command": "__DOTFILES__/packages/code/bin/oxfmt-stdin.sh f.html",
+      "command": "$HOME/Workspaces/yug1224/dotfiles/packages/code/bin/oxfmt-stdin.sh f.html",
       "languages": ["html"]
     },
     {
-      "command": "__DOTFILES__/packages/code/bin/oxfmt-stdin.sh f.json",
+      "command": "$HOME/Workspaces/yug1224/dotfiles/packages/code/bin/oxfmt-stdin.sh f.json",
       "languages": ["json", "jsonc"]
     },
     {
-      "command": "__DOTFILES__/packages/code/bin/oxfmt-stdin.sh f.md",
+      "command": "$HOME/Workspaces/yug1224/dotfiles/packages/code/bin/oxfmt-stdin.sh f.md",
       "languages": ["markdown"]
     },
     {
-      "command": "__DOTFILES__/packages/code/bin/oxfmt-stdin.sh f.vue",
+      "command": "$HOME/Workspaces/yug1224/dotfiles/packages/code/bin/oxfmt-stdin.sh f.vue",
       "languages": ["vue"]
     }
   ],
@@ -252,7 +252,9 @@
   "liveshare.presence": true,
   "makefile.configureOnOpen": false,
   "npm.keybindingsChangedWarningShown": true,
-  "oxc.fmt.configPath": "__DOTFILES__/oxfmt.config.ts",
+  "oxc.fmt.configPath": "$HOME/Workspaces/yug1224/dotfiles/oxfmt.config.ts",
+  "oxc.path.oxfmt": "$HOME/.local/share/mise/installs/npm-oxfmt/latest/lib/node_modules/oxfmt/dist/cli.js",
+  "oxc.path.oxlint": "$HOME/.local/share/mise/installs/npm-oxlint/latest/lib/node_modules/oxlint/dist/cli.js",
   "oxc.useExecPath": true,
   "reactSnippets.settings.typescript": false,
   // アノテーションコメントの一覧ツリー表示、ツリー表示させたいタグがあれば追加する

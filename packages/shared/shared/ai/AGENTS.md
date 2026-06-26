@@ -39,8 +39,4 @@
 
 ### RTK との関係
 
-- Hook 順序: **guard → RTK**（変更しない）
-- guard 正本: `packages/shared/shared/ai/hooks/guard-shell.sh`
-- RTK 設定: `packages/claude/settings.json`, `packages/cursor/hooks.json`, `packages/rtk/rtk/config.toml`
-- 整合チェック: `packages/shared/scripts/check-allowlist-sync.sh`, `check-deny-guard-sync.sh`
-- 詳細: [docs/RTK.md](./docs/RTK.md), [CONVENTIONS.md](./CONVENTIONS.md) の RTK 節
+RTK は **インストール済み・hook 有効** を前提とする。詳細（セットアップ・hook 配線・stow 衝突）: [docs/RTK.md](./docs/RTK.md)

@@ -248,10 +248,24 @@ run_case allow '{"command":"gh release view v1.0.0"}' 'gh release view'
 run_case allow '{"command":"gh search repos query"}' 'gh search repos'
 run_case allow '{"command":"gh api repos/user/repo"}' 'gh api (GET, no write flags)'
 
-# --- allow: pnpm exec vitest / oxlint ---
+# --- deny: pnpm typecheck / test / sql-test ---
 
-run_case allow '{"command":"pnpm exec vitest"}' 'pnpm exec vitest'
-run_case allow '{"command":"pnpm exec vitest run src/foo.test.ts"}' 'pnpm exec vitest (subcommand + args)'
+run_case deny '{"command":"pnpm typecheck"}' 'pnpm typecheck'
+run_case deny '{"command":"pnpm run typecheck"}' 'pnpm run typecheck'
+run_case deny '{"command":"pnpm test"}' 'pnpm test'
+run_case deny '{"command":"pnpm run test"}' 'pnpm run test'
+run_case deny '{"command":"pnpm test -- --run"}' 'pnpm test (with args)'
+run_case deny '{"command":"pnpm sql-test"}' 'pnpm sql-test'
+run_case deny '{"command":"pnpm run sql-test"}' 'pnpm run sql-test'
+run_case deny '{"command":"pnpm install && pnpm test"}' 'compound: && で pnpm test'
+
+run_case deny '{"command":"pnpm exec vitest"}' 'pnpm exec vitest'
+run_case deny '{"command":"pnpm exec vitest run src/foo.test.ts"}' 'pnpm exec vitest (subcommand + args)'
+run_case deny '{"command":"pnpm run vitest"}' 'pnpm run vitest'
+run_case deny '{"command":"pnpm dlx vitest"}' 'pnpm dlx vitest'
+
+# --- allow: pnpm exec oxlint ---
+
 run_case allow '{"command":"pnpm exec oxlint"}' 'pnpm exec oxlint'
 
 # --- ask: pnpm exec (other binaries) / dlx ---

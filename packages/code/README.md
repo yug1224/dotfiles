@@ -15,20 +15,20 @@ make stow
 
 設定変更後は **Developer: Reload Window** を実行する。
 
-## パス置換（`dotfiles-path`）
+## パス（`$HOME` 固定）
 
-[`settings.json`](settings.json) は [`.gitattributes`](../../.gitattributes) の `filter=dotfiles-path` 対象。**Cursor / VS Code / Oxc は `__DOTFILES__` を解釈しない**（README 後述のとおり LSP も展開しない）。実際に読まれるのは **smudge 後の絶対パス**だけ。
+[`settings.json`](settings.json) の oxfmt 関連パスは **`$HOME` ベースの固定パス**で記述する（Oxc 拡張と custom-local-formatters が展開する）。
 
-| 場所                   | 中身                                             |
-| ---------------------- | ------------------------------------------------ |
-| Git にコミットされる形 | `__DOTFILES__/...`（マシン非依存）               |
-| 作業ツリー・stow 先    | `/path/to/dotfiles/...`（smudge 済みであること） |
+| キー / 用途                          | パス                                                                       |
+| ------------------------------------ | -------------------------------------------------------------------------- |
+| dotfiles ルート                      | `$HOME/Workspaces/yug1224/dotfiles`                                        |
+| `oxc.fmt.configPath`                 | `$HOME/Workspaces/yug1224/dotfiles/oxfmt.config.ts`                        |
+| `oxc.path.oxfmt` / `oxc.path.oxlint` | `$HOME/.local/share/mise/installs/npm-oxfmt/latest/...`（mise グローバル） |
+| `customLocalFormatters`              | `$HOME/Workspaces/yug1224/dotfiles/packages/code/bin/oxfmt-stdin.sh`       |
 
-- `git checkout` / clone 時: smudge で `__DOTFILES__` → リポジトリの絶対パス
-- `git add` 時: clean で絶対パス → `__DOTFILES__` に戻る
-- **作業ツリーや `~/Library/Application Support/Cursor/User/settings.json` に `__DOTFILES__` が残っているとフォーマット等が壊れる** → `git checkout HEAD -- packages/code/settings.json`（filter 有効時）か、手動で実パスに直してから `make stow`
+**前提**: dotfiles は `$HOME/Workspaces/yug1224/dotfiles` に clone していること。別の場所に置く場合はパスを合わせて更新する。`make stow` 後は **Developer: Reload Window** を実行する。
 
-`packages/git` を stow し、グローバル Git に `[filter "dotfiles-path"]` が入っていることも前提とする。
+Oxc の LSP は `${workspaceFolder}` を展開しない。
 
 ## 保存時フォーマット（Oxc）
 
@@ -46,12 +46,12 @@ make stow
 
 **「拡張機能 'Oxc' はフォーマッタとして構成されていますが、'TypeScript'-ファイルをフォーマットできません」** は、ほぼ常に **oxfmt の LSP が起動していない**（フォーマッタ未登録）状態。次を確認する。
 
-| 確認                                                                | 対処                                                                                                                                                                      |
-| ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ステータスバーに `oxc` が出ない / Output に `No valid oxfmt binary` | ワークスペースで `pnpm install` または `npm install`。dotfiles 以外ではルートに `oxfmt` を入れるか、ユーザー設定の `oxc.path.oxfmt`（dotfiles の `node_modules`）が有効か |
-| Node を **mise** 等だけで入れている                                 | ユーザー設定の **`oxc.useExecPath`: `true`**（Cursor / VS Code 同梱 Node で `cli.js` を実行）                                                                             |
-| 他リポジトリで dotfiles の `oxfmt.config.ts` を使いたい             | そのリポジトリの `.vscode/settings.json` に `"oxc.fmt.configPath": "oxfmt.config.ts"` とルートの設定ファイル。無いパスを指すと LSP が落ちる                               |
-| 設定変更後も直らない                                                | `Oxc: Restart oxfmt Server` → **Developer: Reload Window**                                                                                                                |
+| 確認                                                                | 対処                                                                                                                                        |
+| ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| ステータスバーに `oxc` が出ない / Output に `No valid oxfmt binary` | `mise install` で `npm:oxfmt` を入れる。dotfiles 以外ではルートに `oxfmt` を入れるか、ユーザー設定の `oxc.path.oxfmt` を確認                |
+| Node を **mise** 等だけで入れている                                 | ユーザー設定の **`oxc.useExecPath`: `true`**（Cursor / VS Code 同梱 Node で `cli.js` を実行）                                               |
+| 他リポジトリで dotfiles の `oxfmt.config.ts` を使いたい             | そのリポジトリの `.vscode/settings.json` に `"oxc.fmt.configPath": "oxfmt.config.ts"` とルートの設定ファイル。無いパスを指すと LSP が落ちる |
+| 設定変更後も直らない                                                | `Oxc: Restart oxfmt Server` → **Developer: Reload Window**                                                                                  |
 
 ## フォーマッタ（ハイブリッド）
 
@@ -61,13 +61,11 @@ make stow
 | CSS / HTML / JSON / JSONC / Markdown / Vue | `jkillian.custom-local-formatters` | `oxfmt` CLI（stdin）                                            |
 | Terraform                                  | `hashicorp.terraform`              | `source.formatAll.terraform`（`[terraform-vars]` は保存時 off） |
 
-`customLocalFormatters.formatters` は [`bin/oxfmt-stdin.sh`](bin/oxfmt-stdin.sh) 経由で `oxfmt` を呼ぶ（`__DOTFILES__` は git の `dotfiles-path` フィルタで実パスに展開される。リポジトリ内が `__DOTFILES__` のままなら `git checkout HEAD -- packages/code/settings.json` で smudge する）。
+`customLocalFormatters.formatters` は [`bin/oxfmt-stdin.sh`](bin/oxfmt-stdin.sh) 経由で mise グローバルの `oxfmt` を呼ぶ（`$HOME/.local/share/mise/shims/oxfmt`、未インストール時は `node_modules/.bin/oxfmt` にフォールバック）。
 
-`oxc.path.oxfmt` / `oxc.fmt.configPath` / `oxc.useExecPath` は **ユーザー設定（本ファイル）にのみ**書く。dotfiles リポジトリを開いたときも同じ絶対パスで `oxfmt.config.ts` を指すため、[`.vscode/settings.json`](../../.vscode/settings.json) に Oxc 設定は置かない（重複と上書きの混乱を避ける）。
+`oxc.path.oxfmt` / `oxc.fmt.configPath` / `oxc.useExecPath` は **ユーザー設定（本ファイル）にのみ**書く。dotfiles リポジトリを開いたときも同じ `$HOME` パスで `oxfmt.config.ts` を指すため、[`.vscode/settings.json`](../../.vscode/settings.json) に Oxc 設定は置かない（重複と上書きの混乱を避ける）。
 
 [`.vscode/settings.json`](../../.vscode/settings.json) に置くのは **ワークスペース依存だけ**（例: `typescript.tsdk` → このリポジトリの `node_modules/typescript`）。
-
-Oxc の LSP は `${workspaceFolder}` や `__DOTFILES__` を展開しない。
 
 **他リポジトリ**では、そのプロジェクトの `.vscode/settings.json` に `"oxc.fmt.configPath": "oxfmt.config.ts"` と `"oxc.path.oxfmt": "node_modules/oxfmt/dist/cli.js"`（ルートからの相対パス）を書く。詳細は [`packages/oxfmt/README.md`](../oxfmt/README.md)。
 

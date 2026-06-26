@@ -30,7 +30,7 @@
 ## MCP
 
 - PR レビュー: GitHub MCP の `get_file_contents` 連打より `gh` + Shell（RTK）
-- Playwright `browser_snapshot` は E2E 時のみ
+- Playwright `browser_snapshot` は E2E 時のみ（例外: 採用系コマンド `/suggest-scout-message` 等のプロフィール・6タブ取得は `recruiting-common-rule.local.md` に従い使用可）
 
 ## 計測（開発者向け）
 
