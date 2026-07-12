@@ -1,0 +1,7 @@
+---
+description: CodeGraph によるセマンティックコード調査（MCP codegraph_explore / CLI explore）。構造理解・フロー追跡時に優先利用。
+globs: []
+alwaysApply: false
+---
+
+@~/.config/shared/ai/rules/conventions/codegraph-rule.md

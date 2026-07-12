@@ -31,7 +31,7 @@
 
 - レビュー時は `gh pr view` / `gh pr diff` / `gh pr checks` を優先使用（GitHub MCP はフォールバック）
 - `git log` / `git diff` / `git blame` で変更履歴と背景を把握する
-- Grep で変更箇所の影響範囲（呼び出し元、依存先）を調査する
+- Grep で変更箇所の影響範囲（呼び出し元、依存先）を調査する（`.codegraph/` がある場合は CodeGraph を優先 — [advisor-behavior-rule.md](../advisor/advisor-behavior-rule.md)）
 - Datadog MCP で関連モニター/ログを確認し、ランタイムリスクを評価する
 
 ## 設計原則

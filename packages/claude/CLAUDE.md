@@ -11,6 +11,7 @@
 
 @./rules/conventions/commit-message-rule.md
 @./rules/conventions/branch-name-rule.md
+@./rules/conventions/codegraph-rule.md
 
 ## レビュー / チケット運用
 
