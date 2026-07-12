@@ -9,6 +9,8 @@ node = "latest"
 "npm:oxfmt" = "latest"
 pnpm = "latest"
 "npm:greptile" = "latest"
+"npm:@colbymchenry/codegraph" = "latest"
+"npm:@playwright/mcp" = "latest"
 
 [settings]
 idiomatic_version_file_enable_tools = ["node"]

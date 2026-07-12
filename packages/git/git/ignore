@@ -363,3 +363,7 @@ _.code-workspace
 # Playwright MCP
 
 .playwright-mcp
+
+# CodeGraph local index
+
+.codegraph/

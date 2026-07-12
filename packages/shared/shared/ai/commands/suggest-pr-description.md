@@ -106,6 +106,8 @@ Notion チケット ID または Notion URL が渡された場合のみ、Notion
 
 ### 6. 変更内容の分析
 
+- `.codegraph/` がある場合、構造・フロー調査は `@~/.config/shared/ai/rules/conventions/token-optimization-rule.md` に従い CodeGraph を explore / Grep より先に使う
+
 diff の読み取りだけでは変更の全体像が把握しにくい場合、Task ツール（`explore`, `readonly: true`）で関連コードを調査する。
 
 **Step 3 で確定したテンプレートのセクション構成に沿って**、以下の情報を整理する:

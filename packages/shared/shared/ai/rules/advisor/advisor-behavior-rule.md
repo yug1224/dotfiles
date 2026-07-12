@@ -8,20 +8,21 @@
 
 1. **ルール確認**: `.cursor/rules/` 内の関連ルールを Read で確認する
 2. **構造把握**: Glob でプロジェクトのディレクトリ構造を把握する
-3. **パターン調査**: Grep / SemanticSearch で既存の実装パターンを調査する
+3. **パターン調査**: `.codegraph/` がある場合は CodeGraph（`codegraph_explore` / `codegraph explore`）で構造・フローを調査。無い場合は Grep / SemanticSearch で既存の実装パターンを調査する
 4. **設定確認**: `package.json` / `tsconfig.json` 等から技術スタック・設定を把握する
 5. **一貫性の維持**: 調査結果に基づいて、既存パターンと一貫性のある提案を行う
 
 ## MCP ツール活用
 
-| ツール        | 用途                                                                                                   |
-| ------------- | ------------------------------------------------------------------------------------------------------ |
-| **context7**  | `resolve-library-id` → `query-docs` でライブラリの最新 API を確認                                      |
-| **Storybook** | `get-ui-building-instructions` でコンポーネント開発指示を取得、`get-story-urls` で既存ストーリーを確認 |
-| **Figma**     | Figma URL が与えられた場合、`get_design_context` / `get_screenshot` でデザイン仕様を取得               |
-| **Datadog**   | `get_monitors` / `list_dashboards` / `get_logs` で監視設定・ランタイム状況を確認                       |
-| **GitHub**    | `search_code` でプロジェクト横断のコード検索（gh CLI が使えない場合のフォールバック）                  |
-| **GitKraken** | `git_blame` のリッチ表示等、IDE 統合が必要な場合                                                       |
+| ツール        | 用途                                                                                                                 |
+| ------------- | -------------------------------------------------------------------------------------------------------------------- |
+| **context7**  | `resolve-library-id` → `query-docs` でライブラリの最新 API を確認                                                    |
+| **CodeGraph** | `.codegraph/` があるプロジェクトでは `codegraph_explore`（MCP）または `codegraph explore`（CLI）で構造・フローを調査 |
+| **Storybook** | `get-ui-building-instructions` でコンポーネント開発指示を取得、`get-story-urls` で既存ストーリーを確認               |
+| **Figma**     | Figma URL が与えられた場合、`get_design_context` / `get_screenshot` でデザイン仕様を取得                             |
+| **Datadog**   | `get_monitors` / `list_dashboards` / `get_logs` で監視設定・ランタイム状況を確認                                     |
+| **GitHub**    | `search_code` でプロジェクト横断のコード検索（gh CLI が使えない場合のフォールバック）                                |
+| **GitKraken** | `git_blame` のリッチ表示等、IDE 統合が必要な場合                                                                     |
 
 ## CLI 活用
 
@@ -37,7 +38,7 @@
 > - **プロジェクトルール**: (読み込んだルールファイルのリスト)
 > - **既存実装**: (参照した既存コードのファイルパスとパターンの要約)
 > - **ライブラリドキュメント**: (確認したライブラリとバージョン)
-> - **MCP ツール**: (使用した MCP ツールとその結果の要約)
+> - **MCP ツール**: (使用した MCP ツールとその結果の要約。CodeGraph 利用時は `codegraph_explore` / `codegraph explore` を明記)
 
 ## 出力フォーマット
 

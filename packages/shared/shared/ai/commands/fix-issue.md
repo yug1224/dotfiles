@@ -81,6 +81,7 @@ Notion ページの内容を分析し、以下を整理する:
 
 **a. コードベース調査（`explore`, `readonly: true`）**
 
+- `.codegraph/` がある場合、構造・フロー調査は `@~/.config/shared/ai/rules/conventions/token-optimization-rule.md` に従い CodeGraph を explore / Grep より先に使う
 - 課題に関連するコード・モジュールの特定
 - エラーメッセージやログ出力箇所からの逆引き
 - 関連する最近のコミット・変更履歴の確認（`git log` で変更経緯を追跡）

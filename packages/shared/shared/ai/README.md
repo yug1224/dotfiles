@@ -4,6 +4,8 @@ Cursor / Claude Code / Gemini CLI が共通で参照する素材の原本。`mak
 
 **RTK 前提**: Shell トークン削減と hook 連携は [docs/RTK.md](./docs/RTK.md) が正本。セットアップ順・hook 配線・stow 衝突はそちらを参照。
 
+**CodeGraph**: セマンティックコードインテリジェンスは [docs/CODEGRAPH.md](./docs/CODEGRAPH.md) が正本。MCP 手動マージ・プロジェクト `init` 手順はそちらを参照。
+
 **読む順序**: [docs/RTK.md](./docs/RTK.md)（前提）→ [CONVENTIONS.md](./CONVENTIONS.md)（命名）→ [AGENTS.md](./AGENTS.md)（allowlist 同期）
 
 - 命名・配置: [CONVENTIONS.md](./CONVENTIONS.md)

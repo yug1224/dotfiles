@@ -44,6 +44,7 @@
 
 ### a. コードベース調査（`explore`, `readonly: true`）
 
+- `.codegraph/` がある場合、呼び出し元・呼び出し先の構造調査は `@~/.config/shared/ai/rules/conventions/token-optimization-rule.md` に従い CodeGraph を explore / Grep より先に使う
 - 変更ファイルの周辺コード・呼び出し元・呼び出し先
 - 既存の実装パターンやルールとの整合性
 - **MECE（漏れなく・ダブりなく）**: 変更すべき箇所に漏れがないか（同一ロジックの他の出現箇所、関連テスト）。類似する既存実装との不整合や重複がないか

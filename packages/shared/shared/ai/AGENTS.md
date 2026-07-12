@@ -40,3 +40,13 @@
 ### RTK との関係
 
 RTK は **インストール済み・hook 有効** を前提とする。詳細（セットアップ・hook 配線・stow 衝突）: [docs/RTK.md](./docs/RTK.md)
+
+## CodeGraph
+
+セマンティックコードインテリジェンス（ローカル知識グラフ）。CLI は mise でグローバルインストール、MCP 配線は手動マージ。
+
+- セットアップ・トラブルシュート: [docs/CODEGRAPH.md](./docs/CODEGRAPH.md)
+- エージェント利用ルール: [rules/conventions/codegraph-rule.md](./rules/conventions/codegraph-rule.md)
+- **プロジェクトごと**に `codegraph init` が必要（`.codegraph/` 作成）。未初期化では MCP 有効でもインデックスなし
+- Cursor: `packages/cursor/rules/conventions/codegraph-rule.mdc`（agent-requestable）
+- Claude: `packages/claude/CLAUDE.md` から `codegraph-rule` を import

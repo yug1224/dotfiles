@@ -175,7 +175,7 @@ graph LR
 ---
 name: <name>
 description: <description（Advisor は明示的なサブエージェント利用またはコマンド経由でのみ起動する旨を含める）>
-model: fast
+model: inherit
 readonly: true
 ---
 
@@ -274,13 +274,14 @@ Cursor ルールの定義ファイル（`.mdc` 形式）。エージェントや
 | `pr-description-rule.mdc`   | PR Title（`type(scope): subject`）・Description の構成・テンプレート |
 | `development-log-rule.mdc`  | 開発ログの MECE 構成・記載ガイド                                     |
 | `ticket-retrieval-rule.mdc` | チケット情報の取得手順（Notion / GitHub / その他 URL / ID）          |
+| `codegraph-rule.mdc`        | CodeGraph によるセマンティックコード調査（MCP / CLI）                |
 
 #### visual/ -- グラフィックレコード
 
-| ファイル                         | 説明                                          |
-| -------------------------------- | --------------------------------------------- |
-| `graphic-record-style-rule.mdc`  | 画像生成向けのスタイル・レイアウトガイド      |
-| `graphic-record-source-rule.mdc` | PR・ADR・開発ログからの情報抽出・構造化ルール |
+| ファイル                         | 説明                                                       |
+| -------------------------------- | ---------------------------------------------------------- |
+| `graphic-record-style-rule.mdc`  | 画像生成向けの構造・レイアウトガイド（画風はプロンプト外） |
+| `graphic-record-source-rule.mdc` | PR・ADR・開発ログからの情報抽出・構造化ルール              |
 
 #### magi/ -- MAGI 合議
 
@@ -434,13 +435,13 @@ Cursor の Auto-run 時に承認なしで実行を許可するコマンド・MCP
 
 ### terminalAllowlist
 
-| カテゴリ             | エントリ                                                                                                                                                                                    | 備考                                                                                                 |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| Unix ユーティリティ  | `awk`, `cat`, `cd`, `comm`, `cp`, `cut`, `diff`, `echo`, `env`, `find`, `grep`, `head`, `kill`, `ls`, `mkdir`, `node`, `paste`, `read`, `sed`, `sort`, `tail`, `timeout`, `uniq`, `wc`      | 個別指定。`curl`（ネットワーク）と `npx`（任意実行）は除外し Cursor の ask で制御                    |
-| パッケージマネージャ | `pnpm add`, `pnpm audit`, `pnpm exec oxlint`, `pnpm exec vitest`, `pnpm install`, `pnpm list`, `pnpm ls`, `pnpm outdated`, `pnpm remove`, `pnpm run`, `pnpm store`, `pnpm test`, `pnpm why` | サブコマンド単位で指定。`pnpm exec`（上記以外）/ `pnpm dlx`（任意実行）は除外し Cursor / Hook が制御 |
-| VCS (git)            | `git diff`, `git diff-tree`, `git log`, `git rev-parse`, `git show`, `git status`, `git --no-pager diff`, `git --no-pager log`, `git --no-pager show`                                       | 読み取り系のみ個別指定                                                                               |
-| GitHub CLI (gh)      | `gh pr checks`, `gh pr diff`, `gh pr list`, `gh pr status`, `gh pr view`, `gh run list`, `gh run view`, `gh search`                                                                         | 読み取り系のみ個別指定                                                                               |
-| プロジェクト固有     | `openspec`                                                                                                                                                                                  | 必要に応じて追加                                                                                     |
+| カテゴリ             | エントリ                                                                                                                                                                                    | 備考                                                                                                       |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Unix ユーティリティ  | `awk`, `cat`, `cd`, `comm`, `cp`, `cut`, `diff`, `echo`, `env`, `find`, `grep`, `head`, `kill`, `ls`, `mkdir`, `node`, `paste`, `read`, `sed`, `sort`, `tail`, `timeout`, `uniq`, `wc`      | 個別指定。`curl`（ネットワーク）と `npx`（任意実行）は除外し Cursor の ask で制御                          |
+| パッケージマネージャ | `pnpm add`, `pnpm audit`, `pnpm exec oxlint`, `pnpm exec vitest`, `pnpm install`, `pnpm list`, `pnpm ls`, `pnpm outdated`, `pnpm remove`, `pnpm run`, `pnpm store`, `pnpm test`, `pnpm why` | サブコマンド単位で指定。`pnpm exec`（上記以外）/ `pnpm dlx`（任意実行）は除外し Cursor / Hook が制御       |
+| VCS (git)            | `git diff`, `git diff-tree`, `git log`, `git rev-parse`, `git show`, `git status`, `git --no-pager diff`, `git --no-pager log`, `git --no-pager show`                                       | 読み取り系のみ個別指定                                                                                     |
+| GitHub CLI (gh)      | `gh pr checks`, `gh pr diff`, `gh pr list`, `gh pr status`, `gh pr view`, `gh run list`, `gh run view`, `gh search`                                                                         | 読み取り系のみ個別指定                                                                                     |
+| プロジェクト固有     | `codegraph`, `openspec`                                                                                                                                                                     | `codegraph` はローカル知識グラフ CLI。セットアップは [CODEGRAPH.md](../shared/shared/ai/docs/CODEGRAPH.md) |
 
 > `kill` はエージェントが起動したバックグラウンドプロセス（dev server 等）の停止に使用する。プロセス停止が Auto-run で実行される点に留意。
 
@@ -452,6 +453,7 @@ Cursor の Auto-run 時に承認なしで実行を許可するコマンド・MCP
 | ------------------------ | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
 | `github` / `user-github` | `get_*`, `list_*`, `search_*`, `*_read`, `actions_get`, `actions_list`                    | 読み取り系のみ glob 指定                                                                                     |
 | `context7`               | `resolve-library-id`, `get-library-docs`, `query-docs`                                    | 全ツールが読み取り系                                                                                         |
+| `codegraph`              | `codegraph_explore`                                                                       | ローカル知識グラフ。セットアップは [CODEGRAPH.md](../shared/shared/ai/docs/CODEGRAPH.md)                     |
 | `notion`                 | `notion-fetch`, `notion-search`, `notion-get-comments`                                    | Cursor Plugin Notion MCP（`serverName: notion`）。読み取り系のみ個別指定                                     |
 | `storybook`              | `get_story_urls`                                                                          | 個別指定                                                                                                     |
 | `chrome_devtools`        | `list_*`                                                                                  | 読み取り系のみ glob 指定                                                                                     |
@@ -461,9 +463,16 @@ Cursor の Auto-run 時に承認なしで実行を許可するコマンド・MCP
 ### Allowlist の更新手順
 
 1. `permissions.json` を編集する
-2. Cursor は変更を自動で再読み込みする（再起動不要）
-3. Cursor Settings で Allowlist が読み取り専用になっていることを確認する
-4. 本 README を更新する
+2. Claude `settings.json` の `permissions.allow` を同期する（[AGENTS.md](../shared/shared/ai/AGENTS.md)）
+3. Cursor は変更を自動で再読み込みする（再起動不要）
+4. Cursor Settings で Allowlist が読み取り専用になっていることを確認する
+5. 本 README を更新する
+
+### CodeGraph MCP（stow 外）
+
+`~/.cursor/mcp.json` はシークレットを含むため dotfiles 未管理。CodeGraph 追加は [CODEGRAPH.md](../shared/shared/ai/docs/CODEGRAPH.md) の手動マージ手順に従う。`codegraph install` をそのまま実行しない（stow 正本とドリフトする）。
+
+**調査フロー**: 構造・フロー・影響範囲の調査優先順位は `token-optimization-rule.mdc`（`alwaysApply`）と `codegraph-rule.mdc`（agent-requestable）に定義。正本は `@~/.config/shared/ai/rules/conventions/token-optimization-rule.md` と `codegraph-rule.md`。
 
 ## 自己申告プロトコル
 
