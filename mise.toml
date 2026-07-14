@@ -1,0 +1,13 @@
+# Repo-local [dotfiles] / bootstrap 制御面。
+# [tools] は packages/mise/mise/config.toml（→ ~/.config/mise/）に残す。
+min_version = { hard = "2026.7.4" }
+
+[settings]
+dotfiles.root = "~/.dotfiles"
+dotfiles.default_mode = "symlink"
+
+[dotfiles]
+# 安定パス入口（初回は config 相対 source なので ~/.dotfiles 不要）
+"~/.dotfiles" = { source = ".", mode = "symlink" }
+# パイロット: Stow から移管。同一ターゲットを Stow と二重管理しない
+"~/.tigrc" = { source = "packages/tig/.tigrc", mode = "symlink" }

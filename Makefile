@@ -7,9 +7,19 @@ install:
 brew:
 	brew bundle -v --file=./Brewfile
 
+.PHONY: mise-gate
+mise-gate:
+	@command -v mise >/dev/null || (echo "mise not found; run: make brew (needs brew 'mise')" && exit 1)
+	@mise --version
+	@mise -C "$(CURDIR)" trust
+
+.PHONY: mise-dotfiles
+mise-dotfiles: mise-gate
+	mise -C "$(CURDIR)" dotfiles apply --yes
+
 .PHONY: stow
 stow:
-	stow -R -v -d ./packages -t ~ ssh tig zsh
+	stow -R -v -d ./packages -t ~ ssh zsh
 	stow -R -v -d ./packages -t ~/.config git mise shared rtk
 	stow -R -v -d ./packages -t ~/Library/Preferences/pnpm pnpm
 	stow -R -v -d ./packages -t ~/Library/Application\ Support/Code/User code

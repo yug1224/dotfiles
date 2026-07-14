@@ -1,3 +1,5 @@
+min_version = { soft = "2026.7.4" }
+
 [tools]
 claude-code = "latest"
 deno = "latest"
