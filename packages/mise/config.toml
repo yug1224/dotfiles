@@ -1,18 +1,27 @@
 min_version = { soft = "2026.7.4" }
 
 [tools]
+bat = "latest"
 claude-code = "latest"
+delta = "latest"
 deno = "latest"
+difftastic = "latest"
 gemini = "latest"
+gh = "latest"
+jq = "latest"
+lefthook = "latest"
 node = "latest"
 "npm:@fission-ai/openspec" = "latest"
 "npm:rimraf" = "latest"
 "npm:oxlint" = "latest"
 "npm:oxfmt" = "latest"
+peco = "latest"
 pnpm = "latest"
 "npm:greptile" = "latest"
 "npm:@colbymchenry/codegraph" = "latest"
 "npm:@playwright/mcp" = "latest"
+rtk = "latest"
+tlrc = "latest"
 
 [settings]
 idiomatic_version_file_enable_tools = ["node"]

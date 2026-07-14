@@ -10,8 +10,9 @@
     ],
     "preToolUse": [
       {
-        "command": "rtk hook cursor",
-        "matcher": "Shell"
+        "command": "./hooks/rtk-hook.sh",
+        "matcher": "Shell",
+        "failClosed": true
       }
     ]
   }

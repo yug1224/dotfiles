@@ -5,21 +5,16 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 GUARD="${SCRIPT_DIR}/guard-shell.sh"
 
-if ! command -v jq &>/dev/null; then
-  echo "SKIP: jq が必要です (brew install jq)" >&2
+: "${JQ:=$HOME/.local/share/mise/shims/jq}"
+if [[ ! -x "$JQ" ]]; then
+  echo "SKIP: executable jq required at JQ=$JQ (make mise-tools / packages/mise/config.toml の jq)" >&2
   exit 0
 fi
+export JQ
 
 # --- deny: jq 未インストール (fail-closed) ---
 
-_path_without_jq() {
-  local IFS=: d result=""
-  for d in $PATH; do
-    [[ -x "$d/jq" ]] || result+="$d:"
-  done
-  echo "${result%:}"
-}
-out="$(printf '{}' | PATH="$(_path_without_jq)" "$GUARD")"
+out="$(printf '{}' | JQ=/nonexistent "$GUARD")"
 if ! echo "$out" | grep -q '"permission":"deny"'; then
   echo "FAIL: 期待=deny (jq 未インストール)" >&2
   echo "  output: $out" >&2
