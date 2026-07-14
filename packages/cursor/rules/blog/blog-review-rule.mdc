@@ -1,0 +1,7 @@
+---
+description: 技術ブログ記事の評価基準（7観点、0.0-5.0 スケール）
+globs: []
+alwaysApply: false
+---
+
+@~/.config/shared/ai/rules/blog/blog-review-rule.md

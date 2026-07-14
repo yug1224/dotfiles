@@ -7,7 +7,8 @@
 **使用例**:
 
 - `/verify-output`
-- `/verify-output https://notion.so/xxx`
+- `/verify-output PROJ-1234`
+- `/verify-output https://github.com/owner/repo/issues/123`
 
 ---
 

@@ -1,14 +1,14 @@
-応答の冒頭に「Applied: graphic-record-style-rule」と出力する（`/graphic-record-prompt` 実行時はコマンド Step 0 に従い、本行は出さない）。
+応答の冒頭に「Applied: graphic-record-style-rule」と出力する（`/write-graphic-prompt` 実行時はコマンド Step 0 に従い、本行は出さない）。
 
 # グラフィックレコード画像 — 構造仕様（固定）
 
 構造のみ・トーンは外部。ブロックAは `image_generation_prompt`（日本語描画内容）+ 【レイアウト】の構造指示のみ。画風・装飾トーンは **含めない**（`.local.md` またはユーザーが別メッセージで先に送る）。`compressed_summary` の markdown fenced は廃止。下流は **Gemini Nano Banana Pro**（Thinking + 画像を作成）を正とする。
 
-画像生成 LLM 向けのレイアウト・構図・禁止事項の正本。`/graphic-record-prompt` は **ブロックA（画像生成用）** に内容を流し込む。
+画像生成 LLM 向けのレイアウト・構図・禁止事項の正本。`/write-graphic-prompt` は **ブロックA（画像生成用）** に内容を流し込む。
 
 ## 下流 LLM 向け契約
 
-`/graphic-record-prompt` の出力は **2 段階**（プロンプト生成 → 別チャットで画像生成）。
+`/write-graphic-prompt` の出力は **2 段階**（プロンプト生成 → 別チャットで画像生成）。
 
 - 下流の正: **Gemini アプリ**で「画像を作成」+ **Thinking モデル（Nano Banana Pro）**
 - Step2 では **2 通に分ける**:
@@ -19,7 +19,7 @@
 
 ## ブロックA（画像生成用・固定文案）
 
-`/graphic-record-prompt` は次の **固定文** をそのまま出力し、`{image_generation_prompt}` だけを差し替える（言い換え・行の追加・削除禁止）:
+`/write-graphic-prompt` は次の **固定文** をそのまま出力し、`{image_generation_prompt}` だけを差し替える（言い換え・行の追加・削除禁止）:
 
 ```text
 【出力指示】

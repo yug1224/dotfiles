@@ -2,13 +2,13 @@
 
 **参照ルール**: `packages/shared/shared/ai/rules/conventions/commit-message-rule.md`（stow 後 `~/.config/shared/ai/rules/` 等。Cursor ラッパー: `commit-message-rule.mdc`。所在は `shared/README.md` の「ルールファイルの所在」）
 
-**Input**: `/suggest-commit-message` の後に続く引数は、チケット ID またはチケット URL（任意）。Notion、GitHub Issues、Jira 等のチケットシステムに対応。
+**Input**: `/suggest-commit-message` の後に続く引数は、チケット ID またはチケット URL（任意）。取得方法は `ticket-retrieval-rule`（および存在すれば `.local.md`）に従う。
 
 **使用例**:
 
 - `/suggest-commit-message`
-- `/suggest-commit-message https://notion.so/xxx`
-- `/suggest-commit-message DC-1234`
+- `/suggest-commit-message https://github.com/owner/repo/issues/123`
+- `/suggest-commit-message PROJ-1234`
 
 ---
 
@@ -46,7 +46,8 @@ git --no-pager log --oneline -10
 ブランチ上の既存コミットを確認し、メッセージの一貫性や重複を検証する。
 
 c. **チケット情報**（引数がある場合のみ）
-`packages/shared/shared/ai/rules/conventions/ticket-retrieval-rule.md`（stow 後 `~/.config/shared/ai/rules/` 等。Cursor ラッパー: `ticket-retrieval-rule.mdc`）に従い、チケットの目的・背景・タイトルを取得する。
+
+`@~/.config/shared/ai/rules/conventions/ticket-retrieval-rule.md` に従い、チケットの目的・背景・タイトルを取得する。同ディレクトリの `ticket-retrieval-rule.local.md` があれば併せて Read（無ければスキップ）。
 
 d. **コンテキスト情報**
 ユーザーが `@` で添付したファイルや会話中で提供した情報があれば、それも考慮する。

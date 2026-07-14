@@ -1,0 +1,7 @@
+---
+description: dotfiles の AI 設定変更時の 3 ラッパー原則と追加手順。
+globs: []
+alwaysApply: false
+---
+
+@~/.config/shared/ai/rules/meta/ai-config-rule.md

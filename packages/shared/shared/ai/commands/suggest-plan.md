@@ -1,13 +1,13 @@
-要件（Notion チケット / GitHub Issue / 自然言語）を起点に、設計・実装の両面から分析し Must have / Nice to have の実装計画を策定する。ユーザーが「サブエージェントを使って」「マルチエージェントで」等とサブエージェント利用を明示している場合のみ、Task ツールで `design-advisor` と `build-advisor` を起動する。明示がない場合は親エージェントが Step 3 の観点に沿って直接分析する。全ステップが読み取り専用のため、Plan モードでの実行を推奨する。
+要件（チケット / GitHub Issue / 自然言語）を起点に、設計・実装の両面から分析し Must have / Nice to have の実装計画を策定する。ユーザーが「サブエージェントを使って」「マルチエージェントで」等とサブエージェント利用を明示している場合のみ、Task ツールで `design-advisor` と `build-advisor` を起動する。明示がない場合は親エージェントが Step 3 の観点に沿って直接分析する。全ステップが読み取り専用のため、Plan モードでの実行を推奨する。
 
 **参照ルール**: `@~/.config/shared/ai/rules/checklists/nfr-checklist.md`（Cursor ラッパー: `packages/cursor/rules/checklists/nfr-checklist.mdc`）
 
-**Input**: `/suggest-plan` の後に続く引数は、要件の説明文、チケット ID またはチケット URL（任意）。Notion、GitHub Issues 等のチケットシステムに対応。
+**Input**: `/suggest-plan` の後に続く引数は、要件の説明文、チケット ID またはチケット URL（任意）。取得方法は `ticket-retrieval-rule`（および存在すれば `.local.md`）に従う。
 
 **使用例**:
 
 - `/suggest-plan ユーザー一覧画面にフィルタリング機能を追加`
-- `/suggest-plan https://notion.so/xxx`
+- `/suggest-plan PROJ-1234`
 - `/suggest-plan https://github.com/owner/repo/issues/123`
 
 ---

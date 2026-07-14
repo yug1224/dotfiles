@@ -4,6 +4,4 @@ globs: []
 alwaysApply: false
 ---
 
-<!-- @~/.config/shared/ai/rules/conventions/branch-name-rule.md -->
-
 @~/.config/shared/ai/rules/conventions/branch-name-rule.md

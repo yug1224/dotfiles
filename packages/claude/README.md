@@ -22,7 +22,7 @@ packages/claude/
 └── README.md
 ```
 
-コマンド・ルールの一覧とカテゴリは [`packages/cursor/README.md`](../cursor/README.md) の commands / rules 節を参照（Cursor と Claude でラッパーは対応する）。
+コマンド・ルールの一覧とカテゴリは [`packages/cursor/README.md`](../cursor/README.md) の commands / rules 節を参照（Cursor と Claude でラッパーは対応する）。コマンド basename の旧→新対応は [`packages/shared/shared/ai/docs/LOCAL-SETUP.md`](../shared/shared/ai/docs/LOCAL-SETUP.md) を参照。
 
 Claude Code の Agent Skills（`~/.claude/skills/` に `<name>/SKILL.md` を置く形式）は本 dotfiles の `packages/claude` には**現状同梱していない**。利用する場合はローカルで `~/.claude/skills/` に追加するか、必要なら `packages/claude/skills/` を新設して `make stow` で配布する。
 

@@ -5,14 +5,14 @@
 - `@~/.config/shared/ai/rules/conventions/pr-description-rule.md`（PR Title・Description）
 - `@~/.config/shared/ai/rules/conventions/commit-message-rule.md`（PR Title の type / scope / subject 定義）
 
-**Input**: `/suggest-pr-description` の後に続く引数は、GitHub PR URL、Notion チケット ID、または Notion URL（すべて任意）。
+**Input**: `/suggest-pr-description` の後に続く引数は、GitHub PR URL、チケット ID、またはチケット URL（すべて任意）。チケット取得は `ticket-retrieval-rule` に従う。
 
 **使用例**:
 
 - `/suggest-pr-description`
 - `/suggest-pr-description https://github.com/owner/repo/pull/123`
-- `/suggest-pr-description DC-1234`
-- `/suggest-pr-description https://github.com/owner/repo/pull/123 DC-1234`
+- `/suggest-pr-description PROJ-1234`
+- `/suggest-pr-description https://github.com/owner/repo/pull/123 PROJ-1234`
 
 ---
 
@@ -24,15 +24,15 @@
 
 ### 1. ルールの読み込み
 
-`@~/.config/shared/ai/rules/conventions/pr-description-rule.md` と `commit-message-rule.md` を Read する。同ディレクトリの `pr-description-rule.local.md` があれば併せて Read（無ければスキップ）。
+1. `@~/.config/shared/ai/rules/conventions/pr-description-rule.md` と `commit-message-rule.md` を Read する。同ディレクトリの `pr-description-rule.local.md` があれば併せて Read（無ければスキップ）
+2. チケット引数がある場合のみ、`@~/.config/shared/ai/rules/conventions/ticket-retrieval-rule.md` を Read。同ディレクトリの `ticket-retrieval-rule.local.md` があれば併せて Read
 
 ### 2. 引数の解析
 
 引数を以下のカテゴリに分類する。
 
-- `github.com` を含む URL → **GitHub PR URL**
-- `notion.so` または `notion.site` を含む URL → **Notion URL**
-- チケット ID パターン（`[A-Z]+-\d+`）に一致する文字列 → **Notion チケット ID**
+- `github.com` を含む URL かつ `/pull/` を含む → **GitHub PR URL**
+- 上記以外の URL、またはチケット ID パターン（`[A-Z]+-\d+`）に一致する文字列 → **チケット**
 
 ### 3. テンプレートの検出（最優先）
 
@@ -99,9 +99,9 @@ git --no-pager diff origin/<base>...HEAD
 
 diff が大きい場合は `--stat` の概要で全体像を把握してから、主要なファイルのみ個別に確認する。
 
-### 5. Notion チケット情報の取得（引数がある場合のみ）
+### 5. チケット情報の取得（引数がある場合のみ）
 
-Notion チケット ID または Notion URL が渡された場合のみ、Notion MCP を使ってチケットの目的・背景・要件を取得する。
+チケット ID またはチケット URL が渡された場合のみ、`ticket-retrieval-rule`（および存在すれば `.local.md`）に従いチケットの目的・背景・要件を取得する。
 引数がなければこのステップはスキップする。
 
 ### 6. 変更内容の分析
@@ -124,7 +124,7 @@ diff の読み取りだけでは変更の全体像が把握しにくい場合、
 ### 7. PR Title と Description の生成
 
 - **PR Title**: `pr-description-rule` の「PR タイトル」に従い、`type(scope): subject [TICKET-ID]` 形式で生成する（`type` / `scope` / subject の定義は `commit-message-rule` のヘッダーに準拠）
-  - 例: `feat(user-list): フィルタリング機能を追加 [DC-6713]`
+  - 例: `feat(user-list): フィルタリング機能を追加 [PROJ-1234]`
   - ヘッダー全体 72 文字以内（subject 50 文字以内、`[TICKET-ID]` 含む）
   - scope が不明確な場合は省略（例: `chore: 依存関係を更新`）
   - チケット ID が取得できた場合のみ、末尾に半角スペース + `[TICKET-ID]` を付与する
@@ -135,7 +135,7 @@ diff の読み取りだけでは変更の全体像が把握しにくい場合、
   - `📝 PR概要` `主な実装内容` `変更前後のスクリーンショット`: プレースホルダーを適切な内容に置き換える
   - `👮‍♂️ 動作確認`: リストの追加・変更は不可、チェックを入れることのみ可
   - `✅ 困ったらこの辺をチェック`: テンプレートの内容をそのまま維持し、変更しない
-- Notion チケット情報があれば、テンプレート内の該当セクション（関連リンク等）に反映する
+- チケット情報があれば、テンプレート内の該当セクション（関連リンク等）に反映する
 - PR URL がある場合は、既存 Description との改善ポイントも補足する
 
 ### 8. PR 文案の下書き作成
@@ -204,6 +204,6 @@ feat(scope): 変更概要 [TICKET-ID]
 - 「目的」は該当するものを **1つだけ選んで** 記載する
 - プレースホルダー（`todo`, `タスク概要`）は必ず具体的な内容に置き換える
 - チケット ID が取得できた場合は、PR Title の subject 末尾に半角スペース + `[TICKET-ID]` を付与する
-- Notion MCP は引数で ID/URL が渡された場合のみ使用し、渡されなければ呼び出さない
+- チケット取得は `ticket-retrieval-rule`（+ 存在すれば `.local.md`）に従い、引数で ID/URL が渡された場合のみ実行する
 - 既存 PR の改善時は、元の Description の良い部分は活かしつつ改善する
 - 最終 Step の再検証完了前に、成果物をユーザーへ出力しない

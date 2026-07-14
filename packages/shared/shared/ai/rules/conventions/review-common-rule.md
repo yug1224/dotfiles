@@ -14,8 +14,18 @@
 
 - **`./review-common-rule.local.md`** — ローカル追加観点
 - **`./pr-review-rule.local.md`** — 自社モノレポ向けの追加コンテキスト・重要度の詳細定義
+- **`./pr-feedback-registry.local.md`** — 再発防止レジストリ（FB-00x / FB-D。存在時のみ）
+- **`../../docs/feedback-log.local.md`** / **`../../docs/feedback-index.local.md`** — ローカル log / index（存在時のみ Glob）
 
 `.md` と `.local.md` が矛盾する場合は **`.local.md` を優先**する。
+
+### dotfiles リポジトリで AI 設定を変更するとき
+
+ワークスペースが dotfiles（`packages/shared/shared/ai/` を編集）の場合、上記に加え次を Read する:
+
+- **`../meta/ai-config-rule.md`** — 3 ラッパー原則
+- **`../meta/wrapper-parity-checklist.md`** — PR 前同期チェック
+- **`../meta/leakage-checklist.md`** — 公開本文漏洩チェック
 
 ### 品質チェックリスト
 

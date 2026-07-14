@@ -1,5 +1,5 @@
 ---
-description: PR レビュー・diff レビュー共通の調査手順・観点・出力フォーマット。/pr-review および /diff-review から参照される。
+description: PR レビュー・diff レビュー共通の調査手順・観点・出力フォーマット。/review-pr および /review-diff から参照される。
 globs: []
 alwaysApply: false
 ---

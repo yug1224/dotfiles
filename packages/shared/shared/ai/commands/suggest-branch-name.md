@@ -2,13 +2,13 @@
 
 **参照ルール**: `packages/shared/shared/ai/rules/conventions/branch-name-rule.md`（stow 後 `~/.config/shared/ai/rules/` 等。Cursor ラッパー: `branch-name-rule.mdc`。所在は `shared/README.md` の「ルールファイルの所在」）
 
-**Input**: `/suggest-branch-name` の後に続く引数は、チケット ID またはチケット URL（任意）。Notion、GitHub Issues、Jira 等のチケットシステムに対応。
+**Input**: `/suggest-branch-name` の後に続く引数は、チケット ID またはチケット URL（任意）。取得方法は `ticket-retrieval-rule`（および存在すれば `.local.md`）に従う。
 
 **使用例**:
 
 - `/suggest-branch-name`
-- `/suggest-branch-name https://notion.so/xxx`
-- `/suggest-branch-name DC-1234`
+- `/suggest-branch-name https://github.com/owner/repo/issues/123`
+- `/suggest-branch-name PROJ-1234`
 
 ---
 
@@ -45,7 +45,8 @@ git --no-pager diff --staged --stat
 unstaged / staged の変更があれば、変更内容から目的を推測する補助情報として活用する。diff が大きい場合は `--stat` の概要のみで判断する。
 
 c. **チケット情報**（引数がある場合のみ）
-`packages/shared/shared/ai/rules/conventions/ticket-retrieval-rule.md`（stow 後 `~/.config/shared/ai/rules/` 等。Cursor ラッパー: `ticket-retrieval-rule.mdc`）に従い、チケットの目的・背景・タイトルを取得する。
+
+`@~/.config/shared/ai/rules/conventions/ticket-retrieval-rule.md` に従い、チケットの目的・背景・タイトルを取得する。同ディレクトリの `ticket-retrieval-rule.local.md` があれば併せて Read（無ければスキップ）。
 
 d. **コンテキスト情報**
 ユーザーが `@` で添付したファイルや会話中で提供した情報があれば、それも考慮する。
