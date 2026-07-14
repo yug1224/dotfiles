@@ -1,16 +1,14 @@
 # VS Code / Cursor ユーザー設定（`settings.json`）
 
-このパッケージは **Visual Studio Code** と **Cursor** の両方のユーザー設定ディレクトリへ同じ `settings.json` を `stow` で配布する。
+このパッケージは **Visual Studio Code** と **Cursor** の両方のユーザー設定ディレクトリへ同じ `settings.json` を `make mise-dotfiles`（ルート `mise.toml` の `[dotfiles]`）で配布する。
 
 ## デプロイ先
-
-リポジトリの [`Makefile`](../../Makefile) より:
 
 - `~/Library/Application Support/Code/User`（VS Code）
 - `~/Library/Application Support/Cursor/User`（Cursor）
 
 ```bash
-make stow
+make mise-dotfiles
 ```
 
 設定変更後は **Developer: Reload Window** を実行する。
@@ -26,7 +24,7 @@ make stow
 | `oxc.path.oxfmt` / `oxc.path.oxlint` | `$HOME/.local/share/mise/installs/npm-oxfmt/latest/...`（mise グローバル） |
 | `customLocalFormatters`              | `$HOME/Workspaces/yug1224/dotfiles/packages/code/bin/oxfmt-stdin.sh`       |
 
-**前提**: dotfiles は `$HOME/Workspaces/yug1224/dotfiles` に clone していること。別の場所に置く場合はパスを合わせて更新する。`make stow` 後は **Developer: Reload Window** を実行する。
+**前提**: dotfiles は `$HOME/Workspaces/yug1224/dotfiles` に clone していること。別の場所に置く場合はパスを合わせて更新する。`make mise-dotfiles` 後は **Developer: Reload Window** を実行する。
 
 Oxc の LSP は `${workspaceFolder}` を展開しない。
 

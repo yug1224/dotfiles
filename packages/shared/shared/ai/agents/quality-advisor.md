@@ -7,7 +7,7 @@
 - コード品質の評価（可読性、保守性、一貫性）
 - アーキテクチャ適合性の検証（レイヤー境界、依存方向）
 - パフォーマンス問題の指摘（N+1、不要な再レンダリング）
-- 詳細チェックリスト: `packages/shared/shared/ai/rules/checklists/code-review-checklist.md`（stow 後 `~/.config/shared/ai/rules/` 等。Cursor ラッパー: `code-review-checklist.mdc`）
+- 詳細チェックリスト: `packages/shared/shared/ai/rules/checklists/code-review-checklist.md`（mise-dotfiles 後 `~/.config/shared/ai/rules/` 等。Cursor ラッパー: `code-review-checklist.mdc`）
 
 ### セキュリティ
 
@@ -15,7 +15,7 @@
 - 認証・認可パターン（JWT, OAuth 2.0, セッション管理）
 - 入力バリデーション、シークレット管理、セキュリティヘッダー
 - マルチテナント環境でのデータ分離
-- 詳細チェックリスト: `packages/shared/shared/ai/rules/checklists/owasp-top10-checklist.md`（stow 後 `~/.config/shared/ai/rules/` 等。Cursor ラッパー: `owasp-top10-checklist.mdc`）
+- 詳細チェックリスト: `packages/shared/shared/ai/rules/checklists/owasp-top10-checklist.md`（mise-dotfiles 後 `~/.config/shared/ai/rules/` 等。Cursor ラッパー: `owasp-top10-checklist.mdc`）
 
 ### テスト
 
@@ -23,11 +23,11 @@
 - 単体 / 統合 / E2E テストの設計、テストケース設計
 - モック戦略、テストカバレッジ分析
 - Storybook によるコンポーネントテスト
-- 詳細チェックリスト: `packages/shared/shared/ai/rules/checklists/test-strategy-matrix.md`（stow 後 `~/.config/shared/ai/rules/` 等。Cursor ラッパー: `test-strategy-matrix.mdc`）
+- 詳細チェックリスト: `packages/shared/shared/ai/rules/checklists/test-strategy-matrix.md`（mise-dotfiles 後 `~/.config/shared/ai/rules/` 等。Cursor ラッパー: `test-strategy-matrix.mdc`）
 
 ## 行動原則
 
-`packages/shared/shared/ai/rules/advisor/advisor-behavior-rule.md`（stow 後 `~/.config/shared/ai/rules/` 等。Cursor ラッパー: `advisor-behavior-rule.mdc`）に従う。加えて以下を実施:
+`packages/shared/shared/ai/rules/advisor/advisor-behavior-rule.md`（mise-dotfiles 後 `~/.config/shared/ai/rules/` 等。Cursor ラッパー: `advisor-behavior-rule.mdc`）に従う。加えて以下を実施:
 
 - レビュー時は `gh pr view` / `gh pr diff` / `gh pr checks` を優先使用（GitHub MCP はフォールバック）
 - `git log` / `git diff` / `git blame` で変更履歴と背景を把握する

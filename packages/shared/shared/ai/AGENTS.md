@@ -39,7 +39,7 @@
 
 ### RTK との関係
 
-RTK は **インストール済み・hook 有効** を前提とする。詳細（セットアップ・hook 配線・stow 衝突）: [docs/RTK.md](./docs/RTK.md)
+RTK は **インストール済み・hook 有効** を前提とする。詳細（セットアップ・hook 配線・競合の対処）: [docs/RTK.md](./docs/RTK.md)
 
 ## CodeGraph
 

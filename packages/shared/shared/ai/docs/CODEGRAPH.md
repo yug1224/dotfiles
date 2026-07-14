@@ -13,13 +13,13 @@
 | **グローバル**   | 1 回              | CLI（済）+ MCP 配線 + allowlist + エージェントルール |
 | **プロジェクト** | 各リポジトリ 1 回 | `codegraph init` → `.codegraph/` 作成 + グラフ構築   |
 
-`codegraph install` を**そのまま実行しない**。[RTK.md](./RTK.md) の `rtk init -g` と同様、stow 管理の正本（`CLAUDE.md` / `AGENTS.md` / `permissions.json` 等）とドリフトする。
+`codegraph install` を**そのまま実行しない**。[RTK.md](./RTK.md) の `rtk init -g` と同様、mise [dotfiles] 管理の正本（`CLAUDE.md` / `AGENTS.md` / `permissions.json` 等）とドリフトする。
 
 ## 1. dotfiles デプロイ
 
 ```bash
-make stow            # cursor / claude ラッパー・allowlist
-make mise-dotfiles   # shared 本文（codegraph-rule 等）
+make stow            # ~/.config/mise
+make mise-dotfiles   # shared 本文 + cursor/claude ラッパー・allowlist
 ```
 
 以下が展開される:
@@ -91,7 +91,7 @@ codegraph status
 
 peer ディレクトリを 1 インデックスにまとめる機能は未対応のため、別場所のリポジトリはそれぞれ `init` + `projectPath` で扱う。
 
-## Allowlist（stow 済み）
+## Allowlist（mise-dotfiles 済み）
 
 | ツール                     | エントリ                                 |
 | -------------------------- | ---------------------------------------- |

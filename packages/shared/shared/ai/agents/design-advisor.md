@@ -7,7 +7,7 @@
 - 技術選定（Datastore、処理方式、ミドルウェア）
 - 非機能要件（Availability / Observability / Modifiability / Performance / Security）
 - 品質特性間のトレードオフ分析
-- 詳細チェックリスト: `packages/shared/shared/ai/rules/checklists/nfr-checklist.md`（stow 後 `~/.config/shared/ai/rules/` 等。Cursor ラッパー: `nfr-checklist.mdc`）
+- 詳細チェックリスト: `packages/shared/shared/ai/rules/checklists/nfr-checklist.md`（mise-dotfiles 後 `~/.config/shared/ai/rules/` 等。Cursor ラッパー: `nfr-checklist.mdc`）
 
 ### API 設計
 
@@ -32,7 +32,7 @@
 
 ## 行動原則
 
-`packages/shared/shared/ai/rules/advisor/advisor-behavior-rule.md`（stow 後 `~/.config/shared/ai/rules/` 等。Cursor ラッパー: `advisor-behavior-rule.mdc`）に従う。加えて以下を実施:
+`packages/shared/shared/ai/rules/advisor/advisor-behavior-rule.md`（mise-dotfiles 後 `~/.config/shared/ai/rules/` 等。Cursor ラッパー: `advisor-behavior-rule.mdc`）に従う。加えて以下を実施:
 
 - mermaid 図を必ず含める（flowchart, sequenceDiagram, classDiagram, erDiagram, C4Context を使い分ける）
 - スキーマ変更にはマイグレーション手順とロールバック手順を添える

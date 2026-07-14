@@ -10,8 +10,8 @@ cd dotfiles
 make install        # Homebrew インストール・Prezto clone（install.sh）
 make brew           # Brewfile（mise / stow / casks 等）
 make node           # npm install（lefthook の pre-commit で oxfmt / secretlint に必要。TypeScript はエディタの言語サービス用）
-make stow           # Stow 管理の symlink（未移行パッケージ）
-make mise-dotfiles  # ~/.dotfiles 安定パス + mise [dotfiles] の symlink
+make stow           # Stow 管理の symlink（ssh / ~/.config/mise）
+make mise-dotfiles  # 残りの設定 symlink（zsh / shared / editors 等）
 ```
 
 - `make install` だけでは **Brew bundle・stow・node_modules・mise dotfiles は入りません**。上記の順で足してください。
@@ -23,17 +23,17 @@ make mise-dotfiles  # ~/.dotfiles 安定パス + mise [dotfiles] の symlink
 
 ### mise と Stow の境界
 
-| 層                | 正本                                                               | 対象                                                                                   |
-| ----------------- | ------------------------------------------------------------------ | -------------------------------------------------------------------------------------- |
-| mise `[dotfiles]` | ルート [`mise.toml`](mise.toml)                                    | `~/.dotfiles`、`~/.tigrc`、`~/.config/{rtk,git,shared}`、pnpm `rc`、zsh（`.zshrc` 等） |
-| mise `[tools]`    | [`packages/mise/mise/config.toml`](packages/mise/mise/config.toml) | node / pnpm CLI / npm グローバル等                                                     |
-| Stow              | [`Makefile`](Makefile) の `stow`                                   | mise config / cursor / claude / code / ssh（未移行分）                                 |
-| Homebrew          | [`Brewfile`](Brewfile)                                             | casks / ネイティブ依存 / 残 CLI（`tig`・`rtk` バイナリ含む）                           |
+| 層                | 正本                                                               | 対象                                                                          |
+| ----------------- | ------------------------------------------------------------------ | ----------------------------------------------------------------------------- |
+| mise `[dotfiles]` | ルート [`mise.toml`](mise.toml)                                    | zsh / shared / rtk / git / pnpm / tig / code（双ターゲット）/ cursor / claude |
+| mise `[tools]`    | [`packages/mise/mise/config.toml`](packages/mise/mise/config.toml) | node / pnpm CLI / npm グローバル等                                            |
+| Stow              | [`Makefile`](Makefile) の `stow`                                   | ssh、`~/.config/mise`（未移行分）                                             |
+| Homebrew          | [`Brewfile`](Brewfile)                                             | casks / ネイティブ依存 / 残 CLI（`tig`・`rtk` バイナリ含む）                  |
 
 **所有権ルール**
 
 - 同一ターゲットを Stow と mise で二重管理しない。移管時は先に正しい `-t` で `stow -D` し、Makefile から外してから `make mise-dotfiles`。
-- `*.local.*` / 秘密ファイルは `[dotfiles]` に取り込まない（`.zshrc.local` 含む）。
+- `*.local.*` / 秘密ファイルは `[dotfiles]` に取り込まない（`.zshrc.local` / `settings.local.json` 含む）。
 - 既存マシンで設定を Stow から外す例:
 
 ```bash
@@ -42,9 +42,13 @@ make brew
 stow -D -v -d ./packages -t ~ tig zsh
 stow -D -v -d ./packages -t ~/.config rtk git shared
 stow -D -v -d ./packages -t ~/Library/Preferences/pnpm pnpm
+stow -D -v -d ./packages -t ~/Library/Application\ Support/Code/User code
+stow -D -v -d ./packages -t ~/Library/Application\ Support/Cursor/User code
+stow -D -v -d ./packages -t ~/.cursor cursor
+stow -D -v -d ./packages -t ~/.claude claude
 make mise-dotfiles
-# .zshrc.local は非管理。ソースがある場合は再リンク:
 test -f packages/zsh/.zshrc.local && ln -sfn "$(pwd)/packages/zsh/.zshrc.local" ~/.zshrc.local
+test -f packages/claude/settings.local.json && ln -sfn "$(pwd)/packages/claude/settings.local.json" ~/.claude/settings.local.json
 mise -C . dotfiles status
 ```
 

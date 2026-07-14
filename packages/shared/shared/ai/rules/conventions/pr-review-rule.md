@@ -26,8 +26,8 @@
 ### 対象リポジトリのルール
 
 - 対象リポジトリの `.cursor/rules/`（または同等のルール配置）を動的に探索・参照する
-- 共有規約（stow 後）: `@~/.config/shared/ai/rules/conventions/commit-message-rule.md`
-- 共有規約（stow 後）: `@~/.config/shared/ai/rules/conventions/branch-name-rule.md`
+- 共有規約（mise-dotfiles 後）: `@~/.config/shared/ai/rules/conventions/commit-message-rule.md`
+- 共有規約（mise-dotfiles 後）: `@~/.config/shared/ai/rules/conventions/branch-name-rule.md`
 
 ### 詳細観点（変更内容に応じて選択適用）
 

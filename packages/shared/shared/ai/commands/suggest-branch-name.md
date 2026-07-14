@@ -1,6 +1,6 @@
 利用可能な情報を総合的に分析し、ブランチ名規約に準拠したブランチ名を Must have / Nice to have の2パターンで提案する。
 
-**参照ルール**: `packages/shared/shared/ai/rules/conventions/branch-name-rule.md`（stow 後 `~/.config/shared/ai/rules/` 等。Cursor ラッパー: `branch-name-rule.mdc`。所在は `shared/README.md` の「ルールファイルの所在」）
+**参照ルール**: `packages/shared/shared/ai/rules/conventions/branch-name-rule.md`（mise-dotfiles 後 `~/.config/shared/ai/rules/` 等。Cursor ラッパー: `branch-name-rule.mdc`。所在は `shared/README.md` の「ルールファイルの所在」）
 
 **Input**: `/suggest-branch-name` の後に続く引数は、チケット ID またはチケット URL（任意）。取得方法は `ticket-retrieval-rule`（および存在すれば `.local.md`）に従う。
 
@@ -20,7 +20,7 @@
 
 ### 1. 規約の読み込み
 
-`packages/shared/shared/ai/rules/conventions/branch-name-rule.md`（または stow 後の `~/.config/shared/ai/rules/conventions/branch-name-rule.md`）を Read ツールで読み込み、ブランチ名規約を把握する。
+`packages/shared/shared/ai/rules/conventions/branch-name-rule.md`（または mise-dotfiles 後の `~/.config/shared/ai/rules/conventions/branch-name-rule.md`）を Read ツールで読み込み、ブランチ名規約を把握する。
 
 ### 2. 情報の収集
 

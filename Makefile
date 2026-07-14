@@ -21,11 +21,6 @@ mise-dotfiles: mise-gate
 stow:
 	stow -R -v -d ./packages -t ~ ssh
 	stow -R -v -d ./packages -t ~/.config mise
-	stow -R -v -d ./packages -t ~/Library/Application\ Support/Code/User code
-	stow -R -v -d ./packages -t ~/Library/Application\ Support/Cursor/User code
-	mkdir -p ~/.claude
-	stow -R -v -d ./packages -t ~/.cursor cursor
-	stow -R -v -d ./packages -t ~/.claude claude
 
 .PHONY: node
 node:
