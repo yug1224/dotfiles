@@ -142,7 +142,7 @@ dotfiles 変更時 → `rules/meta/`
 1. 本文を `packages/shared/shared/ai/` に追加
 2. Cursor: `packages/cursor/rules/<subdir>/<name>.mdc` + `@import`
 3. Claude: `packages/claude/rules/<subdir>/<name>.md` + `@import`
-4. `make mise-dotfiles` で shared 本文と Cursor / Claude ラッパーを反映（必要なら `make stow` で `~/.config/mise`）
+4. `make mise-dotfiles` で shared 本文と Cursor / Claude ラッパーを反映
 
 **Meta ルール**（`rules/meta/`）は dotfiles AI 設定 PR 時のみ Read。`alwaysApply: false`。
 

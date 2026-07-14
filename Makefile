@@ -17,11 +17,6 @@ mise-gate:
 mise-dotfiles: mise-gate
 	mise -C "$(CURDIR)" dotfiles apply --yes
 
-.PHONY: stow
-stow:
-	stow -R -v -d ./packages -t ~ ssh
-	stow -R -v -d ./packages -t ~/.config mise
-
 .PHONY: node
 node:
 	npm install

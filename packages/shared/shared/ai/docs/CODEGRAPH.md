@@ -18,8 +18,7 @@
 ## 1. dotfiles デプロイ
 
 ```bash
-make stow            # ~/.config/mise
-make mise-dotfiles   # shared 本文 + cursor/claude ラッパー・allowlist
+make mise-dotfiles   # shared 本文 + cursor/claude ラッパー・allowlist + ~/.config/mise
 ```
 
 以下が展開される:

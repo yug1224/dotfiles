@@ -17,7 +17,7 @@
 1. shared 本文を追加・修正（1 行目に `Applied: <rule-id>` を shared のみ記載）
 2. Cursor `.mdc` と Claude `.md` ラッパーを **同時** に追加・更新
 3. `wrapper-parity-checklist.md` と `leakage-checklist.md` を上から確認
-4. `make mise-dotfiles` で shared 本文と Cursor / Claude ラッパーを反映（必要なら `make stow` で `~/.config/mise`）
+4. `make mise-dotfiles` で shared 本文と Cursor / Claude ラッパーを反映
 
 ## 例外
 
