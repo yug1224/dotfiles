@@ -5,7 +5,7 @@
 ## このリポジトリでの位置付け
 
 - 原本: `packages/shared/shared/ai/AGENTS.md`
-- デプロイ先: `make stow` により `~/.config/shared/ai/` に展開される
+- デプロイ先: `make mise-dotfiles` により `~/.config/shared/ai/` に展開される
 - 各ツール側からの参照（全て `@~/.config/shared/ai/` 絶対パス）:
   - Cursor: `packages/cursor/commands/*.md` → `@~/.config/shared/ai/commands/...`、`packages/cursor/rules/<sub>/*.mdc` → `@~/.config/shared/ai/rules/<sub>/...`
   - Claude Code: `packages/claude/CLAUDE.md` → `@~/.config/shared/ai/AGENTS.md`、`packages/claude/commands/*.md` → `@~/.config/shared/ai/commands/...`

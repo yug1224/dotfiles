@@ -13,3 +13,8 @@ dotfiles.default_mode = "symlink"
 "~/.config/rtk" = { source = "packages/rtk/rtk", mode = "symlink" }
 "~/Library/Preferences/pnpm/rc" = { source = "packages/pnpm/rc", mode = "symlink" }
 "~/.config/git" = { source = "packages/git/git", mode = "symlink" }
+"~/.zshrc" = { source = "packages/zsh/.zshrc", mode = "symlink" }
+"~/.zprofile" = { source = "packages/zsh/.zprofile", mode = "symlink" }
+"~/.zpreztorc" = { source = "packages/zsh/.zpreztorc", mode = "symlink" }
+"~/.zsh_plugins" = { source = "packages/zsh/.zsh_plugins", mode = "symlink" }
+"~/.config/shared" = { source = "packages/shared/shared", mode = "symlink" }

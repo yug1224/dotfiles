@@ -18,7 +18,8 @@
 ## 1. dotfiles デプロイ
 
 ```bash
-make stow
+make stow            # cursor / claude ラッパー・allowlist
+make mise-dotfiles   # shared 本文（codegraph-rule 等）
 ```
 
 以下が展開される:

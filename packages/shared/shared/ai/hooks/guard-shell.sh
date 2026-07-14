@@ -3,10 +3,10 @@
 # ({ "command", "cwd", "sandbox" }) and prints one JSON line with
 # { "permission": "allow" | "ask" | "deny", ... }.
 #
-# Deployed to ~/.config/shared/ai/hooks/ and ~/.config/shared/ai/hooks/ (same
-# bytes via make stow). Cursor invokes ~/.cursor/hooks/guard-shell.sh, a thin
-# wrapper that execs this file. Claude uses ~/.claude/hooks/guard-shell.sh
-# (adapter) piping the same JSON shape into ~/.config/shared/ai/hooks/guard-shell.sh.
+# Deployed to ~/.config/shared/ai/hooks/ (via make mise-dotfiles). Cursor invokes
+# ~/.cursor/hooks/guard-shell.sh, a thin wrapper that execs this file. Claude uses
+# ~/.claude/hooks/guard-shell.sh (adapter) piping the same JSON shape into
+# ~/.config/shared/ai/hooks/guard-shell.sh.
 #
 # This file must NOT exec or source other scripts for its core decision.
 set -uo pipefail

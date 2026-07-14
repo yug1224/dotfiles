@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-このファイルは Claude Code 全セッションで自動的にロードされる、ユーザーレベルの常時コンテキスト。共有の AGENTS 本文は `~/.config/shared/ai/` に `make stow` で展開され、`@~/.config/shared/ai/...` で取り込む。`packages/claude/rules/` のラッパーは `~/.claude/rules/` に展開され、`@./rules/...`（`~/.claude/` 基準の相対パス）で取り込む。
+このファイルは Claude Code 全セッションで自動的にロードされる、ユーザーレベルの常時コンテキスト。共有の AGENTS 本文は `~/.config/shared/ai/` に `make mise-dotfiles` で展開され、`@~/.config/shared/ai/...` で取り込む。`packages/claude/rules/` のラッパーは `~/.claude/rules/` に展開され、`@./rules/...`（`~/.claude/` 基準の相対パス）で取り込む。
 
 ## 共通規約
 

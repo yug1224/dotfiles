@@ -2,7 +2,7 @@
 
 Cursor の設定ファイル群。`stow -t ~/.cursor cursor` で `~/.cursor/` にデプロイされる。
 
-共有の rules / commands 本文は `make stow` で `~/.config/shared/ai/` に展開される。`.mdc` やコマンドからは `@~/.config/shared/ai/...` 絶対パスで取り込む（例: `@~/.config/shared/ai/rules/...`、`@~/.config/shared/ai/commands/...`）。
+共有の rules / commands 本文は `make mise-dotfiles` で `~/.config/shared/ai/` に展開される。`.mdc` やコマンドからは `@~/.config/shared/ai/...` 絶対パスで取り込む（例: `@~/.config/shared/ai/rules/...`、`@~/.config/shared/ai/commands/...`）。
 
 ## ディレクトリ構成
 
@@ -104,7 +104,7 @@ description: 説明文 # コマンドの説明（パレットに表示）
 
 ### ルール参照パス
 
-- **共有本文（推奨）**: コマンド・ルールの Steps では `@~/.config/shared/ai/rules/<subdir>/<name>.md`（stow 後の絶対パス）。リポジトリ編集時は `packages/shared/shared/ai/rules/...` が正本。
+- **共有本文（推奨）**: コマンド・ルールの Steps では `@~/.config/shared/ai/rules/<subdir>/<name>.md`（展開後の絶対パス）。リポジトリ編集時は `packages/shared/shared/ai/rules/...` が正本。
 - **Cursor ラッパー**: `.mdc` の本文取り込みは `@~/.config/shared/ai/rules/...` と同様。ドキュメント上の例示に `~/.cursor/rules/<subdir>/<name>.mdc` を併記してもよい（stow 後の実パス）。
 
 ```markdown
@@ -538,7 +538,7 @@ Cursor の Auto-run 時に承認なしで実行を許可するコマンド・MCP
 
 ### 共有ルール向けローカル補助ファイル（`review-common-rule`）
 
-[`packages/shared/shared/ai/rules/conventions/review-common-rule.md`](../shared/shared/ai/rules/conventions/review-common-rule.md) は同ディレクトリの **`./pr-review-rule.md`**（必須）と、存在する場合のみ同名の **`.local.md`** を参照する（運用は `shared/ai/README.local.md`、gitignore）。`make stow` で `~/.config/shared/ai/rules/conventions/` に展開する。
+[`packages/shared/shared/ai/rules/conventions/review-common-rule.md`](../shared/shared/ai/rules/conventions/review-common-rule.md) は同ディレクトリの **`./pr-review-rule.md`**（必須）と、存在する場合のみ同名の **`.local.md`** を参照する（運用は `shared/ai/README.local.md`、gitignore）。`make mise-dotfiles` で `~/.config/shared/ai/rules/conventions/` に展開する。
 
 `~/.cursor/rules/**/*.local.mdc` は Cursor 専用ルールとして引き続き有効。共有本文から参照される `./*.local.md` は **`shared/rules/` 配下の同じサブディレクトリ**に置く、という点だけ別系統である。
 

@@ -23,26 +23,28 @@ make mise-dotfiles  # ~/.dotfiles 安定パス + mise [dotfiles] の symlink
 
 ### mise と Stow の境界
 
-| 層                | 正本                                                               | 対象                                                                   |
-| ----------------- | ------------------------------------------------------------------ | ---------------------------------------------------------------------- |
-| mise `[dotfiles]` | ルート [`mise.toml`](mise.toml)                                    | `~/.dotfiles`、`~/.tigrc`、`~/.config/rtk`、`~/.config/git`、pnpm `rc` |
-| mise `[tools]`    | [`packages/mise/mise/config.toml`](packages/mise/mise/config.toml) | node / pnpm CLI / npm グローバル等                                     |
-| Stow              | [`Makefile`](Makefile) の `stow`                                   | zsh / mise config / shared / cursor / claude / code / ssh（未移行分）  |
-| Homebrew          | [`Brewfile`](Brewfile)                                             | casks / ネイティブ依存 / 残 CLI（`tig`・`rtk` バイナリ含む）           |
+| 層                | 正本                                                               | 対象                                                                                   |
+| ----------------- | ------------------------------------------------------------------ | -------------------------------------------------------------------------------------- |
+| mise `[dotfiles]` | ルート [`mise.toml`](mise.toml)                                    | `~/.dotfiles`、`~/.tigrc`、`~/.config/{rtk,git,shared}`、pnpm `rc`、zsh（`.zshrc` 等） |
+| mise `[tools]`    | [`packages/mise/mise/config.toml`](packages/mise/mise/config.toml) | node / pnpm CLI / npm グローバル等                                                     |
+| Stow              | [`Makefile`](Makefile) の `stow`                                   | mise config / cursor / claude / code / ssh（未移行分）                                 |
+| Homebrew          | [`Brewfile`](Brewfile)                                             | casks / ネイティブ依存 / 残 CLI（`tig`・`rtk` バイナリ含む）                           |
 
 **所有権ルール**
 
 - 同一ターゲットを Stow と mise で二重管理しない。移管時は先に正しい `-t` で `stow -D` し、Makefile から外してから `make mise-dotfiles`。
-- `*.local.*` / 秘密ファイルは `[dotfiles]` に取り込まない。
-- 既存マシンで設定を Stow から外す例（tig / rtk / pnpm / git）:
+- `*.local.*` / 秘密ファイルは `[dotfiles]` に取り込まない（`.zshrc.local` 含む）。
+- 既存マシンで設定を Stow から外す例:
 
 ```bash
 git pull
 make brew
-stow -D -v -d ./packages -t ~ tig
-stow -D -v -d ./packages -t ~/.config rtk git
+stow -D -v -d ./packages -t ~ tig zsh
+stow -D -v -d ./packages -t ~/.config rtk git shared
 stow -D -v -d ./packages -t ~/Library/Preferences/pnpm pnpm
 make mise-dotfiles
+# .zshrc.local は非管理。ソースがある場合は再リンク:
+test -f packages/zsh/.zshrc.local && ln -sfn "$(pwd)/packages/zsh/.zshrc.local" ~/.zshrc.local
 mise -C . dotfiles status
 ```
 

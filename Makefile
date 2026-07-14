@@ -19,8 +19,8 @@ mise-dotfiles: mise-gate
 
 .PHONY: stow
 stow:
-	stow -R -v -d ./packages -t ~ ssh zsh
-	stow -R -v -d ./packages -t ~/.config mise shared
+	stow -R -v -d ./packages -t ~ ssh
+	stow -R -v -d ./packages -t ~/.config mise
 	stow -R -v -d ./packages -t ~/Library/Application\ Support/Code/User code
 	stow -R -v -d ./packages -t ~/Library/Application\ Support/Cursor/User code
 	mkdir -p ~/.claude
