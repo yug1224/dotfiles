@@ -11,15 +11,18 @@
 # This file must NOT exec or source other scripts for its core decision.
 set -uo pipefail
 
+# GUI hook は login zsh の mise activate を通らないため shim を絶対指定（oxfmt-stdin と同型）
+JQ="${JQ:-$HOME/.local/share/mise/shims/jq}"
+
 deny_json() {
-  jq -nc \
+  "$JQ" -nc \
     --arg u "${1:-guard-shell: コマンドをブロックしました}" \
     --arg a "${2:-}" \
     '{permission:"deny", user_message: $u, agent_message: (if $a == "" then null else $a end)}'
 }
 
-if ! command -v jq &>/dev/null; then
-  printf '%s\n' '{"permission":"deny","user_message":"guard-shell: jq が未インストールです。brew install jq でインストールしてください。","agent_message":"Shell ガードを実行できません。"}'
+if [[ ! -x "$JQ" ]]; then
+  printf '%s\n' '{"permission":"deny","user_message":"guard-shell: jq が未インストールです。make mise-tools（packages/mise/config.toml の jq）でインストールしてください。","agent_message":"Shell ガードを実行できません。"}'
   exit 0
 fi
 
@@ -29,12 +32,12 @@ if [[ -z "$input" ]]; then
   exit 0
 fi
 
-if ! jq -e . >/dev/null 2>&1 <<<"$input"; then
+if ! "$JQ" -e . >/dev/null 2>&1 <<<"$input"; then
   deny_json "guard-shell: stdin が不正な JSON です。"
   exit 0
 fi
 
-cmd=$(jq -r '.command // ""' <<<"$input")
+cmd=$("$JQ" -r '.command // ""' <<<"$input")
 if [[ -z "$cmd" ]]; then
   deny_json "guard-shell: command が空か、command キーがありません。"
   exit 0
@@ -279,7 +282,7 @@ while IFS= read -r seg; do
   if [[ "$verdict" == ask && "$worst" == allow ]]; then
     worst=ask
   fi
-done < <(jq -nr --arg cmd "$cmd" '
+done < <("$JQ" -nr --arg cmd "$cmd" '
   $cmd
   | gsub("\\s*&&\\s*"; "\u0001")
   | gsub("\\s*\\|\\|\\s*"; "\u0001")
@@ -290,6 +293,6 @@ done < <(jq -nr --arg cmd "$cmd" '
   | select(length > 0)
 ')
 
-jq -nc --arg p "$worst" '{permission: $p}'
+"$JQ" -nc --arg p "$worst" '{permission: $p}'
 
 exit 0

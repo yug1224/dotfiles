@@ -17,6 +17,10 @@ mise-gate:
 mise-dotfiles: mise-gate
 	mise -C "$(CURDIR)" dotfiles apply --yes
 
+.PHONY: mise-tools
+mise-tools: mise-dotfiles
+	mise install
+
 .PHONY: node
 node:
 	npm install
