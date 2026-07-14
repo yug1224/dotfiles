@@ -3,7 +3,7 @@
 # Exit 1 if drift detected. Requires jq.
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CURSOR_PERMS="${ROOT}/packages/cursor/permissions.json"
 CLAUDE_SETTINGS="${ROOT}/packages/claude/settings.json"
 

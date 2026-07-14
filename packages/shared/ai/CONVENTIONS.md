@@ -1,6 +1,6 @@
 # AI 素材の命名・配置規約
 
-正本は `packages/shared/shared/ai/`。各ツールは `packages/cursor/` / `packages/claude/` から `@~/.config/shared/ai/...` で取り込む。
+正本は `packages/shared/ai/`。各ツールは `packages/cursor/` / `packages/claude/` から `@~/.config/shared/ai/...` で取り込む。
 
 ## 共通
 
@@ -139,7 +139,7 @@ dotfiles 変更時 → `rules/meta/`
 
 ## 新規追加手順
 
-1. 本文を `packages/shared/shared/ai/` に追加
+1. 本文を `packages/shared/ai/` に追加
 2. Cursor: `packages/cursor/rules/<subdir>/<name>.mdc` + `@import`
 3. Claude: `packages/claude/rules/<subdir>/<name>.md` + `@import`
 4. `make mise-dotfiles` で shared 本文と Cursor / Claude ラッパーを反映
@@ -154,10 +154,10 @@ dotfiles 変更時 → `rules/meta/`
 
 AI 設定は **RTK インストール済み・hook 有効** を前提とする。詳細は [docs/RTK.md](./docs/RTK.md) を参照。
 
-| 項目                | 正本                                                                      |
-| ------------------- | ------------------------------------------------------------------------- |
-| RTK 利用ガイド      | `packages/shared/shared/ai/docs/RTK.md`                                   |
-| hook 設定（Claude） | `packages/claude/settings.json`                                           |
-| hook 設定（Cursor） | `packages/cursor/hooks.json`                                              |
-| RTK 設定            | `packages/rtk/rtk/config.toml` → `~/.config/rtk/`（`make mise-dotfiles`） |
-| エージェント運用    | `rules/conventions/token-optimization-rule.md`                            |
+| 項目                | 正本                                                                  |
+| ------------------- | --------------------------------------------------------------------- |
+| RTK 利用ガイド      | `packages/shared/ai/docs/RTK.md`                                      |
+| hook 設定（Claude） | `packages/claude/settings.json`                                       |
+| hook 設定（Cursor） | `packages/cursor/hooks.json`                                          |
+| RTK 設定            | `packages/rtk/config.toml` → `~/.config/rtk/`（`make mise-dotfiles`） |
+| エージェント運用    | `rules/conventions/token-optimization-rule.md`                        |

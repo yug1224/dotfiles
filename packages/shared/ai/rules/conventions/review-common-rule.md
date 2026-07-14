@@ -21,7 +21,7 @@
 
 ### dotfiles リポジトリで AI 設定を変更するとき
 
-ワークスペースが dotfiles（`packages/shared/shared/ai/` を編集）の場合、上記に加え次を Read する:
+ワークスペースが dotfiles（`packages/shared/ai/` を編集）の場合、上記に加え次を Read する:
 
 - **`../meta/ai-config-rule.md`** — 3 ラッパー原則
 - **`../meta/wrapper-parity-checklist.md`** — PR 前同期チェック

@@ -3,9 +3,9 @@
 # Exit 1 on mismatch. Requires jq.
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CLAUDE_SETTINGS="${ROOT}/packages/claude/settings.json"
-GUARD="${ROOT}/packages/shared/shared/ai/hooks/guard-shell.sh"
+GUARD="${ROOT}/packages/shared/ai/hooks/guard-shell.sh"
 
 if ! command -v jq &>/dev/null; then
   echo "SKIP: jq required" >&2

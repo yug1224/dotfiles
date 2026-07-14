@@ -2,11 +2,11 @@
 
 # AI 設定変更ルール（dotfiles）
 
-`packages/shared/shared/ai/` および Cursor / Claude ラッパーを変更するときの手順。`alwaysApply: false` — dotfiles リポジトリで AI 設定を触るときのみ Read。
+`packages/shared/ai/` および Cursor / Claude ラッパーを変更するときの手順。`alwaysApply: false` — dotfiles リポジトリで AI 設定を触るときのみ Read。
 
 ## 3 ラッパー原則
 
-1. **正本**: `packages/shared/shared/ai/` に frontmatter なし `.md`
+1. **正本**: `packages/shared/ai/` に frontmatter なし `.md`
 2. **Cursor**: `packages/cursor/rules/<subdir>/<name>.mdc` — frontmatter + `@~/.config/shared/ai/rules/<subdir>/<name>.md`
 3. **Claude**: `packages/claude/rules/<subdir>/<name>.md` — 1 行 `@import`
 

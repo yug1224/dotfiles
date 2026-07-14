@@ -4,7 +4,7 @@
 
 - 公式: [colbymchenry/codegraph](https://github.com/colbymchenry/codegraph)
 - エージェント向けルール: `@~/.config/shared/ai/rules/conventions/codegraph-rule.md`
-- CLI: mise で `npm:@colbymchenry/codegraph`（[packages/mise/mise/config.toml](../../../../mise/mise/config.toml)）
+- CLI: mise で `npm:@colbymchenry/codegraph`（[packages/mise/config.toml](../../../mise/config.toml)）
 
 ## セットアップの 2 段階
 
@@ -98,7 +98,7 @@ peer ディレクトリを 1 インデックスにまとめる機能は未対応
 | Cursor `mcpAllowlist`      | `codegraph:codegraph_explore`            |
 | Claude `permissions.allow` | `Bash(codegraph:*)`, `mcp__codegraph__*` |
 
-同期確認: `packages/shared/scripts/check-allowlist-sync.sh`
+同期確認: `scripts/check-allowlist-sync.sh`
 
 ## トラブルシュート
 

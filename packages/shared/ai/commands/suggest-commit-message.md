@@ -1,6 +1,6 @@
 利用可能な情報を総合的に分析し、コミットメッセージ規約に基づいて Must have / Nice to have の2パターンを提案する。
 
-**参照ルール**: `packages/shared/shared/ai/rules/conventions/commit-message-rule.md`（mise-dotfiles 後 `~/.config/shared/ai/rules/` 等。Cursor ラッパー: `commit-message-rule.mdc`。所在は `shared/README.md` の「ルールファイルの所在」）
+**参照ルール**: `packages/shared/ai/rules/conventions/commit-message-rule.md`（mise-dotfiles 後 `~/.config/shared/ai/rules/` 等。Cursor ラッパー: `commit-message-rule.mdc`。所在は `shared/README.md` の「ルールファイルの所在」）
 
 **Input**: `/suggest-commit-message` の後に続く引数は、チケット ID またはチケット URL（任意）。取得方法は `ticket-retrieval-rule`（および存在すれば `.local.md`）に従う。
 
@@ -20,7 +20,7 @@
 
 ### 1. 規約の読み込み
 
-`packages/shared/shared/ai/rules/conventions/commit-message-rule.md`（または mise-dotfiles 後の `~/.config/shared/ai/rules/conventions/commit-message-rule.md`）を Read ツールで読み込み、コミットメッセージ規約を把握する。
+`packages/shared/ai/rules/conventions/commit-message-rule.md`（または mise-dotfiles 後の `~/.config/shared/ai/rules/conventions/commit-message-rule.md`）を Read ツールで読み込み、コミットメッセージ規約を把握する。
 
 ### 2. 情報の収集
 

@@ -1,5 +1,5 @@
 # Repo-local [dotfiles] / bootstrap 制御面。
-# [tools] は packages/mise/mise/config.toml（→ ~/.config/mise/）に残す。
+# [tools] は packages/mise/config.toml（→ ~/.config/mise/）に残す。
 min_version = { hard = "2026.7.4" }
 
 [settings]
@@ -10,14 +10,14 @@ dotfiles.default_mode = "symlink"
 # 安定パス入口（初回は config 相対 source なので ~/.dotfiles 不要）
 "~/.dotfiles" = { source = ".", mode = "symlink" }
 "~/.tigrc" = { source = "packages/tig/.tigrc", mode = "symlink" }
-"~/.config/rtk" = { source = "packages/rtk/rtk", mode = "symlink" }
+"~/.config/rtk" = { source = "packages/rtk", mode = "symlink" }
 "~/Library/Preferences/pnpm/rc" = { source = "packages/pnpm/rc", mode = "symlink" }
-"~/.config/git" = { source = "packages/git/git", mode = "symlink" }
+"~/.config/git" = { source = "packages/git", mode = "symlink" }
 "~/.zshrc" = { source = "packages/zsh/.zshrc", mode = "symlink" }
 "~/.zprofile" = { source = "packages/zsh/.zprofile", mode = "symlink" }
 "~/.zpreztorc" = { source = "packages/zsh/.zpreztorc", mode = "symlink" }
 "~/.zsh_plugins" = { source = "packages/zsh/.zsh_plugins", mode = "symlink" }
-"~/.config/shared" = { source = "packages/shared/shared", mode = "symlink" }
+"~/.config/shared" = { source = "packages/shared", mode = "symlink" }
 
 # packages/code — 同一 source を Code / Cursor User へ
 "~/Library/Application Support/Code/User/settings.json" = { source = "packages/code/settings.json", mode = "symlink" }
@@ -49,9 +49,9 @@ dotfiles.default_mode = "symlink"
 "~/.claude/hooks" = { source = "packages/claude/hooks", mode = "symlink" }
 
 # packages/ssh — .ssh 全体は紐付けない（鍵・known_hosts は非管理）
-"~/.ssh/config" = { source = "packages/ssh/.ssh/config", mode = "symlink" }
-"~/.ssh/00_global/config" = { source = "packages/ssh/.ssh/00_global/config", mode = "symlink" }
-"~/.ssh/01_github/config" = { source = "packages/ssh/.ssh/01_github/config", mode = "symlink" }
+"~/.ssh/config" = { source = "packages/ssh/config", mode = "symlink" }
+"~/.ssh/00_global/config" = { source = "packages/ssh/00_global/config", mode = "symlink" }
+"~/.ssh/01_github/config" = { source = "packages/ssh/01_github/config", mode = "symlink" }
 
 # packages/mise — [tools] 正本（config.local.toml は gitignore 同居・エントリ化しない）
-"~/.config/mise" = { source = "packages/mise/mise", mode = "symlink" }
+"~/.config/mise" = { source = "packages/mise", mode = "symlink" }

@@ -1,6 +1,6 @@
 # ローカル AI ルール初期化
 
-`.local.*` は **Git 管理しない**（`packages/shared/shared/ai/.gitignore`）。展開先（`~/.config/shared/ai/`）で個人・プロジェクト固有ルールを直接編集する。
+`.local.*` は **Git 管理しない**（`packages/shared/ai/.gitignore`）。展開先（`~/.config/shared/ai/`）で個人・プロジェクト固有ルールを直接編集する。
 
 公開境界の契約は [BOUNDARY.md](./BOUNDARY.md) を参照。
 
