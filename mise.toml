@@ -1,5 +1,5 @@
 # Repo-local [dotfiles] / bootstrap 制御面。
-# [tools] は packages/mise/config.toml（→ ~/.config/mise/）に残す。
+# [tools] 正本: packages/mise/config.toml → ~/.config/mise/config.toml
 min_version = { hard = "2026.7.4" }
 
 [settings]
@@ -12,7 +12,9 @@ dotfiles.default_mode = "symlink"
 "~/.tigrc" = { source = "packages/tig/.tigrc", mode = "symlink" }
 "~/.config/rtk" = { source = "packages/rtk", mode = "symlink" }
 "~/Library/Preferences/pnpm/rc" = { source = "packages/pnpm/rc", mode = "symlink" }
-"~/.config/git" = { source = "packages/git", mode = "symlink" }
+# packages/git — 必要ファイルのみ（.gitignore / config.local は非管理）
+"~/.config/git/config" = { source = "packages/git/config", mode = "symlink" }
+"~/.config/git/ignore" = { source = "packages/git/ignore", mode = "symlink" }
 "~/.zshrc" = { source = "packages/zsh/.zshrc", mode = "symlink" }
 "~/.zprofile" = { source = "packages/zsh/.zprofile", mode = "symlink" }
 "~/.zpreztorc" = { source = "packages/zsh/.zpreztorc", mode = "symlink" }
@@ -53,5 +55,5 @@ dotfiles.default_mode = "symlink"
 "~/.ssh/00_global/config" = { source = "packages/ssh/00_global/config", mode = "symlink" }
 "~/.ssh/01_github/config" = { source = "packages/ssh/01_github/config", mode = "symlink" }
 
-# packages/mise — [tools] 正本（config.local.toml は gitignore 同居・エントリ化しない）
-"~/.config/mise" = { source = "packages/mise", mode = "symlink" }
+# packages/mise — [tools] 正本（config.local.toml / .gitignore は非管理）
+"~/.config/mise/config.toml" = { source = "packages/mise/config.toml", mode = "symlink" }

@@ -22,11 +22,11 @@ make mise-dotfiles  # [dotfiles] の symlink（zsh / shared / editors / ssh / ~/
 
 ### 設定レイヤ
 
-| 層                | 正本                                                     | 対象                                                                                                                 |
-| ----------------- | -------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| mise `[dotfiles]` | ルート [`mise.toml`](mise.toml)                          | zsh / shared / rtk / git / pnpm / tig / code（双ターゲット）/ cursor / claude / ssh（config のみ）/ `~/.config/mise` |
-| mise `[tools]`    | [`packages/mise/config.toml`](packages/mise/config.toml) | node / pnpm CLI / npm グローバル等                                                                                   |
-| Homebrew          | [`Brewfile`](Brewfile)                                   | casks / ネイティブ依存 / 残 CLI（`tig`・`rtk` 含む）                                                                 |
+| 層                | 正本                                                     | 対象                                                                                                                                       |
+| ----------------- | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| mise `[dotfiles]` | ルート [`mise.toml`](mise.toml)                          | zsh / shared / rtk / git（config・ignore）/ pnpm / tig / code（双ターゲット）/ cursor / claude / ssh（config のみ）/ mise（`config.toml`） |
+| mise `[tools]`    | [`packages/mise/config.toml`](packages/mise/config.toml) | node / pnpm CLI / npm グローバル等                                                                                                         |
+| Homebrew          | [`Brewfile`](Brewfile)                                   | casks / ネイティブ依存 / 残 CLI（`tig`・`rtk` 含む）                                                                                       |
 
 **所有権ルール**
 
