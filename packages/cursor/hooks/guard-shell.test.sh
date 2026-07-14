@@ -1,1 +1,1 @@
-../../shared/shared/ai/hooks/guard-shell.test.sh
+../../shared/ai/hooks/guard-shell.test.sh

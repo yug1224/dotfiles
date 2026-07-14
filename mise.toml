@@ -1,0 +1,59 @@
+# Repo-local [dotfiles] / bootstrap 制御面。
+# [tools] 正本: packages/mise/config.toml → ~/.config/mise/config.toml
+min_version = { hard = "2026.7.4" }
+
+[settings]
+dotfiles.root = "~/.dotfiles"
+dotfiles.default_mode = "symlink"
+
+[dotfiles]
+# 安定パス入口（初回は config 相対 source なので ~/.dotfiles 不要）
+"~/.dotfiles" = { source = ".", mode = "symlink" }
+"~/.tigrc" = { source = "packages/tig/.tigrc", mode = "symlink" }
+"~/.config/rtk" = { source = "packages/rtk", mode = "symlink" }
+"~/Library/Preferences/pnpm/rc" = { source = "packages/pnpm/rc", mode = "symlink" }
+# packages/git — 必要ファイルのみ（.gitignore / config.local は非管理）
+"~/.config/git/config" = { source = "packages/git/config", mode = "symlink" }
+"~/.config/git/ignore" = { source = "packages/git/ignore", mode = "symlink" }
+"~/.zshrc" = { source = "packages/zsh/.zshrc", mode = "symlink" }
+"~/.zprofile" = { source = "packages/zsh/.zprofile", mode = "symlink" }
+"~/.zpreztorc" = { source = "packages/zsh/.zpreztorc", mode = "symlink" }
+"~/.zsh_plugins" = { source = "packages/zsh/.zsh_plugins", mode = "symlink" }
+"~/.config/shared" = { source = "packages/shared", mode = "symlink" }
+
+# packages/code — 同一 source を Code / Cursor User へ
+"~/Library/Application Support/Code/User/settings.json" = { source = "packages/code/settings.json", mode = "symlink" }
+"~/Library/Application Support/Code/User/keybindings.json" = { source = "packages/code/keybindings.json", mode = "symlink" }
+"~/Library/Application Support/Code/User/bin" = { source = "packages/code/bin", mode = "symlink" }
+"~/Library/Application Support/Cursor/User/settings.json" = { source = "packages/code/settings.json", mode = "symlink" }
+"~/Library/Application Support/Cursor/User/keybindings.json" = { source = "packages/code/keybindings.json", mode = "symlink" }
+"~/Library/Application Support/Cursor/User/bin" = { source = "packages/code/bin", mode = "symlink" }
+
+# packages/cursor — トップレベル個別 + サブツリーはディレクトリ symlink
+"~/.cursor/hooks.json" = { source = "packages/cursor/hooks.json", mode = "symlink" }
+"~/.cursor/permissions.json" = { source = "packages/cursor/permissions.json", mode = "symlink" }
+"~/.cursor/.cursorignore" = { source = "packages/cursor/.cursorignore", mode = "symlink" }
+"~/.cursor/AGENTS.md" = { source = "packages/cursor/AGENTS.md", mode = "symlink" }
+"~/.cursor/rules" = { source = "packages/cursor/rules", mode = "symlink" }
+"~/.cursor/agents" = { source = "packages/cursor/agents", mode = "symlink" }
+"~/.cursor/commands" = { source = "packages/cursor/commands", mode = "symlink" }
+"~/.cursor/hooks" = { source = "packages/cursor/hooks", mode = "symlink" }
+
+# packages/claude — 同上（settings.local.json は非管理）
+"~/.claude/settings.json" = { source = "packages/claude/settings.json", mode = "symlink" }
+"~/.claude/CLAUDE.md" = { source = "packages/claude/CLAUDE.md", mode = "symlink" }
+"~/.claude/RTK.md" = { source = "packages/claude/RTK.md", mode = "symlink" }
+"~/.claude/.cursorignore" = { source = "packages/claude/.cursorignore", mode = "symlink" }
+"~/.claude/AGENTS.md" = { source = "packages/claude/AGENTS.md", mode = "symlink" }
+"~/.claude/rules" = { source = "packages/claude/rules", mode = "symlink" }
+"~/.claude/agents" = { source = "packages/claude/agents", mode = "symlink" }
+"~/.claude/commands" = { source = "packages/claude/commands", mode = "symlink" }
+"~/.claude/hooks" = { source = "packages/claude/hooks", mode = "symlink" }
+
+# packages/ssh — .ssh 全体は紐付けない（鍵・known_hosts は非管理）
+"~/.ssh/config" = { source = "packages/ssh/config", mode = "symlink" }
+"~/.ssh/00_global/config" = { source = "packages/ssh/00_global/config", mode = "symlink" }
+"~/.ssh/01_github/config" = { source = "packages/ssh/01_github/config", mode = "symlink" }
+
+# packages/mise — [tools] 正本（config.local.toml / .gitignore は非管理）
+"~/.config/mise/config.toml" = { source = "packages/mise/config.toml", mode = "symlink" }
