@@ -1,5 +1,5 @@
 ---
-description: MAGI 合議オーケストレーション共通ロジック。/magi および /magi-pr-review から参照される。
+description: MAGI 合議オーケストレーション共通ロジック。/magi および /review-pr-magi から参照される。
 globs: []
 alwaysApply: false
 ---

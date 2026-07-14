@@ -1,0 +1,7 @@
+---
+description: AI 設定 PR 前の公開本文漏洩チェック。
+globs: []
+alwaysApply: false
+---
+
+@~/.config/shared/ai/rules/meta/leakage-checklist.md

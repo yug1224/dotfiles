@@ -1,0 +1,7 @@
+---
+description: shared ↔ Cursor ↔ Claude ラッパー同期の PR 前チェックリスト。
+globs: []
+alwaysApply: false
+---
+
+@~/.config/shared/ai/rules/meta/wrapper-parity-checklist.md
