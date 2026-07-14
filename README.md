@@ -10,7 +10,7 @@ cd dotfiles
 make install        # Homebrew インストール・Prezto clone（install.sh）
 make brew           # Brewfile（mise / casks / ネイティブ依存等）
 make mise-dotfiles  # [dotfiles] の symlink（zsh / shared / editors / ssh / ~/.config/mise 等）
-make mise-tools     # [tools]（node / pnpm / gh / jq / rtk 等）— mise-dotfiles の後
+make mise-tools     # [tools]（node / pnpm / gh / jq / rtk / fd / ripgrep 等）— mise-dotfiles の後
 make node           # npm install（lefthook の pre-commit で oxfmt / secretlint に必要。TypeScript はエディタの言語サービス用）
 ```
 
@@ -26,11 +26,22 @@ make node           # npm install（lefthook の pre-commit で oxfmt / secretli
 | 層                | 正本                                                     | 対象                                                                                                                                       |
 | ----------------- | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
 | mise `[dotfiles]` | ルート [`mise.toml`](mise.toml)                          | zsh / shared / rtk / git（config・ignore）/ pnpm / tig / code（双ターゲット）/ cursor / claude / ssh（config のみ）/ mise（`config.toml`） |
-| mise `[tools]`    | [`packages/mise/config.toml`](packages/mise/config.toml) | runtimes（node / pnpm / …）+ CLI（`gh` `jq` `bat` `delta` `difftastic` `lefthook` `peco` `rtk` `tlrc` 等）                                 |
-| Homebrew          | [`Brewfile`](Brewfile)                                   | casks / ネイティブ・GNU 依存 / registry 弱・なし CLI（`tig`・`tree`・`eza` 等）/ **`mise` 本体**                                           |
+| mise `[tools]`    | [`packages/mise/config.toml`](packages/mise/config.toml) | runtimes（node / pnpm / …）+ CLI（`gh` `jq` `bat` `delta` `difftastic` `fd` `lefthook` `peco` `ripgrep`（バイナリ `rg`）`rtk` `tlrc` 等）  |
+| Homebrew          | [`Brewfile`](Brewfile)                                   | casks / ネイティブ・GNU 依存 / registry 弱・なし CLI（`tig`・`tree`・`eza` 等。`eza` は aqua なし）/ **`mise` 本体**                       |
 
 **所有権ルール**
 
 - 設定の正本はルート [`mise.toml`](mise.toml) の `[dotfiles]`。展開は `make mise-dotfiles`。
 - `*.local.*` / 秘密ファイルは `[dotfiles]` に取り込まない（`.zshrc.local` / `settings.local.json` / SSH 鍵含む）。
 - 通常ファイル（symlink でない）で conflict になる場合は、バックアップのうえ `mise -C . dotfiles apply --force --yes`。
+
+### mise `config.local.toml`（非管理）
+
+- `[tools]` の正本は [`packages/mise/config.toml`](packages/mise/config.toml) → `~/.config/mise/config.toml`（symlink）。
+- マシン固有は **`~/.config/mise/config.local.toml`**（[`packages/mise/config.local.toml`](packages/mise/config.local.toml) は `.gitignore` 済み。**コミットしない**）。
+- 例（パスは自分の作業ルートに置換）:
+
+```toml
+[settings]
+trusted_config_paths = ["/PATH/TO/Workspaces"]
+```
