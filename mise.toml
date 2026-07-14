@@ -9,5 +9,7 @@ dotfiles.default_mode = "symlink"
 [dotfiles]
 # 安定パス入口（初回は config 相対 source なので ~/.dotfiles 不要）
 "~/.dotfiles" = { source = ".", mode = "symlink" }
-# パイロット: Stow から移管。同一ターゲットを Stow と二重管理しない
 "~/.tigrc" = { source = "packages/tig/.tigrc", mode = "symlink" }
+"~/.config/rtk" = { source = "packages/rtk/rtk", mode = "symlink" }
+"~/Library/Preferences/pnpm/rc" = { source = "packages/pnpm/rc", mode = "symlink" }
+"~/.config/git" = { source = "packages/git/git", mode = "symlink" }

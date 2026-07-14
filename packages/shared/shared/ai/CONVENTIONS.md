@@ -154,10 +154,10 @@ dotfiles 変更時 → `rules/meta/`
 
 AI 設定は **RTK インストール済み・hook 有効** を前提とする。詳細は [docs/RTK.md](./docs/RTK.md) を参照。
 
-| 項目                | 正本                                              |
-| ------------------- | ------------------------------------------------- |
-| RTK 利用ガイド      | `packages/shared/shared/ai/docs/RTK.md`           |
-| hook 設定（Claude） | `packages/claude/settings.json`                   |
-| hook 設定（Cursor） | `packages/cursor/hooks.json`                      |
-| RTK 設定            | `packages/rtk/rtk/config.toml` → `~/.config/rtk/` |
-| エージェント運用    | `rules/conventions/token-optimization-rule.md`    |
+| 項目                | 正本                                                                      |
+| ------------------- | ------------------------------------------------------------------------- |
+| RTK 利用ガイド      | `packages/shared/shared/ai/docs/RTK.md`                                   |
+| hook 設定（Claude） | `packages/claude/settings.json`                                           |
+| hook 設定（Cursor） | `packages/cursor/hooks.json`                                              |
+| RTK 設定            | `packages/rtk/rtk/config.toml` → `~/.config/rtk/`（`make mise-dotfiles`） |
+| エージェント運用    | `rules/conventions/token-optimization-rule.md`                            |

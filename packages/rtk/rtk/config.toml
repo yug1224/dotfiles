@@ -1,4 +1,4 @@
-# RTK global config — stow to ~/.config/rtk/config.toml
+# RTK global config — mise [dotfiles] → ~/.config/rtk/config.toml (`make mise-dotfiles`)
 # Exclude commands from RTK rewrite (must not bypass guard deny rules).
 
 [hooks]
