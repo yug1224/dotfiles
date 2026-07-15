@@ -175,23 +175,23 @@
   ],
   "customLocalFormatters.formatters": [
     {
-      "command": "$HOME/Workspaces/yug1224/dotfiles/packages/code/bin/oxfmt-stdin.sh f.css",
+      "command": "$HOME/.dotfiles/packages/code/bin/oxfmt-stdin.sh f.css",
       "languages": ["css"]
     },
     {
-      "command": "$HOME/Workspaces/yug1224/dotfiles/packages/code/bin/oxfmt-stdin.sh f.html",
+      "command": "$HOME/.dotfiles/packages/code/bin/oxfmt-stdin.sh f.html",
       "languages": ["html"]
     },
     {
-      "command": "$HOME/Workspaces/yug1224/dotfiles/packages/code/bin/oxfmt-stdin.sh f.json",
+      "command": "$HOME/.dotfiles/packages/code/bin/oxfmt-stdin.sh f.json",
       "languages": ["json", "jsonc"]
     },
     {
-      "command": "$HOME/Workspaces/yug1224/dotfiles/packages/code/bin/oxfmt-stdin.sh f.md",
+      "command": "$HOME/.dotfiles/packages/code/bin/oxfmt-stdin.sh f.md",
       "languages": ["markdown"]
     },
     {
-      "command": "$HOME/Workspaces/yug1224/dotfiles/packages/code/bin/oxfmt-stdin.sh f.vue",
+      "command": "$HOME/.dotfiles/packages/code/bin/oxfmt-stdin.sh f.vue",
       "languages": ["vue"]
     }
   ],
@@ -252,7 +252,7 @@
   "liveshare.presence": true,
   "makefile.configureOnOpen": false,
   "npm.keybindingsChangedWarningShown": true,
-  "oxc.fmt.configPath": "$HOME/Workspaces/yug1224/dotfiles/oxfmt.config.ts",
+  "oxc.fmt.configPath": "$HOME/.dotfiles/oxfmt.config.ts",
   "oxc.path.oxfmt": "$HOME/.local/share/mise/installs/npm-oxfmt/latest/lib/node_modules/oxfmt/dist/cli.js",
   "oxc.path.oxlint": "$HOME/.local/share/mise/installs/npm-oxlint/latest/lib/node_modules/oxlint/dist/cli.js",
   "oxc.useExecPath": true,

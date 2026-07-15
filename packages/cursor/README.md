@@ -461,16 +461,16 @@ Cursor の Auto-run 時に承認なしで実行を許可するコマンド・MCP
 
 読み取り系パターン（`get_*`, `list_*`, `search_*`, `*_read`）のみ許可。書き込み系ツール（`create_*`, `update_*`, `use_*` 等）は含めない。glob パターンはツール命名規約に依存するため、MCP サーバーの更新時にパターンの妥当性を確認すること。
 
-| サーバー                 | パターン                                                                                  | 備考                                                                                                         |
-| ------------------------ | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `github` / `user-github` | `get_*`, `list_*`, `search_*`, `*_read`, `actions_get`, `actions_list`                    | 読み取り系のみ glob 指定                                                                                     |
-| `context7`               | `resolve-library-id`, `get-library-docs`, `query-docs`                                    | 全ツールが読み取り系                                                                                         |
-| `codegraph`              | `codegraph_explore`                                                                       | ローカル知識グラフ。セットアップは [CODEGRAPH.md](../shared/ai/docs/CODEGRAPH.md)                            |
-| `notion`                 | `notion-fetch`, `notion-search`, `notion-get-comments`                                    | Cursor Plugin Notion MCP（`serverName: notion`）。読み取り系のみ個別指定                                     |
-| `storybook`              | `get_story_urls`                                                                          | 個別指定                                                                                                     |
-| `chrome_devtools`        | `list_*`                                                                                  | 読み取り系のみ glob 指定                                                                                     |
-| `figma`                  | `get_design_context`, `get_screenshot`, `get_figjam`, `get_metadata`                      | 書き込み系（`use_figma` 等）は除外                                                                           |
-| `Playwright`             | `browser_snapshot`, `browser_navigate`, `browser_click`, 他 18 件（計 21 ツール個別指定） | `browser_run_code_unsafe`, `browser_evaluate` は除外。接続中タブへのクリック・入力が Auto-run される点に留意 |
+| サーバー                 | パターン                                                                                  | 備考                                                                                                                             |
+| ------------------------ | ----------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `github` / `user-github` | `get_*`, `list_*`, `search_*`, `*_read`, `actions_get`, `actions_list`                    | 読み取り系のみ glob 指定                                                                                                         |
+| `context7`               | `resolve-library-id`, `get-library-docs`, `query-docs`                                    | 全ツールが読み取り系                                                                                                             |
+| `codegraph`              | `*`（現状 `codegraph_explore`）                                                           | ローカル知識グラフ。allow は Claude の `mcp__codegraph__*` と対称。セットアップは [CODEGRAPH.md](../shared/ai/docs/CODEGRAPH.md) |
+| `notion`                 | `notion-fetch`, `notion-search`, `notion-get-comments`                                    | Cursor Plugin Notion MCP（`serverName: notion`）。読み取り系のみ個別指定                                                         |
+| `storybook`              | `get_story_urls`                                                                          | 個別指定                                                                                                                         |
+| `chrome_devtools`        | `list_*`                                                                                  | 読み取り系のみ glob 指定                                                                                                         |
+| `figma`                  | `get_design_context`, `get_screenshot`, `get_figjam`, `get_metadata`                      | 書き込み系（`use_figma` 等）は除外                                                                                               |
+| `Playwright`             | `browser_snapshot`, `browser_navigate`, `browser_click`, 他 18 件（計 21 ツール個別指定） | `browser_run_code_unsafe`, `browser_evaluate` は除外。接続中タブへのクリック・入力が Auto-run される点に留意                     |
 
 ### Allowlist の更新手順
 

@@ -15,9 +15,10 @@
 ## 追加・変更手順
 
 1. shared 本文を追加・修正（1 行目に `Applied: <rule-id>` を shared のみ記載）
-2. Cursor `.mdc` と Claude `.md` ラッパーを **同時** に追加・更新
+2. `make scaffold-wrappers` で Cursor / Claude 薄ラッパーを生成（既存は上書きしない）。手書きしてもよい
 3. `wrapper-parity-checklist.md` と `leakage-checklist.md` を上から確認
-4. `make mise-dotfiles` で shared 本文と Cursor / Claude ラッパーを反映
+4. `make check-sync` で allowlist / wrapper / deny-guard / always-on を検証
+5. `make mise-dotfiles` で shared 本文と Cursor / Claude ラッパーを反映
 
 ## 例外
 

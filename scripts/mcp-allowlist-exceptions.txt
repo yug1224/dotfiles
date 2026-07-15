@@ -1,0 +1,24 @@
+# Intentional MCP allowlist asymmetries (canonical form: server:tool).
+# Format: only_cursor|<canonical>  or  only_claude|<canonical>
+# Exact match only. Playwright: Cursor-only E2E tooling (enumerate so new tools fail CI).
+only_cursor|Playwright:browser_snapshot
+only_cursor|Playwright:browser_take_screenshot
+only_cursor|Playwright:browser_console_messages
+only_cursor|Playwright:browser_network_requests
+only_cursor|Playwright:browser_network_request
+only_cursor|Playwright:browser_tabs
+only_cursor|Playwright:browser_wait_for
+only_cursor|Playwright:browser_navigate
+only_cursor|Playwright:browser_navigate_back
+only_cursor|Playwright:browser_click
+only_cursor|Playwright:browser_type
+only_cursor|Playwright:browser_press_key
+only_cursor|Playwright:browser_fill_form
+only_cursor|Playwright:browser_select_option
+only_cursor|Playwright:browser_hover
+only_cursor|Playwright:browser_drag
+only_cursor|Playwright:browser_drop
+only_cursor|Playwright:browser_file_upload
+only_cursor|Playwright:browser_handle_dialog
+only_cursor|Playwright:browser_resize
+only_cursor|Playwright:browser_close

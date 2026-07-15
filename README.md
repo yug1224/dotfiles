@@ -11,15 +11,20 @@ make install        # Homebrew インストール・Prezto clone（install.sh）
 make brew           # Brewfile（mise / casks / ネイティブ依存等）
 make mise-dotfiles  # [dotfiles] の symlink（zsh / shared / editors / ssh / ~/.config/mise 等）
 make mise-tools     # [tools]（node / pnpm / gh / jq / rtk / fd / ripgrep 等）— mise-dotfiles の後
-make node           # npm install（lefthook の pre-commit で oxfmt / secretlint に必要。TypeScript はエディタの言語サービス用）
+make node           # pnpm install（lefthook の pre-commit で oxfmt / secretlint に必要。TypeScript はエディタの言語サービス用）
+make check          # oxfmt check + AI sync 検証（allowlist / wrapper / deny-guard / always-on）+ script 最小テスト
 ```
 
 - `make install` だけでは **Brew bundle・node_modules・mise dotfiles・tools は入りません**。上記の順で足してください。
+- パッケージマネージャは **pnpm**（`packageManager` / `pnpm-lock.yaml`）。`npm install` は使わない。
+- lefthook pre-commit は oxfmt + secretlint のみ。AI sync は **`make check` / CI** で担保する。
 - `[dotfiles]` には **mise ≥ 2026.7.4** が必要（`Brewfile` の `mise` / ルート `mise.toml` の `min_version`）。
 - `install.sh` は `curl | bash` で Homebrew を入れます。Intel Mac では `/opt/homebrew` ではなく `/usr/local` 側になる場合があります。
 - AI 設定（Cursor / Claude Code）は **RTK 前提**。`make brew` → `make mise-dotfiles` → `make mise-tools` の後、`rtk --version && rtk gain` で smoke test すること。詳細は [`packages/shared/ai/docs/RTK.md`](packages/shared/ai/docs/RTK.md)。
 - Cursor / AI 用のルールは [`packages/cursor/README.md`](packages/cursor/README.md) を参照。
 - oxfmt の構成は [`packages/oxfmt/README.md`](packages/oxfmt/README.md) を参照。
+- 依存の所有権（oxfmt の二重管理・Node 正本は [`.node-version`](.node-version)）は [`packages/oxfmt/README.md`](packages/oxfmt/README.md) を参照。
+- エディタの oxfmt パスは `$HOME/.dotfiles/...`（`make mise-dotfiles` でリポジトリが `~/.dotfiles` に symlink される前提）。
 
 ### 設定レイヤ
 

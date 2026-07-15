@@ -1,0 +1,17 @@
+{
+  "cursor": {
+    "alwaysApply": ["conventions/token-optimization-rule"]
+  },
+  "claude": {
+    "tierA": [
+      "AGENTS.md",
+      "conventions/token-optimization-rule",
+      "conventions/commit-message-rule",
+      "conventions/branch-name-rule",
+      "conventions/codegraph-rule",
+      "conventions/review-common-rule",
+      "conventions/ticket-retrieval-rule",
+      "RTK.md"
+    ]
+  }
+}

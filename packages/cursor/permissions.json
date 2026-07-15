@@ -58,7 +58,7 @@
   ],
   "mcpAllowlist": [
     "chrome_devtools:list_*",
-    "codegraph:codegraph_explore",
+    "codegraph:*",
     "context7:get-library-docs",
     "context7:query-docs",
     "context7:resolve-library-id",
