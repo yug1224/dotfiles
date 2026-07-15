@@ -16,6 +16,9 @@ if ! command -v jq &>/dev/null; then
   exit 0
 fi
 
+# guard-shell defaults to mise shim; CI apt jq is on PATH — pin that for the probe.
+export JQ="${JQ:-$(command -v jq)}"
+
 # Map deny prefix (from Bash(...:*) ) to a representative command string
 sample_for_deny() {
   local pattern="$1"
