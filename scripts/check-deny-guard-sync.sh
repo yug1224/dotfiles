@@ -8,9 +8,16 @@ CLAUDE_SETTINGS="${ROOT}/packages/claude/settings.json"
 GUARD="${ROOT}/packages/shared/ai/hooks/guard-shell.sh"
 
 if ! command -v jq &>/dev/null; then
+  if [[ "${REQUIRE_JQ:-0}" == "1" ]]; then
+    echo "ERROR: jq required (REQUIRE_JQ=1)" >&2
+    exit 1
+  fi
   echo "SKIP: jq required" >&2
   exit 0
 fi
+
+# guard-shell defaults to mise shim; CI apt jq is on PATH — pin that for the probe.
+export JQ="${JQ:-$(command -v jq)}"
 
 # Map deny prefix (from Bash(...:*) ) to a representative command string
 sample_for_deny() {

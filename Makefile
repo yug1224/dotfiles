@@ -23,4 +23,30 @@ mise-tools: mise-dotfiles
 
 .PHONY: node
 node:
-	npm install
+	pnpm install
+
+.PHONY: check-fmt
+check-fmt:
+	pnpm run check
+
+.PHONY: scaffold-wrappers
+scaffold-wrappers:
+	./scripts/scaffold-wrappers.sh
+
+.PHONY: check-wrappers
+check-wrappers:
+	./scripts/scaffold-wrappers.sh --check
+
+.PHONY: check-sync
+check-sync:
+	REQUIRE_JQ=1 ./scripts/check-allowlist-sync.sh
+	./scripts/check-wrapper-parity.sh
+	REQUIRE_JQ=1 ./scripts/check-deny-guard-sync.sh
+	REQUIRE_JQ=1 ./scripts/check-always-on-sync.sh
+
+.PHONY: test-scripts
+test-scripts:
+	./scripts/check-allowlist-sync.test.sh
+
+.PHONY: check
+check: check-fmt check-sync test-scripts

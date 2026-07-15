@@ -11,8 +11,17 @@
 # This file must NOT exec or source other scripts for its core decision.
 set -uo pipefail
 
-# GUI hook は login zsh の mise activate を通らないため shim を絶対指定（oxfmt-stdin と同型）
-JQ="${JQ:-$HOME/.local/share/mise/shims/jq}"
+# GUI hook は login zsh の mise activate を通らないため shim を絶対指定（oxfmt-stdin と同型）。
+# CI / 非 mise 環境は PATH の jq にフォールバック（check-deny-guard-sync 等）。
+if [[ -z "${JQ:-}" ]]; then
+  if [[ -x "$HOME/.local/share/mise/shims/jq" ]]; then
+    JQ="$HOME/.local/share/mise/shims/jq"
+  elif command -v jq &>/dev/null; then
+    JQ="$(command -v jq)"
+  else
+    JQ=""
+  fi
+fi
 
 deny_json() {
   "$JQ" -nc \
@@ -21,12 +30,13 @@ deny_json() {
     '{permission:"deny", user_message: $u, agent_message: (if $a == "" then null else $a end)}'
 }
 
-if [[ ! -x "$JQ" ]]; then
+# Drain stdin before early exit so callers with pipefail + jq don't get Broken pipe.
+input=$(cat || true)
+
+if [[ -z "$JQ" || ! -x "$JQ" ]]; then
   printf '%s\n' '{"permission":"deny","user_message":"guard-shell: jq が未インストールです。make mise-tools（packages/mise/config.toml の jq）でインストールしてください。","agent_message":"Shell ガードを実行できません。"}'
   exit 0
 fi
-
-input=$(cat || true)
 if [[ -z "$input" ]]; then
   deny_json "guard-shell: stdin が空です。"
   exit 0

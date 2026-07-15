@@ -1,6 +1,6 @@
 # AGENTS.md
 
-このファイルは Cursor / Claude Code / Gemini CLI の各 AI コーディングツールが共通で参照する規約・運用ルールを集約する。`packages/shared/ai/` の単一原本として管理し、各ツールの設定パッケージから `@`-import（`@~/.config/shared/ai/` 絶対パス）で取り込む。
+このファイルは Cursor / Claude Code が共通で参照する規約・運用ルールを集約する（Gemini CLI 用ホストパッケージ `packages/gemini` は **未実装**）。`packages/shared/ai/` の単一原本として管理し、各ツールの設定パッケージから `@`-import（`@~/.config/shared/ai/` 絶対パス）で取り込む。
 
 ## このリポジトリでの位置付け
 
@@ -9,15 +9,12 @@
 - 各ツール側からの参照（全て `@~/.config/shared/ai/` 絶対パス）:
   - Cursor: `packages/cursor/commands/*.md` → `@~/.config/shared/ai/commands/...`、`packages/cursor/rules/<sub>/*.mdc` → `@~/.config/shared/ai/rules/<sub>/...`
   - Claude Code: `packages/claude/CLAUDE.md` → `@~/.config/shared/ai/AGENTS.md`、`packages/claude/commands/*.md` → `@~/.config/shared/ai/commands/...`
-  - Gemini CLI: 同様に `@~/.config/shared/ai/...`
 
 ## 運用方針
 
 - 規約・プロンプト本体・hook シェルスクリプトなど **ツール非依存の素材**は `packages/shared/ai/` に置く
 - ツール固有の frontmatter / 設定 JSON / ホストごとの hook 仕様は各 `packages/<tool>/` に置く
 - 共通本文を編集する場合は `packages/shared/ai/` 配下の原本のみを変更する
-
-（個別の規約・チェックリストは順次このディレクトリ配下に集約していく）
 
 ## Allowlist 同期チェックリスト
 
@@ -35,11 +32,26 @@
 3. Claude `settings.json` の `permissions.allow` に同等エントリを追加（`Bash(<cmd>:*)` または `mcp__<server>__<tool>` 形式）
 4. 破壊的操作は allowlist ではなく **guard-shell**（deny/ask）で制御する — allowlist に載せない
 5. RTK が書き換えるコマンド（`git status` → `rtk git status`）は allowlist を拡張しない — RTK hook が `permission: allow` を返す
-6. 任意: `scripts/check-allowlist-sync.sh` でドリフトを検出
+6. **必須**: `make check-sync`（terminal + MCP allowlist / wrapper parity / deny-guard / always-on）
+
+### MCP 意図的非対称
+
+- Playwright MCP は Cursor のみ許可（例外は `scripts/mcp-allowlist-exceptions.txt` に **個別列挙**。新規 Playwright ツールは例外ファイルも更新すること）。
+- 比較時は `user-github` を `github` に正規化する（両ファイルに二重記載があっても可）
 
 ### RTK との関係
 
 RTK は **インストール済み・hook 有効** を前提とする。詳細（セットアップ・hook 配線・競合の対処）: [docs/RTK.md](./docs/RTK.md)
+
+## Guard matcher（意図的非対称）
+
+- Cursor `hooks.json`: guard は `git |gh |pnpm `、RTK は `Shell`
+- Claude `settings.json`: guard / RTK とも `Bash` matcher → 同一 `packages/shared/ai/hooks/guard-shell.sh`
+- matcher を同一に揃える必要はない（判定ロジックの正本は shared）
+
+## Always-on
+
+正本: [`manifests/always-on.json`](./manifests/always-on.json)。Cursor `alwaysApply` と Claude Tier A は意図的に非対称。`make check-sync` が照合する。
 
 ## CodeGraph
 

@@ -1,0 +1,3 @@
+# Shared basename paths (no extension) that intentionally have no Cursor/Claude wrappers.
+# Consumed by check-wrapper-parity.sh and scaffold-wrappers.sh.
+conventions/output-verification-rule

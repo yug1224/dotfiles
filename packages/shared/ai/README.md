@@ -1,6 +1,6 @@
 # `packages/shared/ai/`（クロスツール共有素材）
 
-Cursor / Claude Code / Gemini CLI が共通で参照する素材の原本。`make mise-dotfiles` で `~/.config/shared/ai/` に展開される（ルート `mise.toml` の `[dotfiles]`）。
+Cursor / Claude Code が共通で参照する素材の原本（Gemini CLI 用ホストパッケージ `packages/gemini` は **未実装**）。`make mise-dotfiles` で `~/.config/shared/ai/` に展開される（ルート `mise.toml` の `[dotfiles]`）。
 
 **RTK 前提**: Shell トークン削減と hook 連携は [docs/RTK.md](./docs/RTK.md) が正本。セットアップ順・hook 配線・競合の対処はそちらを参照。
 

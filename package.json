@@ -6,14 +6,14 @@
   "repository": "https://github.com/yug1224/dotfiles.git",
   "type": "module",
   "scripts": {
-    "check": "oxfmt --check -c oxfmt.config.ts",
-    "fmt": "oxfmt -c oxfmt.config.ts"
+    "check": "oxfmt --check --no-error-on-unmatched-pattern -c oxfmt.config.ts",
+    "fmt": "oxfmt --no-error-on-unmatched-pattern -c oxfmt.config.ts"
   },
   "devDependencies": {
     "@secretlint/secretlint-rule-preset-recommend": "^11.7.1",
     "oxfmt": "^0.41.0",
-    "oxlint": "^1.66.0",
     "secretlint": "^11.7.1",
     "typescript": "^5.9.3"
-  }
+  },
+  "packageManager": "pnpm@10.34.3"
 }

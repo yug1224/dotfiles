@@ -19,12 +19,12 @@ make mise-dotfiles
 
 | キー / 用途                          | パス                                                                       |
 | ------------------------------------ | -------------------------------------------------------------------------- |
-| dotfiles ルート                      | `$HOME/Workspaces/yug1224/dotfiles`                                        |
-| `oxc.fmt.configPath`                 | `$HOME/Workspaces/yug1224/dotfiles/oxfmt.config.ts`                        |
+| dotfiles ルート                      | `$HOME/.dotfiles`（`make mise-dotfiles` でリポジトリへ symlink）           |
+| `oxc.fmt.configPath`                 | `$HOME/.dotfiles/oxfmt.config.ts`                                          |
 | `oxc.path.oxfmt` / `oxc.path.oxlint` | `$HOME/.local/share/mise/installs/npm-oxfmt/latest/...`（mise グローバル） |
-| `customLocalFormatters`              | `$HOME/Workspaces/yug1224/dotfiles/packages/code/bin/oxfmt-stdin.sh`       |
+| `customLocalFormatters`              | `$HOME/.dotfiles/packages/code/bin/oxfmt-stdin.sh`                         |
 
-**前提**: dotfiles は `$HOME/Workspaces/yug1224/dotfiles` に clone していること。別の場所に置く場合はパスを合わせて更新する。`make mise-dotfiles` 後は **Developer: Reload Window** を実行する。
+**前提**: `make mise-dotfiles` によりリポジトリが `$HOME/.dotfiles` に symlink されること（clone 場所は問わない）。適用後は **Developer: Reload Window** を実行する。
 
 Oxc の LSP は `${workspaceFolder}` を展開しない。
 

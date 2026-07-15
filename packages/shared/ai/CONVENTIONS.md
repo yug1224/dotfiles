@@ -140,8 +140,8 @@ dotfiles 変更時 → `rules/meta/`
 ## 新規追加手順
 
 1. 本文を `packages/shared/ai/` に追加
-2. Cursor: `packages/cursor/rules/<subdir>/<name>.mdc` + `@import`
-3. Claude: `packages/claude/rules/<subdir>/<name>.md` + `@import`
+2. `make scaffold-wrappers` で Cursor / Claude 薄ラッパーを生成（手動追加でも可）
+3. `make check-sync` で allowlist / wrapper parity / deny-guard / always-on を検証
 4. `make mise-dotfiles` で shared 本文と Cursor / Claude ラッパーを反映
 
 **Meta ルール**（`rules/meta/`）は dotfiles AI 設定 PR 時のみ Read。`alwaysApply: false`。
