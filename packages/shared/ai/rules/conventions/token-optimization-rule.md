@@ -1,4 +1,4 @@
-応答の冒頭に「Applied: token-optimization-rule」と出力する。
+応答の冒頭に「✅️: token-optimization-rule」と出力する。
 
 # トークン節約（エージェント運用）
 

@@ -14,7 +14,7 @@ packages/claude/
 ├── AGENTS.md → ../shared/ai/AGENTS.md   # 共通規約（symlink）
 ├── agents/                       # Claude frontmatter ラッパー
 ├── commands/                     # スラッシュコマンドラッパー（本文は shared）
-├── rules/                        # ルールラッパー（blog/, conventions/, visual/ 等）
+├── rules/                        # ルールラッパー（blog/, writing/, conventions/, visual/ 等）
 ├── hooks/                        # Claude 用 adapter（共有 guard は ~/.config/shared/ai/hooks/）
 ├── settings.json                 # hooks / permissions / model
 ├── CLAUDE.md                     # ルール集約（@RTK.md 参照）
@@ -23,6 +23,20 @@ packages/claude/
 ```
 
 コマンド・ルールの一覧とカテゴリは [`packages/cursor/README.md`](../cursor/README.md) の commands / rules 節を参照（Cursor と Claude でラッパーは対応する）。コマンド basename の旧→新対応は [`packages/shared/ai/docs/LOCAL-SETUP.md`](../shared/ai/docs/LOCAL-SETUP.md) を参照。
+
+### writing/（日本語文章規範）
+
+`packages/claude/rules/writing/` に次を置く（`make scaffold-wrappers` で生成）:
+
+| ラッパー                           | 共有本文                                                              |
+| ---------------------------------- | --------------------------------------------------------------------- |
+| `japanese-tech-writing-rule.md`    | `@~/.config/shared/ai/rules/writing/japanese-tech-writing-rule.md`    |
+| `cognitive-rhythm-writing-rule.md` | `@~/.config/shared/ai/rules/writing/cognitive-rhythm-writing-rule.md` |
+
+- **Tier**: B（コマンド経由 / agent-requestable）。CLAUDE.md Tier A には載せない
+- **用途**: 日本語出力の基底。Git 管理コマンドからの必須 Read は `plan-blog` / `suggest-development-log` / `suggest-pr-description`（`review-blog` は writing-style 経由）。採用メッセージ系（`.local`）は必須 Read する場合も適用は `tech-doc-lite`
+- **優先**: blog では `writing-style-rule` の Override が優先（JTW は `blog-base`）。開発ログ／PR 説明／採用メッセージは `tech-doc-lite`。CRW は体験記・読み物時のみ opt-in
+- **出典**: [`packages/shared/ai/README.md`](../shared/ai/README.md)「出典・蒸留」（JTW: Unlicense / CRW: 原典に表記なし）
 
 Claude Code の Agent Skills（`~/.claude/skills/` に `<name>/SKILL.md` を置く形式）は本 dotfiles の `packages/claude` には**現状同梱していない**。利用する場合はローカルで `~/.claude/skills/` に追加するか、必要なら `packages/claude/skills/` を新設して `make mise-dotfiles` で配布する。
 

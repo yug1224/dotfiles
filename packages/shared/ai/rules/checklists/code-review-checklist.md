@@ -1,4 +1,4 @@
-応答の冒頭に「Applied: code-review-checklist」と出力する。
+応答の冒頭に「✅️: code-review-checklist」と出力する。
 
 # コードレビュー観点チェックリスト
 

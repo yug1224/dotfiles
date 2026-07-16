@@ -12,7 +12,7 @@
 
 ### 0. トレース（必須）
 
-応答の冒頭に `Applied: /apply-coding-rule` と出力する。
+応答の冒頭に `✅️: /apply-coding-rule` と出力する。
 
 ### 1. ルールの読み込み
 

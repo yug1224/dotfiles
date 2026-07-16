@@ -1,4 +1,4 @@
-応答の冒頭に「Applied: graphic-record-style-rule」と出力する（`/write-graphic-prompt` 実行時はコマンド Step 0 に従い、本行は出さない）。
+応答の冒頭に「✅️: graphic-record-style-rule」と出力する（`/write-graphic-prompt` 実行時はコマンド Step 0 に従い、本行は出さない）。
 
 # グラフィックレコード画像 — 構造仕様（固定）
 

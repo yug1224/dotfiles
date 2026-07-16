@@ -16,7 +16,7 @@
 
 ### 0. トレース（必須）
 
-応答の冒頭に `Applied: /suggest-branch-name` と出力する。
+応答の冒頭に `✅️: /suggest-branch-name` と出力する。
 
 ### 1. 規約の読み込み
 

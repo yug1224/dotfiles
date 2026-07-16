@@ -2,6 +2,7 @@
 
 **参照ルール**:
 
+- `@~/.config/shared/ai/rules/writing/japanese-tech-writing-rule.md`（スライス `tech-doc-lite`。PR テンプレ構造は最優先）
 - `@~/.config/shared/ai/rules/conventions/pr-description-rule.md`（PR Title・Description）
 - `@~/.config/shared/ai/rules/conventions/commit-message-rule.md`（PR Title の type / scope / subject 定義）
 
@@ -20,12 +21,13 @@
 
 ### 0. トレース（必須）
 
-応答の冒頭に `Applied: /suggest-pr-description` と出力する。
+応答の冒頭に `✅️: /suggest-pr-description` と出力する。
 
 ### 1. ルールの読み込み
 
-1. `@~/.config/shared/ai/rules/conventions/pr-description-rule.md` と `commit-message-rule.md` を Read する。同ディレクトリの `pr-description-rule.local.md` があれば併せて Read（無ければスキップ）
-2. チケット引数がある場合のみ、`@~/.config/shared/ai/rules/conventions/ticket-retrieval-rule.md` を Read。同ディレクトリの `ticket-retrieval-rule.local.md` があれば併せて Read
+1. `@~/.config/shared/ai/rules/writing/japanese-tech-writing-rule.md` を Read する（適用は `tech-doc-lite`）
+2. `@~/.config/shared/ai/rules/conventions/pr-description-rule.md` と `commit-message-rule.md` を Read する。同ディレクトリの `pr-description-rule.local.md` があれば併せて Read（無ければスキップ）
+3. チケット引数がある場合のみ、`@~/.config/shared/ai/rules/conventions/ticket-retrieval-rule.md` を Read。同ディレクトリの `ticket-retrieval-rule.local.md` があれば併せて Read
 
 ### 2. 引数の解析
 
@@ -196,6 +198,7 @@ feat(scope): 変更概要 [TICKET-ID]
 ## Guardrails
 
 - **プロジェクトの PR テンプレートが存在する場合は、そのテンプレートの構造から絶対に逸脱しない**
+- 説明文の文章規範は `japanese-tech-writing-rule` の **`tech-doc-lite`**（空句・冗長・根拠なき断言のみ。テンプレ構造・チェックリスト項目は常にテンプレ優先。**一文一行は要求しない**）
 - PR Title は `type(scope): subject [TICKET-ID]` 形式とする（プロジェクトにタイトル慣習がある場合はそちらを優先）
 - PR Title のヘッダー全体は 72 文字以内、subject は 50 文字以内を目安とする（`[TICKET-ID]` 含む）
 - PR Title の scope が不明確な場合は省略する

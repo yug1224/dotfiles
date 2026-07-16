@@ -1,6 +1,9 @@
 ブログ記事評価プロンプトに基づいて、指定された記事を7つの観点から評価し、建設的で実践的なフィードバックを提供する。
 
-**参照ルール**: `@~/.config/shared/ai/rules/blog/blog-review-rule.md`
+**参照ルール**:
+
+- `@~/.config/shared/ai/rules/blog/blog-review-rule.md`（7 観点の採点正本。空句／論証観点を含む）
+- `@~/.config/shared/ai/rules/blog/writing-style-rule.md`（Override 適合の軽量チェック。独立採点軸にはしない）
 
 **Input**: `/review-blog` の後に続く引数は、評価対象の記事ファイルパスまたは URL。
 
@@ -16,11 +19,12 @@
 
 ### 0. トレース（必須）
 
-応答の冒頭に `Applied: /review-blog` と出力する。
+応答の冒頭に `✅️: /review-blog` と出力する。
 
 ### 1. 評価基準の読み込み
 
-`@~/.config/shared/ai/rules/blog/blog-review-rule.md` を Read ツールで読み込み、評価基準・スコア定義・レポート形式を把握する。
+1. `@~/.config/shared/ai/rules/blog/blog-review-rule.md` を Read し、評価基準・スコア定義・レポート形式を把握する
+2. `@~/.config/shared/ai/rules/blog/writing-style-rule.md` を Read し、Override 表（段落長・挨拶・まとめ見出し等）を把握する
 
 ### 2. 記事の取得
 
@@ -61,4 +65,5 @@ Step 5 で修正した評価レポートのみをユーザーに提示する。
 - スコアは厳格に付ける（5.0 は例外的に優れた記事のみ）
 - 迷った場合は低い方のスコアを付ける
 - 企業ブログ・組織名が紐づく場合は1段階厳しく評価する
+- Override 適合（段落長・挨拶・「おわりに／まとめ」見出し等）は独立採点せず、「構成と読みやすさ」「人間らしさ」に反映する（`blog-review-rule` の当該節）
 - 最終 Step の再検証完了前に、成果物をユーザーへ出力しない

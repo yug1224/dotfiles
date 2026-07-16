@@ -16,7 +16,7 @@
 
 | 種別           | パターン                        | 配置                                                                                                                                           |
 | -------------- | ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| ルール         | `<topic>-rule.md`               | `rules/<domain>/`（`meta/` は dotfiles 変更メタ）                                                                                              |
+| ルール         | `<topic>-rule.md`               | `rules/<domain>/`（`meta/` は dotfiles 変更メタ。`writing/` は媒体非依存の文章規範）                                                           |
 | チェックリスト | `<topic>-checklist.md`          | 原則 `rules/checklists/`。例外: `publish-checklist.md` は `rules/blog/` 可。`rules/meta/*-checklist.md`（`leakage` / `wrapper-parity` 等）も可 |
 | **Meta**       | `<topic>-rule.md` 等            | `rules/meta/` — dotfiles AI 設定変更手順（`alwaysApply: false`）                                                                               |
 | **Registry**   | `pr-feedback-registry.local.md` | `rules/conventions/` — 再発防止（**Git 管理外**）                                                                                              |
@@ -43,7 +43,7 @@
 
 `write` / `capture` / `suggest` の使い分け: 単一の本文・プロンプト案を起こすなら `write`、フィードバック等を log に取り込むなら `capture`、規約に沿った候補を並べるなら `suggest`。
 
-リネームは許可する。`packages/shared` + Cursor + Claude の **3 ラッパーと参照を同一変更で同期**する（`Applied: /新名` と frontmatter `name:` も一致させる）。
+リネームは許可する。`packages/shared` + Cursor + Claude の **3 ラッパーと参照を同一変更で同期**する（`✅️: /新名` と frontmatter `name:` も一致させる）。
 
 #### 旧 → 新対応表
 
@@ -72,13 +72,13 @@
 
 業務リポジトリ側の Skills は **名詞先頭** `<domain>-<pattern>`（コマンドの動詞先頭と名前空間分離）。コマンド動詞プレフィックス（`suggest-` / `review-` / `plan-` / `write-` / `capture-` / `analyze-` / `apply-` / `verify-` / `magi`）は先頭に付けない。`name:` は dirname と一致。詳細は [docs/templates/skills/README.md](./docs/templates/skills/README.md)。
 
-### 自己申告（`Applied:`）の rule-id
+### 自己申告（`✅️:`）の rule-id
 
-- **ルール / チェックリスト**: 共有本文 1 行目に `応答の冒頭に「Applied: <rule-id>」と出力する。` を記載。`<rule-id>` はファイル名から拡張子（`.md`）を除いた文字列（例: `writing-style-rule.md` → `writing-style-rule`）。**`-rule` を二重に付けない**（誤: `writing-style-rule-rule`）。`alwaysApply: true` のルール（例: `token-optimization-rule`）も同一 — 毎応答の冒頭に出力する。
-- **`.local.md` の rule-id**: basename そのまま（例: `coding-rule.local.md` → `Applied: coding-rule.local`、`pr-review-rule.local.md` → `Applied: pr-review-rule.local`）。ラッパーには書かない。
-- **コマンド**: Step 0 に `応答の冒頭に \`Applied: /command-name\` と出力する。`（スラッシュ付き）。frontmatter の `name:`および`/command-name` と basename を一致させる。
-- **対比**: ルールは `Applied: rule-id`（スラッシュなし）、コマンドは `Applied: /command-name`（スラッシュあり）。いずれも **応答の冒頭** に出す。
-- **ラッパー**（`.mdc` / Claude の `rules/**/*.md`）: `Applied:` は **共有本文**にのみ書く。ラッパーは frontmatter + `@~/.config/shared/ai/...` の import のみ（blog / conventions と同型）。
+- **ルール / チェックリスト**: 共有本文 1 行目に `応答の冒頭に「✅️: <rule-id>」と出力する。` を記載。`<rule-id>` はファイル名から拡張子（`.md`）を除いた文字列（例: `writing-style-rule.md` → `writing-style-rule`）。**`-rule` を二重に付けない**（誤: `writing-style-rule-rule`）。`alwaysApply: true` のルール（例: `token-optimization-rule`）も同一 — 毎応答の冒頭に出力する。
+- **`.local.md` の rule-id**: basename そのまま（例: `coding-rule.local.md` → `✅️: coding-rule.local`、`pr-review-rule.local.md` → `✅️: pr-review-rule.local`）。ラッパーには書かない。
+- **コマンド**: Step 0 に `応答の冒頭に \`✅️: /command-name\` と出力する。`（スラッシュ付き）。frontmatter の `name:`および`/command-name` と basename を一致させる。
+- **対比**: ルールは `✅️: rule-id`（スラッシュなし）、コマンドは `✅️: /command-name`（スラッシュあり）。いずれも **応答の冒頭** に出す。
+- **ラッパー**（`.mdc` / Claude の `rules/**/*.md`）: `✅️:` は **共有本文**にのみ書く。ラッパーは frontmatter + `@~/.config/shared/ai/...` の import のみ（blog / conventions と同型）。
 
 ### レガシー例外（リネームしない）
 
@@ -143,6 +143,30 @@ dotfiles 変更時 → `rules/meta/`
 2. `make scaffold-wrappers` で Cursor / Claude 薄ラッパーを生成（手動追加でも可）
 3. `make check-sync` で allowlist / wrapper parity / deny-guard / always-on を検証
 4. `make mise-dotfiles` で shared 本文と Cursor / Claude ラッパーを反映
+
+## 外部ソースの蒸留
+
+外部の記事・gist・リポジトリ等を **蒸留して** shared に載せるときは、毎回次を満たす（フィードバック蒸留とは別系統。出典を残す点は共通）。
+
+| 記載場所                                          | 必須内容                                                                                 |
+| ------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| **正本フッター**                                  | 出典 URL、原著者（分かる場合）、ライセンス（未明示ならその旨）、「蒸留・再構成」である旨 |
+| **`README.md`**                                   | 「出典・蒸留」節（または taxonomy 付近）に蒸留済みファイルの一覧                         |
+| **本節（CONVENTIONS）**                           | 本手順に従うこと（恒久規約）                                                             |
+| **`ai-config-rule` / `wrapper-parity-checklist`** | 追加時チェック                                                                           |
+
+**フッターテンプレ**:
+
+```markdown
+## 出典
+
+- 原典: <URL>（必要なら元記事 URL も）
+- 原著者: <分かる場合>
+- ライセンス: <明示されていれば記載。未明示なら「原典にライセンス表記なし」>
+- 扱い: 全文転載ではなく、用途に合わせて蒸留・再構成した規範である
+```
+
+独自抽出（自ブログ過去記事の要約など）は外部蒸留ではないため、本節の帰属は不要。
 
 **Meta ルール**（`rules/meta/`）は dotfiles AI 設定 PR 時のみ Read。`alwaysApply: false`。
 

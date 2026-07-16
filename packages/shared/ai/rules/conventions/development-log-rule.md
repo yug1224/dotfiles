@@ -1,4 +1,4 @@
-応答の冒頭に「Applied: development-log-rule」と出力する。
+応答の冒頭に「✅️: development-log-rule」と出力する。
 
 # 開発ログ記載ルール
 

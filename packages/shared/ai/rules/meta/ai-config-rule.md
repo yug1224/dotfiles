@@ -1,4 +1,4 @@
-応答の冒頭に「Applied: ai-config-rule」と出力する。
+応答の冒頭に「✅️: ai-config-rule」と出力する。
 
 # AI 設定変更ルール（dotfiles）
 
@@ -14,11 +14,12 @@
 
 ## 追加・変更手順
 
-1. shared 本文を追加・修正（1 行目に `Applied: <rule-id>` を shared のみ記載）
-2. `make scaffold-wrappers` で Cursor / Claude 薄ラッパーを生成（既存は上書きしない）。手書きしてもよい
-3. `wrapper-parity-checklist.md` と `leakage-checklist.md` を上から確認
-4. `make check-sync` で allowlist / wrapper / deny-guard / always-on を検証
-5. `make mise-dotfiles` で shared 本文と Cursor / Claude ラッパーを反映
+1. shared 本文を追加・修正（1 行目に `応答の冒頭に「✅️: <rule-id>」と出力する。` を shared のみ記載）
+2. **外部ソースを蒸留した場合**: 正本フッターに出典を書く。`README.md` の「出典・蒸留」一覧を更新する（詳細: [CONVENTIONS.md](../../CONVENTIONS.md)「外部ソースの蒸留」）
+3. `make scaffold-wrappers` で Cursor / Claude 薄ラッパーを生成（既存は上書きしない）。手書きしてもよい
+4. `wrapper-parity-checklist.md` と `leakage-checklist.md` を上から確認
+5. `make check-sync` で allowlist / wrapper / deny-guard / always-on を検証
+6. `make mise-dotfiles` で shared 本文と Cursor / Claude ラッパーを反映
 
 ## 例外
 
@@ -39,6 +40,6 @@
 ## 禁止
 
 - shared 本文に frontmatter を書く
-- ラッパーに `Applied:` を書く（正本のみ）
+- ラッパーに `✅️:` を書く（正本のみ）
 - Git 管理ファイルに会社名・非公開 URL を書く
 - 1 ファイルだけ更新してラッパーを放置（FB-005）

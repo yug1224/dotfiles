@@ -1,4 +1,4 @@
-応答の冒頭に「Applied: structure-templates-rule」と出力する。
+応答の冒頭に「✅️: structure-templates-rule」と出力する。
 
 # ブログ記事 構成テンプレート集
 
