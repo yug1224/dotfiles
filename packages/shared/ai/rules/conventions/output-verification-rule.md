@@ -1,4 +1,4 @@
-応答の冒頭に「Applied: output-verification-rule」と出力する。
+応答の冒頭に「✅️: output-verification-rule」と出力する。
 
 # 出力再検証ルール
 

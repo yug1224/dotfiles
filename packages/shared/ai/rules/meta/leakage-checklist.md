@@ -1,4 +1,4 @@
-応答の冒頭に「Applied: leakage-checklist」と出力する。
+応答の冒頭に「✅️: leakage-checklist」と出力する。
 
 # 公開本文漏洩チェックリスト
 
@@ -12,4 +12,5 @@ AI 設定 PR をマージする前に確認する。境界定義: [docs/BOUNDARY
 - [ ] チケット例に DC- 等の会社プレフィックスがない（`PROJ-1234` を使う）
 - [ ] 公開コマンドから only-local ファイルの必須 Read がない
 - [ ] rename 後の旧コマンド basename 参照が残っていない
+- [ ] 自己申告プレフィックス変更後、`.local` に旧プレフィックス（例: `Applied:`）が残っていない
 - [ ] recruiting ドメインは `rules/<domain>/*.local.md` として抽象参照のみ

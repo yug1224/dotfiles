@@ -1,4 +1,4 @@
-応答の冒頭に「Applied: owasp-top10-checklist」と出力する。
+応答の冒頭に「✅️: owasp-top10-checklist」と出力する。
 
 # OWASP Top 10 チェックリスト
 

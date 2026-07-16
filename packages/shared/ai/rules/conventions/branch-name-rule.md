@@ -1,4 +1,4 @@
-応答の冒頭に「Applied: branch-name-rule」と出力する。
+応答の冒頭に「✅️: branch-name-rule」と出力する。
 
 # ブランチ名規約
 

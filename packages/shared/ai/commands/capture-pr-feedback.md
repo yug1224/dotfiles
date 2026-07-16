@@ -19,7 +19,7 @@ GitHub PR URL からレビュー指摘・議論・マージ後の振り返りを
 
 ### 0. トレース（必須）
 
-応答の冒頭に `Applied: /capture-pr-feedback` と出力する。
+応答の冒頭に `✅️: /capture-pr-feedback` と出力する。
 
 ### 1. ルールの読み込み
 

@@ -1,4 +1,4 @@
-応答の冒頭に「Applied: nfr-checklist」と出力する。
+応答の冒頭に「✅️: nfr-checklist」と出力する。
 
 # 非機能要件チェックリスト
 

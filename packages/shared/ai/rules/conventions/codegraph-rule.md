@@ -1,4 +1,4 @@
-応答の冒頭に「Applied: codegraph-rule」と出力する。
+応答の冒頭に「✅️: codegraph-rule」と出力する。
 
 # CodeGraph 利用ルール
 

@@ -1,4 +1,4 @@
-応答の冒頭に「Applied: topic-ideation-rule」と出力する。
+応答の冒頭に「✅️: topic-ideation-rule」と出力する。
 
 # ブログネタ発掘ルール
 

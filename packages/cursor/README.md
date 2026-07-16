@@ -16,6 +16,7 @@ packages/cursor/
 └── rules/           # Cursor ルール（.mdc）
     ├── advisor/     #   Advisor 共通ルール
     ├── blog/        #   ブログ執筆・公開ルール
+    ├── writing/     #   媒体非依存の日本語文章規範
     ├── checklists/  #   専門チェックリスト
     ├── conventions/ #   開発規約
     ├── magi/        #   MAGI 合議ルール
@@ -227,15 +228,16 @@ Cursor ルールの定義ファイル（`.mdc` 形式）。エージェントや
 
 ### サブディレクトリ構成
 
-| ディレクトリ   | 内容                     |
-| -------------- | ------------------------ |
-| `advisor/`     | Advisor 共通行動パターン |
-| `blog/`        | ブログ執筆・公開ルール   |
-| `checklists/`  | 専門チェックリスト       |
-| `conventions/` | 開発規約                 |
-| `magi/`        | MAGI 合議ルール          |
-| `meta/`        | dotfiles AI 設定変更メタ |
-| `visual/`      | グラフィックレコード用   |
+| ディレクトリ   | 内容                       |
+| -------------- | -------------------------- |
+| `advisor/`     | Advisor 共通行動パターン   |
+| `blog/`        | ブログ執筆・公開ルール     |
+| `writing/`     | 媒体非依存の日本語文章規範 |
+| `checklists/`  | 専門チェックリスト         |
+| `conventions/` | 開発規約                   |
+| `magi/`        | MAGI 合議ルール            |
+| `meta/`        | dotfiles AI 設定変更メタ   |
+| `visual/`      | グラフィックレコード用     |
 
 ### ルール一覧
 
@@ -265,6 +267,15 @@ Cursor ルールの定義ファイル（`.mdc` 形式）。エージェントや
 | `meta-and-seo-rule.mdc`        | タイトル・タグ・要約などメタ情報の決定ガイド        |
 | `publish-checklist.mdc`        | 公開前チェックリスト（PASS/FAIL 判定）              |
 | `blog-review-rule.mdc`         | 技術ブログ記事の評価基準（7観点、0.0-5.0 スケール） |
+
+#### writing/ -- 日本語文章規範
+
+| ファイル                            | 説明                                                             |
+| ----------------------------------- | ---------------------------------------------------------------- |
+| `japanese-tech-writing-rule.mdc`    | 日本語技術文書の整形・論証・LLM 空句禁止（蒸留）                 |
+| `cognitive-rhythm-writing-rule.mdc` | 認知リズム（緩急・緊張）。JTW 併用。blog 読み物時 opt-in（蒸留） |
+
+出典一覧の正本: [`packages/shared/ai/README.md`](../shared/ai/README.md)「出典・蒸留」。
 
 #### conventions/ -- 開発規約
 
@@ -488,25 +499,25 @@ Cursor の Auto-run 時に承認なしで実行を許可するコマンド・MCP
 
 ## 自己申告プロトコル
 
-セッション中にどのルール・コマンドが使われたかを把握するための軽量な仕組み。モデルが応答内に `Applied:` を出力することで、利用コンポーネントを可視化する。モデルが指示に従わないリスクがあるため、「観測可能性の向上」であり「監査証跡」ではないと位置づける。
+セッション中にどのルール・コマンドが使われたかを把握するための軽量な仕組み。モデルが応答内に `✅️:` を出力することで、利用コンポーネントを可視化する。モデルが指示に従わないリスクがあるため、「観測可能性の向上」であり「監査証跡」ではないと位置づける。
 
 ### ルール
 
 本パッケージが提供するルール（`rules/**/*.mdc`）は共有本文 1 行目に以下を記載し、適用時にモデルが**応答の冒頭**に出力する:
 
 ```
-応答の冒頭に「Applied: <rule-id>」と出力する。
+応答の冒頭に「✅️: <rule-id>」と出力する。
 ```
 
 `<rule-id>` はファイル名から `.mdc` を除いた文字列（例: `branch-name-rule`, `wcag-checklist`）。`alwaysApply: true` のルール（`token-optimization-rule`）も同一 — 毎応答の冒頭に出力する。
 
 ### コマンド
 
-コマンドは Step 0 として応答冒頭に `Applied: /command-name` を出力する。
+コマンドは Step 0 として応答冒頭に `✅️: /command-name` を出力する。
 
 ### Advisor エージェント
 
-`advisor-behavior-rule.mdc` はルールでもあるため、先頭の `Applied:` 出力に加え、「トレース報告」セクションに従い分析結果末尾に使用した agents / rules / tools を記載する。
+`advisor-behavior-rule.mdc` はルールでもあるため、先頭の `✅️:` 出力に加え、「トレース報告」セクションに従い分析結果末尾に使用した agents / rules / tools を記載する。
 
 ## ローカル拡張
 
@@ -545,8 +556,9 @@ Cursor の Auto-run 時に承認なしで実行を許可するコマンド・MCP
 ### ローカルコマンド・ルール作成時の規約
 
 - ファイル名は `<name>.local.md` / `<name>.local.mdc` とする
-- コマンドは Git 管理のコマンドと同じ frontmatter 仕様・Step 0 トレース（`Applied:`）に従う
-- ルールは frontmatter 直後に `このルールを適用したら、「Applied: <rule-id>」と出力する。` を記載する
+- コマンドは Git 管理のコマンドと同じ frontmatter 仕様・Step 0 トレース（`応答の冒頭に \`✅️: /command-name\` と出力する。`）に従う
+- Git 管理ルール（共有正本）: 1 行目に `応答の冒頭に「✅️: <rule-id>」と出力する。`
+- `.local` ルール: 上記と同義なら `このルールを適用したら、「✅️: <rule-id>」と出力する。` でも可（rule-id は `<basename>.local`）
 - 同名コマンドの二重定義（Git 管理 + ローカル）は Cursor の挙動が不定になるため避ける
 
 ### レビュー系コマンドの使い分け

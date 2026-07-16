@@ -1,4 +1,4 @@
-応答の冒頭に「Applied: magi-orchestration-rule」と出力する。
+応答の冒頭に「✅️: magi-orchestration-rule」と出力する。
 
 # MAGI オーケストレーション共通ルール
 

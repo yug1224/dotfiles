@@ -35,7 +35,7 @@ first_h1_or_basename() {
   fi
 }
 
-# Prefer H1; otherwise basename. Never use Applied: / blank / @import as description.
+# Prefer H1; otherwise basename. Never use ✅️: / blank / @import as description.
 wrapper_description() {
   local file="$1" fallback="$2"
   first_h1_or_basename "$file" "$fallback"
