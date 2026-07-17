@@ -7,7 +7,7 @@
 ## 前提
 
 ```bash
-make mise-dotfiles   # shared → ~/.config/shared/ai/
+make mise   # shared → ~/.config/shared/ai/
 ```
 
 ## ルールファイル

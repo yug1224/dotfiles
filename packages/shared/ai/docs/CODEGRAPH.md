@@ -18,7 +18,7 @@
 ## 1. dotfiles デプロイ
 
 ```bash
-make mise-dotfiles   # shared 本文 + cursor/claude ラッパー・allowlist + ~/.config/mise
+make mise   # shared 本文 + cursor/claude ラッパー・allowlist + ~/.config/mise
 ```
 
 以下が展開される:
@@ -90,7 +90,7 @@ codegraph status
 
 peer ディレクトリを 1 インデックスにまとめる機能は未対応のため、別場所のリポジトリはそれぞれ `init` + `projectPath` で扱う。
 
-## Allowlist（mise-dotfiles 済み）
+## Allowlist（make mise 済み）
 
 | ツール                     | エントリ                                          |
 | -------------------------- | ------------------------------------------------- |

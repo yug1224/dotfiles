@@ -142,7 +142,7 @@ dotfiles 変更時 → `rules/meta/`
 1. 本文を `packages/shared/ai/` に追加
 2. `make scaffold-wrappers` で Cursor / Claude 薄ラッパーを生成（手動追加でも可）
 3. `make check-sync` で allowlist / wrapper parity / deny-guard / always-on を検証
-4. `make mise-dotfiles` で shared 本文と Cursor / Claude ラッパーを反映
+4. `make mise` で shared 本文と Cursor / Claude ラッパーを反映
 
 ## 外部ソースの蒸留
 
@@ -178,10 +178,10 @@ dotfiles 変更時 → `rules/meta/`
 
 AI 設定は **RTK インストール済み・hook 有効** を前提とする。詳細は [docs/RTK.md](./docs/RTK.md) を参照。
 
-| 項目                | 正本                                                                  |
-| ------------------- | --------------------------------------------------------------------- |
-| RTK 利用ガイド      | `packages/shared/ai/docs/RTK.md`                                      |
-| hook 設定（Claude） | `packages/claude/settings.json`                                       |
-| hook 設定（Cursor） | `packages/cursor/hooks.json`                                          |
-| RTK 設定            | `packages/rtk/config.toml` → `~/.config/rtk/`（`make mise-dotfiles`） |
-| エージェント運用    | `rules/conventions/token-optimization-rule.md`                        |
+| 項目                | 正本                                                         |
+| ------------------- | ------------------------------------------------------------ |
+| RTK 利用ガイド      | `packages/shared/ai/docs/RTK.md`                             |
+| hook 設定（Claude） | `packages/claude/settings.json`                              |
+| hook 設定（Cursor） | `packages/cursor/hooks.json`                                 |
+| RTK 設定            | `packages/rtk/config.toml` → `~/.config/rtk/`（`make mise`） |
+| エージェント運用    | `rules/conventions/token-optimization-rule.md`               |

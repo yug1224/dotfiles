@@ -18,7 +18,7 @@ set -u
 JQ="${JQ:-$HOME/.local/share/mise/shims/jq}"
 
 if [[ ! -x "$JQ" ]]; then
-  echo '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"guard-shell (claude adapter): jq が未インストール。make mise-tools（packages/mise/config.toml の jq）でインストールしてください。"}}'
+  echo '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"guard-shell (claude adapter): jq が未インストール。make mise（packages/mise/config.toml の jq）でインストールしてください。"}}'
   exit 0
 fi
 

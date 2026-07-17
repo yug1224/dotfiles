@@ -28,11 +28,11 @@
 - WCAG 2.2 準拠（A / AA レベル）、ARIA 属性・ロール・ステート設計
 - キーボードナビゲーション・フォーカス管理
 - カラーコントラスト、フォームのアクセシビリティ
-- 詳細チェックリスト: `packages/shared/ai/rules/checklists/wcag-checklist.md`（mise-dotfiles 後 `~/.config/shared/ai/rules/` 等。Cursor ラッパー: `wcag-checklist.mdc`）
+- 詳細チェックリスト: `packages/shared/ai/rules/checklists/wcag-checklist.md`（make mise 後 `~/.config/shared/ai/rules/` 等。Cursor ラッパー: `wcag-checklist.mdc`）
 
 ## 行動原則
 
-`packages/shared/ai/rules/advisor/advisor-behavior-rule.md`（mise-dotfiles 後 `~/.config/shared/ai/rules/` 等。Cursor ラッパー: `advisor-behavior-rule.mdc`）に従う。加えて以下を実施:
+`packages/shared/ai/rules/advisor/advisor-behavior-rule.md`（make mise 後 `~/.config/shared/ai/rules/` 等。Cursor ラッパー: `advisor-behavior-rule.mdc`）に従う。加えて以下を実施:
 
 - mermaid 図を含める（flowchart でモジュール構成、sequenceDiagram で処理フロー）
 - インフラ提案にはコスト影響を概算で添える

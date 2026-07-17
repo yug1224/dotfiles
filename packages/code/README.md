@@ -1,6 +1,6 @@
 # VS Code / Cursor ユーザー設定（`settings.json`）
 
-このパッケージは **Visual Studio Code** と **Cursor** の両方のユーザー設定ディレクトリへ同じ `settings.json` を `make mise-dotfiles`（ルート `mise.toml` の `[dotfiles]`）で配布する。
+このパッケージは **Visual Studio Code** と **Cursor** の両方のユーザー設定ディレクトリへ同じ `settings.json` を `make mise`（ルート `mise.toml` の `[dotfiles]`）で配布する。
 
 ## デプロイ先
 
@@ -8,7 +8,7 @@
 - `~/Library/Application Support/Cursor/User`（Cursor）
 
 ```bash
-make mise-dotfiles
+make mise
 ```
 
 設定変更後は **Developer: Reload Window** を実行する。
@@ -19,12 +19,12 @@ make mise-dotfiles
 
 | キー / 用途                          | パス                                                                       |
 | ------------------------------------ | -------------------------------------------------------------------------- |
-| dotfiles ルート                      | `$HOME/.dotfiles`（`make mise-dotfiles` でリポジトリへ symlink）           |
+| dotfiles ルート                      | `$HOME/.dotfiles`（`make mise` でリポジトリへ symlink）                    |
 | `oxc.fmt.configPath`                 | `$HOME/.dotfiles/oxfmt.config.ts`                                          |
 | `oxc.path.oxfmt` / `oxc.path.oxlint` | `$HOME/.local/share/mise/installs/npm-oxfmt/latest/...`（mise グローバル） |
 | `customLocalFormatters`              | `$HOME/.dotfiles/packages/code/bin/oxfmt-stdin.sh`                         |
 
-**前提**: `make mise-dotfiles` によりリポジトリが `$HOME/.dotfiles` に symlink されること（clone 場所は問わない）。適用後は **Developer: Reload Window** を実行する。
+**前提**: `make mise` によりリポジトリが `$HOME/.dotfiles` に symlink されること（clone 場所は問わない）。適用後は **Developer: Reload Window** を実行する。
 
 Oxc の LSP は `${workspaceFolder}` を展開しない。
 
@@ -67,9 +67,9 @@ Oxc の LSP は `${workspaceFolder}` を展開しない。
 
 **他リポジトリ**では、そのプロジェクトの `.vscode/settings.json` に `"oxc.fmt.configPath": "oxfmt.config.ts"` と `"oxc.path.oxfmt": "node_modules/oxfmt/dist/cli.js"`（ルートからの相対パス）を書く。詳細は [`packages/oxfmt/README.md`](../oxfmt/README.md)。
 
-## 主な拡張（Brewfile）
+## 主な拡張（mise bootstrap）
 
-[`Brewfile`](../../Brewfile) の `vscode '...'` と対応。
+ルート [`mise.toml`](../../mise.toml) の `[tasks.bootstrap]` で `code --install-extension` により冪等インストール。`vscode:` package plugin（`mise-plugins/mise-vscode-extensions`）は公式例のみで repo 未公開のため、公開後に宣言化予定。
 
 - フォーマット: **`oxc.oxc-vscode`**、**`jkillian.custom-local-formatters`**（非 JS）
 - Terraform: HashiCorp 拡張は手動インストール想定
@@ -78,4 +78,4 @@ Oxc の LSP は `${workspaceFolder}` を展開しない。
 
 `settings.json` はエディタのフォーマッタ・拡張機能・UI などの設定であり、**Cursor の `rules` / `commands` / `agents` や `packages/shared/ai` の共有ルールとは別レイヤー**である。AI 用の dotfiles は [`packages/cursor`](../cursor/README.md)、[`packages/claude`](../claude/README.md)、[`packages/shared/ai`](../shared/ai/README.md) を参照する。
 
-**Claude Code** は VS Code / Cursor の `settings.json` を読み込まない（CLI / 別プロセス）。エディタ設定の共有は本 `packages/code` パッケージ、**ターミナル・MCP の allowlist やエージェント規約**の共有は `packages/shared/ai`（および `make mise-dotfiles` 先の `~/.config/shared/ai`）で行う、という切り分けになる。
+**Claude Code** は VS Code / Cursor の `settings.json` を読み込まない（CLI / 別プロセス）。エディタ設定の共有は本 `packages/code` パッケージ、**ターミナル・MCP の allowlist やエージェント規約**の共有は `packages/shared/ai`（および `make mise` 先の `~/.config/shared/ai`）で行う、という切り分けになる。

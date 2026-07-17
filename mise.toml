@@ -1,10 +1,142 @@
 # Repo-local [dotfiles] / bootstrap 制御面。
 # [tools] 正本: packages/mise/config.toml → ~/.config/mise/config.toml
-min_version = { hard = "2026.7.4" }
+# Brewfile 時代のコメントアウト項目（keeper / krisp / mas 一式など）は意図的に持ち込まない。
+# vscode: 宣言は mise-plugins/mise-vscode-extensions 公開後（docs 例は 2026.7.8+ 想定）。
+min_version = { hard = "2026.7.7" }
 
 [settings]
 dotfiles.root = "~/.dotfiles"
 dotfiles.default_mode = "symlink"
+
+[bootstrap.brew.taps]
+"cloudflare/cloudflare" = "https://github.com/cloudflare/homebrew-cloudflare.git"
+"dotenvx/brew" = "https://github.com/dotenvx/homebrew-brew.git"
+
+[bootstrap.packages]
+# formulae
+"brew:automake" = "latest"
+"brew:cloudflare/cloudflare/curl" = "latest"
+"brew:coreutils" = "latest"
+"brew:docker-compose" = "latest"
+"brew:docker" = "latest"
+"brew:dotenvx/brew/dotenvx" = "latest"
+"brew:eza" = "latest"
+"brew:ffmpeg" = "latest"
+"brew:gibo" = "latest"
+"brew:git" = "latest"
+"brew:gnu-sed" = "latest"
+"brew:gnupg" = "latest"
+"brew:gnutls" = "latest"
+"brew:imagemagick" = "latest"
+"brew:iperf3" = "latest"
+"brew:libheif" = "latest"
+"brew:libraw" = "latest"
+"brew:mas" = "latest"
+"brew:mise" = "latest"
+"brew:switchaudio-osx" = "latest"
+"brew:tig" = "latest"
+"brew:tree" = "latest"
+"brew:zsh-autosuggestions" = "latest"
+"brew:zsh-completions" = "latest"
+# casks（mise brew-cask で artifact/reconcile 失敗するものは [tasks.bootstrap]）
+"brew-cask:discord" = "latest"
+"brew-cask:font-monaspace" = "latest"
+"brew-cask:font-plemol-jp-hs" = "latest"
+"brew-cask:font-plemol-jp-nf" = "latest"
+"brew-cask:font-plemol-jp" = "latest"
+"brew-cask:google-chrome" = "latest"
+"brew-cask:microsoft-edge" = "latest"
+
+# gcloud-cli / google-japanese-ime（pkg 状態を mise が追えない）/ raycast 等 / VS Code 拡張 / rtmpdump
+[tasks.bootstrap]
+description = "Install brew-escaped casks, rtmpdump, and VS Code extensions (idempotent)"
+run = """
+#!/usr/bin/env bash
+set -euo pipefail
+
+export NONINTERACTIVE=1
+export HOMEBREW_NO_AUTO_UPDATE=1
+export HOMEBREW_NO_ENV_HINTS=1
+
+if ! command -v brew >/dev/null 2>&1; then
+  echo "bootstrap: brew not found" >&2
+  exit 1
+fi
+
+prefix="$(brew --prefix)"
+
+echo "bootstrap: ensure rtmpdump"
+if [[ ! -d "$prefix/Cellar/rtmpdump" ]]; then
+  brew install rtmpdump
+fi
+
+echo "bootstrap: ensure casks via brew"
+installed_casks="$(brew list --cask 2>/dev/null || true)"
+casks=(
+  gcloud-cli
+  google-japanese-ime
+  raycast
+  slack
+  visual-studio-code
+  zoom
+)
+for cask in "${casks[@]}"; do
+  if printf '%s\n' "$installed_casks" | grep -Fxq "$cask"; then
+    continue
+  fi
+  echo "bootstrap: install cask $cask"
+  brew install --cask "$cask"
+done
+
+if ! command -v code >/dev/null 2>&1; then
+  echo "bootstrap: code CLI not found; skip VS Code extensions"
+  exit 0
+fi
+
+echo "bootstrap: ensure VS Code extensions"
+installed="$(code --list-extensions 2>/dev/null || true)"
+exts=(
+  aaron-bond.better-comments
+  alexcvzz.vscode-sqlite
+  beardedbear.beardedicons
+  beardedbear.beardedtheme
+  christian-kohler.path-intellisense
+  dsznajder.es7-react-js-snippets
+  eamodio.gitlens
+  editorconfig.editorconfig
+  enkia.tokyo-night
+  eriklynd.json-tools
+  oxc.oxc-vscode
+  formulahendry.auto-close-tag
+  formulahendry.auto-rename-tag
+  foxundermoon.shell-format
+  gruntfuggly.todo-tree
+  hookyqr.minify
+  ics.japanese-proofreading
+  jkillian.custom-local-formatters
+  mikestead.dotenv
+  ms-ceintl.vscode-language-pack-ja
+  ms-playwright.playwright
+  ms-vscode.makefile-tools
+  richie5um2.vscode-sort-json
+  steoates.autoimport
+  streetsidesoftware.code-spell-checker
+  stylelint.vscode-stylelint
+  tamasfe.even-better-toml
+  tomoki1207.pdf
+  vscode-icons-team.vscode-icons
+  xabikos.javascriptsnippets
+)
+for id in "${exts[@]}"; do
+  if printf '%s\n' "$installed" | grep -Fxq "$id"; then
+    continue
+  fi
+  echo "bootstrap: install extension $id"
+  code --install-extension "$id"
+done
+
+echo "bootstrap: done"
+"""
 
 [dotfiles]
 # 安定パス入口（初回は config 相対 source なので ~/.dotfiles 不要）

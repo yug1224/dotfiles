@@ -7,7 +7,7 @@ GUARD="${SCRIPT_DIR}/guard-shell.sh"
 
 : "${JQ:=$HOME/.local/share/mise/shims/jq}"
 if [[ ! -x "$JQ" ]]; then
-  echo "SKIP: executable jq required at JQ=$JQ (make mise-tools / packages/mise/config.toml の jq)" >&2
+  echo "SKIP: executable jq required at JQ=$JQ (make mise / packages/mise/config.toml の jq)" >&2
   exit 0
 fi
 export JQ
