@@ -3,7 +3,7 @@
 # ({ "command", "cwd", "sandbox" }) and prints one JSON line with
 # { "permission": "allow" | "ask" | "deny", ... }.
 #
-# Deployed to ~/.config/shared/ai/hooks/ (via make mise-dotfiles). Cursor invokes
+# Deployed to ~/.config/shared/ai/hooks/ (via make mise). Cursor invokes
 # ~/.cursor/hooks/guard-shell.sh, a thin wrapper that execs this file. Claude uses
 # ~/.claude/hooks/guard-shell.sh (adapter) piping the same JSON shape into
 # ~/.config/shared/ai/hooks/guard-shell.sh.
@@ -34,7 +34,7 @@ deny_json() {
 input=$(cat || true)
 
 if [[ -z "$JQ" || ! -x "$JQ" ]]; then
-  printf '%s\n' '{"permission":"deny","user_message":"guard-shell: jq が未インストールです。make mise-tools（packages/mise/config.toml の jq）でインストールしてください。","agent_message":"Shell ガードを実行できません。"}'
+  printf '%s\n' '{"permission":"deny","user_message":"guard-shell: jq が未インストールです。make mise（packages/mise/config.toml の jq）でインストールしてください。","agent_message":"Shell ガードを実行できません。"}'
   exit 0
 fi
 if [[ -z "$input" ]]; then

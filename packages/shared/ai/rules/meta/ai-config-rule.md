@@ -19,7 +19,7 @@
 3. `make scaffold-wrappers` で Cursor / Claude 薄ラッパーを生成（既存は上書きしない）。手書きしてもよい
 4. `wrapper-parity-checklist.md` と `leakage-checklist.md` を上から確認
 5. `make check-sync` で allowlist / wrapper / deny-guard / always-on を検証
-6. `make mise-dotfiles` で shared 本文と Cursor / Claude ラッパーを反映
+6. `make mise` で shared 本文と Cursor / Claude ラッパーを反映
 
 ## 例外
 

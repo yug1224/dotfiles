@@ -1,6 +1,6 @@
 # `packages/shared/ai/`（クロスツール共有素材）
 
-Cursor / Claude Code が共通で参照する素材の原本（Gemini CLI 用ホストパッケージ `packages/gemini` は **未実装**）。`make mise-dotfiles` で `~/.config/shared/ai/` に展開される（ルート `mise.toml` の `[dotfiles]`）。
+Cursor / Claude Code が共通で参照する素材の原本（Gemini CLI 用ホストパッケージ `packages/gemini` は **未実装**）。`make mise` で `~/.config/shared/ai/` に展開される（ルート `mise.toml` の `[dotfiles]`）。
 
 **RTK 前提**: Shell トークン削減と hook 連携は [docs/RTK.md](./docs/RTK.md) が正本。セットアップ順・hook 配線・競合の対処はそちらを参照。
 
@@ -58,7 +58,7 @@ packages/shared/
 
 ## `@`-import パス（`@~/.config/shared/ai/` 絶対パス）
 
-`make mise-dotfiles` で `~/.config/shared/ai/` にデプロイされた共有本文を、`@~/.config/shared/ai/...` で参照する。Cursor は symlink の配置場所からの相対パスでは共有本文に届かないため、この絶対パス形式を使う。
+`make mise` で `~/.config/shared/ai/` にデプロイされた共有本文を、`@~/.config/shared/ai/...` で参照する。Cursor は symlink の配置場所からの相対パスでは共有本文に届かないため、この絶対パス形式を使う。
 
 | ラッパー配置（リポジトリ）             | 共有本文への import 例                    |
 | -------------------------------------- | ----------------------------------------- |
@@ -76,7 +76,7 @@ packages/shared/
 
 - **ツール専用**: `packages/cursor/` / `packages/claude/` の `*.local.*` も同様（`.gitignore` で除外）。運用メモは `README.local.md`。
 - **共有本文**: 汎用 `.md`（Git）と同名の **`.local.md`（gitignore）** を同じディレクトリに置く。Git 側のルール・コマンドは「存在すれば Read」と記載し、無くても動作する。
-- 参照パス: `@~/.config/shared/ai/...`（`make mise-dotfiles` 後）
+- 参照パス: `@~/.config/shared/ai/...`（`make mise` 後）
 
 ## 編集ルール
 
@@ -85,7 +85,7 @@ packages/shared/
 
 ## ルールファイルの所在（Cursor / Claude 共通）
 
-共有の規約本文はすべてこのツリー内の `rules/**/*.md` にある。`make mise-dotfiles` により `~/.config/shared/ai/rules/` へ展開される。
+共有の規約本文はすべてこのツリー内の `rules/**/*.md` にある。`make mise` により `~/.config/shared/ai/rules/` へ展開される。
 
 **Read ツールで本文を開くとき**は、次のいずれかを使う（実在パスを指す）。
 
