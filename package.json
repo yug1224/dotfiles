@@ -10,7 +10,7 @@
     "fmt": "oxfmt --no-error-on-unmatched-pattern -c oxfmt.config.ts"
   },
   "devDependencies": {
-    "@secretlint/secretlint-rule-preset-recommend": "^11.7.1",
+    "@secretlint/secretlint-rule-preset-recommend": "^13.0.3",
     "oxfmt": "^0.41.0",
     "secretlint": "^11.7.1",
     "typescript": "^5.9.3"
