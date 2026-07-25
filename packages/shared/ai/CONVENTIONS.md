@@ -47,24 +47,30 @@
 
 #### 旧 → 新対応表
 
-| 旧                        | 新                        | 変更                              |
-| ------------------------- | ------------------------- | --------------------------------- |
-| `suggest-branch-name`     | `suggest-branch-name`     | 維持                              |
-| `suggest-commit-message`  | `suggest-commit-message`  | 維持                              |
-| `suggest-pr-description`  | `suggest-pr-description`  | 維持                              |
-| `suggest-plan`            | `suggest-plan`            | 維持                              |
-| `suggest-development-log` | `suggest-development-log` | 維持                              |
-| `apply-coding-rule`       | `apply-coding-rule`       | 維持                              |
-| `verify-output`           | `verify-output`           | 維持                              |
-| `magi`                    | `magi`                    | 維持（唯一の名詞例外）            |
-| `pr-review`               | `review-pr`               | リネーム                          |
-| `diff-review`             | `review-diff`             | リネーム                          |
-| `blog-review`             | `review-blog`             | リネーム                          |
-| `magi-pr-review`          | `review-pr-magi`          | リネーム（MAGI は suffix）        |
-| `blog-plan`               | `plan-blog`               | リネーム                          |
-| `capture-pr-lesson`       | `capture-pr-feedback`     | リネーム（`lesson` → `feedback`） |
-| `fix-issue`               | `analyze-issue`           | リネーム                          |
-| `graphic-record-prompt`   | `write-graphic-prompt`    | リネーム                          |
+| 旧                        | 新                        | 変更                                                             |
+| ------------------------- | ------------------------- | ---------------------------------------------------------------- |
+| `suggest-branch-name`     | `suggest-branch-name`     | 維持                                                             |
+| `suggest-commit-message`  | `suggest-commit-message`  | 維持                                                             |
+| `suggest-pr-description`  | `suggest-pr-description`  | 維持                                                             |
+| `suggest-plan`            | `suggest-plan`            | 維持                                                             |
+| `suggest-development-log` | `suggest-development-log` | 維持                                                             |
+| `apply-coding-rule`       | `apply-coding-rule`       | 維持                                                             |
+| `verify-output`           | `verify-output`           | 維持                                                             |
+| `magi`                    | `magi`                    | 維持（唯一の名詞例外）                                           |
+| （新規）                  | `verify-adversarial`      | 敵対的検証の明示入口                                             |
+| （新規）                  | `analyze-ai-config`       | AI 資産棚卸し（傘。`skills`/`rules`/`commands`/`agents` 引数可） |
+| （新規）                  | `analyze-ai-skills`       | → `analyze-ai-config skills` のエイリアス                        |
+| （新規）                  | `analyze-ai-rules`        | → `analyze-ai-config rules` のエイリアス                         |
+| （新規）                  | `analyze-ai-commands`     | → `analyze-ai-config commands` のエイリアス                      |
+| （新規）                  | `analyze-ai-agents`       | → `analyze-ai-config agents` のエイリアス                        |
+| `pr-review`               | `review-pr`               | リネーム                                                         |
+| `diff-review`             | `review-diff`             | リネーム                                                         |
+| `blog-review`             | `review-blog`             | リネーム                                                         |
+| `magi-pr-review`          | `review-pr-magi`          | リネーム（MAGI は suffix）                                       |
+| `blog-plan`               | `plan-blog`               | リネーム                                                         |
+| `capture-pr-lesson`       | `capture-pr-feedback`     | リネーム（`lesson` → `feedback`）                                |
+| `fix-issue`               | `analyze-issue`           | リネーム                                                         |
+| `graphic-record-prompt`   | `write-graphic-prompt`    | リネーム                                                         |
 
 手元の `*.local.md` 追従は [docs/LOCAL-SETUP.md](./docs/LOCAL-SETUP.md) を参照。
 
@@ -74,9 +80,10 @@
 
 ### 自己申告（`✅️:`）の rule-id
 
-- **ルール / チェックリスト**: 共有本文 1 行目に `応答の冒頭に「✅️: <rule-id>」と出力する。` を記載。`<rule-id>` はファイル名から拡張子（`.md`）を除いた文字列（例: `writing-style-rule.md` → `writing-style-rule`）。**`-rule` を二重に付けない**（誤: `writing-style-rule-rule`）。`alwaysApply: true` のルール（例: `token-optimization-rule`）も同一 — 毎応答の冒頭に出力する。
+- **ルール / チェックリスト**: 共有本文 1 行目に `応答の冒頭に「✅️: <rule-id>」と出力する。` を記載。`<rule-id>` はファイル名から拡張子（`.md`）を除いた文字列。**`-rule` を二重に付けない**。`alwaysApply: true` のルール（例: `token-optimization-rule`）は **コマンド／明示適用時のみ** 冒頭自己申告すればよい（毎応答冒頭は不要。観測コスト削減）。
+- **コマンド経由でルールを Read する場合**: **コマンドの ✅️ のみ**（ルール id は出さない）。ルールを `@` / 明示 Read のみしたときだけルールの ✅️ を出す。
 - **`.local.md` の rule-id**: basename そのまま（例: `coding-rule.local.md` → `✅️: coding-rule.local`、`pr-review-rule.local.md` → `✅️: pr-review-rule.local`）。ラッパーには書かない。
-- **コマンド**: Step 0 に `応答の冒頭に \`✅️: /command-name\` と出力する。`（スラッシュ付き）。frontmatter の `name:`および`/command-name` と basename を一致させる。
+- **コマンド**: Step 0 に `応答の冒頭に \`✅️: /command-name\` と出力する。`（スラッシュ付き）。frontmatter の `name:`および`/command-name` と basename を一致させる。**`description` は日本語の要約\*\*（basename フォールバックのまま残さない）。
 - **対比**: ルールは `✅️: rule-id`（スラッシュなし）、コマンドは `✅️: /command-name`（スラッシュあり）。いずれも **応答の冒頭** に出す。
 - **ラッパー**（`.mdc` / Claude の `rules/**/*.md`）: `✅️:` は **共有本文**にのみ書く。ラッパーは frontmatter + `@~/.config/shared/ai/...` の import のみ（blog / conventions と同型）。
 
@@ -141,7 +148,7 @@ dotfiles 変更時 → `rules/meta/`
 
 1. 本文を `packages/shared/ai/` に追加
 2. `make scaffold-wrappers` で Cursor / Claude 薄ラッパーを生成（手動追加でも可）
-3. `make check-sync` で allowlist / wrapper parity / deny-guard / always-on を検証
+3. `make check-sync` で allowlist / wrapper parity / deny-guard / always-on / context-bloat を検証
 4. `make mise` で shared 本文と Cursor / Claude ラッパーを反映
 
 ## 外部ソースの蒸留

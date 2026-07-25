@@ -1,5 +1,7 @@
 直前の AI 応答（プラン・説明・レビューレポート等）を再検証し、誤検証・間違い・ヌケモレを修正した最終版を出力する。各コマンドのインライン再検証と同じ正本手順の単体版。
 
+**敵対的検証との使い分け**: 本コマンドは `output-verification-rule.md` の **3 軸**（誤検証・間違い・ヌケモレ）で成果物を**修正した最終版**を出す。課題あり前提で主張を攻撃し、反証できなかった点を列挙する深掘りは [`verify-adversarial.md`](./verify-adversarial.md)（`/verify-adversarial`）を使う。**同一ターンで両コマンドを起動しない**（どちらか一方。正本: `review-common-rule`。レビュー／MAGI 内蔵のインライン再検証は対象外）。
+
 **参照ルール**: `@~/.config/shared/ai/rules/conventions/output-verification-rule.md`
 
 **Input**: `/verify-output` の後に続く引数は任意。チケット ID またはチケット URL（直前応答の要件照合用）。

@@ -77,6 +77,12 @@ Cursor カスタムスラッシュコマンドの定義ファイル。チャッ�
 | `suggest-development-log.md`     | `/suggest-development-log`     | Development | タスク対応の開発ログを MECE 構造で生成                                    |
 | `capture-pr-feedback.md`         | `/capture-pr-feedback`         | Quality     | PR URL からフィードバックログへの追記案を生成（読み取り専用）             |
 | `verify-output.md`               | `/verify-output`               | Quality     | 直前 AI 応答の再検証と最終版出力（単体・追確認用）                        |
+| `verify-adversarial.md`          | `/verify-adversarial`          | Quality     | 敵対的検証（主張の反証。フル版はサブエージェント明示時）                  |
+| `analyze-ai-config.md`           | `/analyze-ai-config`           | Meta        | AI 資産の総合棚卸し（引数で skills/rules/commands/agents）                |
+| `analyze-ai-skills.md`           | `/analyze-ai-skills`           | Meta        | → `/analyze-ai-config skills` エイリアス                                  |
+| `analyze-ai-rules.md`            | `/analyze-ai-rules`            | Meta        | → `/analyze-ai-config rules` エイリアス                                   |
+| `analyze-ai-commands.md`         | `/analyze-ai-commands`         | Meta        | → `/analyze-ai-config commands` エイリアス                                |
+| `analyze-ai-agents.md`           | `/analyze-ai-agents`           | Meta        | → `/analyze-ai-config agents` エイリアス                                  |
 | `review-diff.md`                 | `/review-diff`                 | Quality     | ステージング済み変更のセルフレビュー（出力前に再検証）                    |
 | `review-diff-linus.md`           | `/review-diff-linus`           | Quality     | staged 差分の Linus 風批判的レビュー（出力前に再検証）                    |
 | `review-pr.md`                   | `/review-pr`                   | Quality     | GitHub PR のレビュー（出力前に再検証・過剰指摘抑制）                      |
@@ -132,9 +138,9 @@ Cursor カスタムエージェントの定義ファイル。起動方法は種�
 
 #### Advisor エージェント（3体）
 
-開発ライフサイクルのフェーズに特化したアドバイザー。すべて `readonly: true`・`model: fast` で、分析・提案のみを行う。ユーザーがサブエージェント利用を明示した場合、またはサブエージェントを使うコマンドから起動された場合にのみ使用される（description match による自動委譲は行わない）。
+開発ライフサイクルのフェーズに特化したアドバイザー。すべて `readonly: true`。分析・提案のみを行う。ユーザーがサブエージェント利用を明示した場合、またはサブエージェントを使うコマンドから起動された場合にのみ使用される（description match による自動委譲は行わない）。
 
-**モデル（`model`）について**: Advisor 3体および MAGI 3体の frontmatter では `model: fast` を指定している。Cursor 公式の [Subagents](https://cursor.com/docs/subagents) にあるとおり、軽量・高速向けモデルであり、複数サブの並列起動時のレイテンシとコストを抑える意図である。親チャットと同じモデルに揃えたい場合は各 `.md` で `inherit` に、より重い推論が必要ならモデル ID を指定すること。
+**Meta LOOP（モデル割当）**: Orchestrator（親・UI 選択）推奨 Grok 4.5 / Advisor は `claude-opus-5[thinking=true,effort=high,fast=false]` / Worker・MAGI は Cursor `composer-2.5[fast=false]`（Claude Code の MAGI は `sonnet`）。詳細は [`packages/shared/ai/docs/LOCAL-SETUP.md`](../shared/ai/docs/LOCAL-SETUP.md)「Meta LOOP」。bracket は Cursor [Subagents](https://cursor.com/docs/subagents) 準拠（親と同じなら `inherit`）。
 
 ##### サブエージェントとして Advisor を起動するコマンド
 
@@ -273,30 +279,31 @@ Cursor ルールの定義ファイル（`.mdc` 形式）。エージェントや
 
 #### writing/ -- 日本語文章規範
 
-| ファイル                            | 説明                                                                                                                         |
-| ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| `japanese-tech-writing-rule.mdc`    | 日本語技術文書の整形・論証・LLM 空句禁止（蒸留）。`globs: **/*.md` で `.md` 編集時に自動適用。既定スライスは `tech-doc-lite` |
-| `cognitive-rhythm-writing-rule.mdc` | 認知リズム（緩急・緊張）。JTW 併用。blog 読み物時 opt-in（蒸留）。`globs` なし（既定適用しない）                             |
+| ファイル                            | 説明                                                                                                              |
+| ----------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `japanese-tech-writing-rule.mdc`    | 日本語技術文書の整形・論証・LLM 空句禁止（蒸留）。`globs` は docs/README 系に限定。既定スライスは `tech-doc-lite` |
+| `cognitive-rhythm-writing-rule.mdc` | 認知リズム（緩急・緊張）。JTW 併用。blog 読み物時 opt-in（蒸留）。`globs` なし（既定適用しない）                  |
 
-- **JTW 自動適用**: Cursor のみ。`alwaysApply: false` + `globs: ["**/*.md"]`。適用範囲は `tech-doc-lite`（空句・冗長・根拠なき断言の抑制）。blog は `writing-style-rule` Override / `blog-base` 優先。OpenSpec・仕様テンプレは構造優先
+- **JTW 自動適用**: Cursor のみ。`alwaysApply: false` + `globs: ["**/docs/**/*.md", "**/*README*.md", ...]`（全 `.md` ではない）。適用範囲は `tech-doc-lite`。blog は `writing-style-rule` Override / `blog-base` 優先。OpenSpec・仕様テンプレは構造優先
 - **CRW**: 手動 `@` または体験記・読み物時のみ。md glob には載せない
 
 出典一覧の正本: [`packages/shared/ai/README.md`](../shared/ai/README.md)「出典・蒸留」。
 
 #### conventions/ -- 開発規約
 
-| ファイル                      | 説明                                                                          |
-| ----------------------------- | ----------------------------------------------------------------------------- |
-| `branch-name-rule.mdc`        | ブランチ名規約（`<type>/<description>` 形式）                                 |
-| `commit-message-rule.mdc`     | コミットメッセージ規約（`<type>(<scope>): <subject>` 形式）                   |
-| `review-common-rule.mdc`      | PR レビュー・diff レビュー共通の調査手順・観点・出力フォーマット              |
-| `pr-review-rule.mdc`          | PR レビュー基準・重要度・テンプレート（汎用）                                 |
-| `linus-review-rule.mdc`       | Linus スタイル批判的レビュー（ペルソナ・口調・出力差分）                      |
-| `pr-description-rule.mdc`     | PR Title（`type(scope): subject`）・Description の構成・テンプレート          |
-| `development-log-rule.mdc`    | 開発ログの MECE 構成・記載ガイド                                              |
-| `ticket-retrieval-rule.mdc`   | チケット情報の取得手順（GitHub / その他 URL / ID。プロバイダ固有は `.local`） |
-| `codegraph-rule.mdc`          | CodeGraph によるセマンティックコード調査（MCP / CLI）                         |
-| `token-optimization-rule.mdc` | 全ワークスペース共通のトークン節約運用（`alwaysApply: true`）                 |
+| ファイル                       | 説明                                                                          |
+| ------------------------------ | ----------------------------------------------------------------------------- |
+| `branch-name-rule.mdc`         | ブランチ名規約（`<type>/<description>` 形式）                                 |
+| `commit-message-rule.mdc`      | コミットメッセージ規約（`<type>(<scope>): <subject>` 形式）                   |
+| `review-common-rule.mdc`       | PR レビュー・diff レビュー共通の調査手順・観点・出力フォーマット              |
+| `pr-review-rule.mdc`           | PR レビュー基準・重要度・テンプレート（汎用）                                 |
+| `linus-review-rule.mdc`        | Linus スタイル批判的レビュー（ペルソナ・口調・出力差分）                      |
+| `pr-description-rule.mdc`      | PR Title（`type(scope): subject`）・Description の構成・テンプレート          |
+| `development-log-rule.mdc`     | 開発ログの MECE 構成・記載ガイド                                              |
+| `ticket-retrieval-rule.mdc`    | チケット情報の取得手順（GitHub / その他 URL / ID。プロバイダ固有は `.local`） |
+| `codegraph-rule.mdc`           | CodeGraph によるセマンティックコード調査（MCP / CLI）                         |
+| `token-optimization-rule.mdc`  | 全ワークスペース共通のトークン節約運用（`alwaysApply: true`）                 |
+| `ai-config-inventory-rule.mdc` | AI 資産棚卸し手順（`/analyze-ai-*` から参照。`alwaysApply: false`）           |
 
 #### meta/ -- dotfiles AI 設定変更
 
@@ -516,7 +523,7 @@ Cursor の Auto-run 時に承認なしで実行を許可するコマンド・MCP
 応答の冒頭に「✅️: <rule-id>」と出力する。
 ```
 
-`<rule-id>` はファイル名から `.mdc` を除いた文字列（例: `branch-name-rule`, `wcag-checklist`）。`alwaysApply: true` のルール（`token-optimization-rule`）も同一 — 毎応答の冒頭に出力する。
+`<rule-id>` はファイル名から `.mdc` を除いた文字列（例: `branch-name-rule`, `wcag-checklist`）。`alwaysApply: true` の `token-optimization-rule` は **コマンド／明示適用時のみ**冒頭出力（単独 always-on の毎応答冒頭は不要）。
 
 ### コマンド
 

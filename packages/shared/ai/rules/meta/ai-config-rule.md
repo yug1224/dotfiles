@@ -18,24 +18,25 @@
 2. **外部ソースを蒸留した場合**: 正本フッターに出典を書く。`README.md` の「出典・蒸留」一覧を更新する（詳細: [CONVENTIONS.md](../../CONVENTIONS.md)「外部ソースの蒸留」）
 3. `make scaffold-wrappers` で Cursor / Claude 薄ラッパーを生成（既存は上書きしない）。手書きしてもよい
 4. `wrapper-parity-checklist.md` と `leakage-checklist.md` を上から確認
-5. `make check-sync` で allowlist / wrapper / deny-guard / always-on を検証
+5. `make check-sync` で allowlist / wrapper / deny-guard / always-on / context-bloat を検証
 6. `make mise` で shared 本文と Cursor / Claude ラッパーを反映
 
 ## 例外
 
-| ファイル                      | ラッパー | 理由                      |
-| ----------------------------- | -------- | ------------------------- |
-| `output-verification-rule.md` | なし     | コマンドから直接 `@` 参照 |
+| ファイル                      | ラッパー    | 理由                                                  |
+| ----------------------------- | ----------- | ----------------------------------------------------- |
+| `output-verification-rule.md` | なし        | コマンドから直接 `@` 参照                             |
+| `INDEX`（Claude only）        | Claude のみ | 発見索引。shared SoT なし（`wrapper-exceptions.txt`） |
 
 ## CLAUDE.md Tier 判定
 
-| Tier          | 内容                             | 例                                                  |
-| ------------- | -------------------------------- | --------------------------------------------------- |
-| A（常時）     | `CLAUDE.md` から `@./rules/...`  | token-optimization, commit-message, review-common   |
-| B（参照）     | agent-requestable / コマンド経由 | meta ルール、`pr-feedback-registry.local`（存在時） |
-| C（ローカル） | `.local.md` のみ                 | coding-rule.local, pr-review-rule.local             |
+| Tier          | 内容                             | 例                                                |
+| ------------- | -------------------------------- | ------------------------------------------------- |
+| A（常時）     | `CLAUDE.md` から `@./rules/...`  | `token-optimization-rule` + `INDEX`（発見索引）   |
+| B（参照）     | agent-requestable / コマンド経由 | commit/review、meta、`pr-feedback-registry.local` |
+| C（ローカル） | `.local.md` のみ                 | coding-rule.local, pr-review-rule.local           |
 
-新規 convention は Tier B をデフォルトとし、`alwaysApply: true` は token-optimization のみ。
+新規 convention は Tier B をデフォルトとし、`alwaysApply: true` は token-optimization のみ。Claude Tier A は token-opt + INDEX（本文は載せない）。`make check-sync` は `check-context-bloat.sh`（肥大警告）も含む。
 
 ## 禁止
 

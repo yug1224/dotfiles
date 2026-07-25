@@ -97,93 +97,30 @@ BREAKING CHANGE: レスポンスの `items` フィールドを `data` にリネ�
 
 ---
 
-## 実践例
+## 実践例（gotcha）
 
-### ✅ Good
-
-```
-feat(user-list): フィルタリング機能を追加
-
-- カテゴリ選択UIを実装
-- APIクエリパラメータにcategoryを追加
-```
-
-```
-fix(api-client): null値レスポンスのハンドリングを修正
-
-- レスポンスのnullチェックを追加
-- フォールバック値の設定ロジックを実装
-```
-
-```
-feat(auth): OAuth2認証フローを追加
-
-- Google OAuth2のコールバック処理を実装
-- セッション管理ミドルウェアを追加
-
-Closes #123
-```
-
-```
-feat(user-list): フィルタリング機能を追加 [PROJ-1234]
-
-- カテゴリ選択UIを実装
-- APIクエリパラメータにcategoryを追加
-```
-
-### ❌ Bad
-
-```
-fix: バグ修正
-```
-
-→ スコープなし、何のバグか不明、理由なし
-
-```
-feat: 一覧画面とユーザー管理を追加
-```
-
-→ 複数の変更を1コミットに含めている
-
-```
-refactor(user): コードを整理
-```
-
-→ 「なぜ」がない、何が改善されたか不明
+- Good: `feat(user-list): フィルタリング機能を追加` + body で「なぜ」と箇条書き。チケットがあれば `[PROJ-1234]`
+- Bad: `fix: バグ修正`（何が／なぜが無い）、1コミットに無関係な変更を混ぜる、`refactor: コードを整理`（何が改善されたか不明）
 
 ---
 
 ## コミット前チェックリスト
 
-- [ ] `git --no-pager diff --staged` でステージング内容を確認
-- [ ] 1コミット = 1論理的変更
-- [ ] ヘッダー全体72文字以内（subject 50文字以内）
-- [ ] 「なぜ」を説明している
-- [ ] チケット ID が判明している場合はヘッダー末尾に `[TICKET-ID]` を付与
-- [ ] 破壊的変更がある場合は `BREAKING CHANGE:` を記載
-- [ ] テストとLintが通る
-
-### よく使うコマンド
-
-```bash
-git --no-pager diff --staged        # ステージング確認
-git --no-pager diff --staged --stat # ステージング概要
-git add -p                          # 対話的にステージング
-git commit --amend                  # コミット修正（push前のみ）
-```
+- [ ] ステージング内容を確認（`git --no-pager diff --staged`）
+- [ ] 1コミット = 1論理的変更、ヘッダー72文字以内、「なぜ」を説明
+- [ ] チケット ID 判明時は `[TICKET-ID]`、破壊的変更は `BREAKING CHANGE:`
 
 ---
 
-## 関連規約（Git 運用の一貫性）
+## 関連規約
 
-| 成果物      | 規約                                           | 形式の関係                                                                                                                 |
-| ----------- | ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| ブランチ    | [ブランチ名規約](./branch-name-rule.md)        | `type` は本規約と同一 8 種。ブランチの `type` とコミット / PR の `type` を揃える                                           |
-| PR タイトル | [PR概要の記述ルール](./pr-description-rule.md) | **ヘッダー1行と同一**（`type(scope): subject [ticket-id]`）。Squash merge 時に PR タイトルが main へ入る運用と整合しやすい |
+| 成果物      | 規約                                                                    |
+| ----------- | ----------------------------------------------------------------------- |
+| ブランチ    | [branch-name-rule.md](./branch-name-rule.md)（`type` を揃える）         |
+| PR タイトル | [pr-description-rule.md](./pr-description-rule.md)（ヘッダー1行と同一） |
 
 ---
 
 ## 参考
 
 - [Conventional Commits](https://www.conventionalcommits.org/ja/)
-- [Angular Commit Guidelines](https://github.com/angular/angular/blob/main/CONTRIBUTING.md#commit)

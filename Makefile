@@ -45,12 +45,17 @@ scaffold-wrappers:
 check-wrappers:
 	./scripts/scaffold-wrappers.sh --check
 
+.PHONY: check-context-bloat
+check-context-bloat:
+	./scripts/check-context-bloat.sh
+
 .PHONY: check-sync
 check-sync:
 	REQUIRE_JQ=1 ./scripts/check-allowlist-sync.sh
 	./scripts/check-wrapper-parity.sh
 	REQUIRE_JQ=1 ./scripts/check-deny-guard-sync.sh
 	REQUIRE_JQ=1 ./scripts/check-always-on-sync.sh
+	./scripts/check-context-bloat.sh
 
 .PHONY: test-scripts
 test-scripts:

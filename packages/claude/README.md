@@ -11,14 +11,14 @@ Claude Code の設定ファイル群。`make mise`（ルート `mise.toml` の `
 
 ```
 packages/claude/
-├── AGENTS.md → ../shared/ai/AGENTS.md   # 共通規約（symlink）
+├── AGENTS.md → ../shared/ai/AGENTS.md   # メンテ・運用メモ（symlink・常時コンテキスト外）
 ├── agents/                       # Claude frontmatter ラッパー
 ├── commands/                     # スラッシュコマンドラッパー（本文は shared）
 ├── rules/                        # ルールラッパー（blog/, writing/, conventions/, visual/ 等）
 ├── hooks/                        # Claude 用 adapter（共有 guard は ~/.config/shared/ai/hooks/）
 ├── settings.json                 # hooks / permissions / model
-├── CLAUDE.md                     # ルール集約（@RTK.md 参照）
-├── RTK.md                        # RTK 利用ガイド（shared 正本のラッパー）
+├── CLAUDE.md                     # Tier A（token-opt + INDEX）
+├── RTK.md                        # RTK 利用ガイド（shared 正本のラッパー・オンデマンド）
 └── README.md
 ```
 
@@ -34,7 +34,7 @@ packages/claude/
 | `cognitive-rhythm-writing-rule.md` | `@~/.config/shared/ai/rules/writing/cognitive-rhythm-writing-rule.md` |
 
 - **Tier**: B（コマンド経由 / agent-requestable）。CLAUDE.md Tier A には載せない
-- **Cursor との非対称**: Cursor は `japanese-tech-writing-rule.mdc` の `globs: **/*.md` で `.md` 編集時に自動適用（既定 `tech-doc-lite`）。Claude に glob 相当はないため、同等の自動適用はせずコマンド／明示 `@` に任せる
+- **Cursor との非対称**: Cursor は `japanese-tech-writing-rule.mdc` の docs/README 系 `globs` で自動適用（既定 `tech-doc-lite`）。Claude に glob 相当はないため、同等の自動適用はせずコマンド／明示 `@` に任せる
 - **明示適用**: `/apply-japanese-tech-writing`（引数でスライス指定可。既定 `tech-doc-lite`）。Cursor / Claude 共通
 - **用途**: 日本語出力の基底。Git 管理コマンドからの必須 Read は `plan-blog` / `suggest-development-log` / `suggest-pr-description`（`review-blog` は writing-style 経由）。採用メッセージ系（`.local`）は必須 Read する場合も適用は `tech-doc-lite`
 - **優先**: blog では `writing-style-rule` の Override が優先（JTW は `blog-base`）。開発ログ／PR 説明／採用メッセージは `tech-doc-lite`。CRW は体験記・読み物時のみ opt-in
@@ -49,7 +49,7 @@ Claude Code の Agent Skills（`~/.claude/skills/` に `<name>/SKILL.md` を置�
 | `packages/claude/commands/*.md`       | `@~/.config/shared/ai/commands/...`       |
 | `packages/claude/agents/*.md`         | `@~/.config/shared/ai/agents/...`         |
 | `packages/claude/rules/<subdir>/*.md` | `@~/.config/shared/ai/rules/<subdir>/...` |
-| `packages/claude/CLAUDE.md`           | `@~/.config/shared/ai/AGENTS.md`          |
+| `packages/claude/CLAUDE.md`           | Tier A: token-opt + `INDEX`（発見索引）   |
 
 詳細とフックの委譲先は [`packages/shared/ai/README.md`](../shared/ai/README.md) を参照。命名・`.local.md` 上書きは [CONVENTIONS.md](../shared/ai/CONVENTIONS.md)。運用メモは `shared/ai/README.local.md`（gitignore）。
 
@@ -82,8 +82,8 @@ Claude Code の Agent Skills（`~/.claude/skills/` に `<name>/SKILL.md` を置�
 | 1    | `$HOME/.claude/hooks/guard-shell.sh` | `Bash`  |
 | 2    | `$HOME/.claude/hooks/rtk-hook.sh`    | `Bash`  |
 
-RTK 前提・セットアップ・競合対処・guard 判定表: [`packages/shared/ai/docs/RTK.md`](../shared/ai/docs/RTK.md)。`CLAUDE.md` は [`RTK.md`](RTK.md)（shared 正本のラッパー）を常時 import する。
+RTK 前提・セットアップ・競合対処・guard 判定表: [`packages/shared/ai/docs/RTK.md`](../shared/ai/docs/RTK.md)。[`RTK.md`](RTK.md) はオンデマンド（`CLAUDE.md` Tier A には載せない）。
 
 ## CodeGraph
 
-セマンティックコードインテリジェンス。セットアップ・MCP 手動マージ・プロジェクト `init`: [`packages/shared/ai/docs/CODEGRAPH.md`](../shared/ai/docs/CODEGRAPH.md)。`CLAUDE.md` は `codegraph-rule` を import する。`~/.claude.json` への MCP マージは手動（dotfiles 未管理）。
+セマンティックコードインテリジェンス。セットアップ・MCP 手動マージ・プロジェクト `init`: [`packages/shared/ai/docs/CODEGRAPH.md`](../shared/ai/docs/CODEGRAPH.md)。`codegraph-rule` はコマンド／明示 Read（`CLAUDE.md` Tier A には載せない）。`~/.claude.json` への MCP マージは手動（dotfiles 未管理）。

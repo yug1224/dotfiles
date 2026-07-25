@@ -3,15 +3,9 @@
     "alwaysApply": ["conventions/token-optimization-rule"]
   },
   "claude": {
-    "tierA": [
-      "AGENTS.md",
-      "conventions/token-optimization-rule",
-      "conventions/commit-message-rule",
-      "conventions/branch-name-rule",
-      "conventions/codegraph-rule",
-      "conventions/review-common-rule",
-      "conventions/ticket-retrieval-rule",
-      "RTK.md"
-    ]
+    "tierA": ["conventions/token-optimization-rule", "INDEX"]
+  },
+  "notes": {
+    "localAlwaysApply": "Git-ignored *.local.* with alwaysApply:true (e.g. coding-rule.local) are intentional L2 and excluded from cursor.alwaysApply / claude.tierA. check-context-bloat.sh reports them informationally."
   }
 }

@@ -21,7 +21,7 @@
 
 ### 1. ルールの読み込み
 
-1. `@~/.config/shared/ai/rules/conventions/review-common-rule.md` を Read（必須）
+1. `@~/.config/shared/ai/rules/conventions/review-common-rule.md` を Read（必須。薄い敵対的検証を含む）
 2. `@~/.config/shared/ai/rules/conventions/pr-review-rule.md` を Read（必須）
 3. `@~/.config/shared/ai/rules/conventions/linus-review-rule.md` を Read（必須）
 4. 同ディレクトリの `review-common-rule.local.md` / `pr-review-rule.local.md` / `pr-feedback-registry.local.md` を Glob。存在する場合のみ Read

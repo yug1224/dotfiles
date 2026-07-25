@@ -1,7 +1,10 @@
 ---
-description: ".md 編集時に適用。既定スライスは tech-doc-lite。blog は writing-style Override / blog-base 優先。OpenSpec・仕様テンプレは構造優先。"
+description: "docs / README 等の .md 編集時に適用。既定スライスは tech-doc-lite。blog は writing-style Override / blog-base 優先。OpenSpec・仕様テンプレは構造優先。"
 globs:
-  - "**/*.md"
+  - "**/docs/**/*.md"
+  - "**/*README*.md"
+  - "**/CHANGELOG*.md"
+  - "**/CONTRIBUTING*.md"
 alwaysApply: false
 ---
 

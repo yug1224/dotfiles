@@ -1,0 +1,7 @@
+---
+description: MAGI レポート出力フォーマット
+globs: []
+alwaysApply: false
+---
+
+@~/.config/shared/ai/rules/magi/magi-report-format.md

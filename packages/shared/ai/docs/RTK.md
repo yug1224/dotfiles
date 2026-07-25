@@ -43,7 +43,7 @@ flowchart TD
 
 **allowlist 拡張禁止**: RTK が書き換えるコマンド（例: `git status` → `rtk git status`）は allowlist に追加しない。RTK hook が書き換え成功時に `permission: allow` を直接返し、allowlist をバイパスする。allowlist は**元のコマンド形式**にのみ適用される。
 
-Allowlist 同期手順: [AGENTS.md](../AGENTS.md)。検証: `scripts/check-allowlist-sync.sh`, `check-deny-guard-sync.sh`。
+Allowlist 同期手順: [ALLOWLIST-SYNC.md](./ALLOWLIST-SYNC.md)（要約は [AGENTS.md](../AGENTS.md)）。検証: `scripts/check-allowlist-sync.sh`, `check-deny-guard-sync.sh`。
 
 ## 3. インストール確認（smoke test）
 
@@ -125,7 +125,7 @@ make mise
 | RTK イベント     | `PreToolUse`（matcher: `Bash`）                                         | `preToolUse`（matcher: `Shell`）                            |
 | RTK コマンド     | `$HOME/.claude/hooks/rtk-hook.sh`（内部で mise shim `rtk hook claude`） | `./hooks/rtk-hook.sh`（内部で mise shim `rtk hook cursor`） |
 | 設定正本         | [`packages/claude/settings.json`](../../../claude/settings.json)        | [`packages/cursor/hooks.json`](../../../cursor/hooks.json)  |
-| 常時コンテキスト | `CLAUDE.md` → `@RTK.md`（ラッパー）                                     | なし（本 README から参照）                                  |
+| 常時コンテキスト | Tier A は `token-optimization-rule` + `INDEX`（RTK 本文はオンデマンド） | なし（本 README から参照）                                  |
 
 guard / RTK とも PATH に依存せず `~/.local/share/mise/shims/{jq,rtk}` を使う（`JQ` / `RTK` で上書き可）。欠落時: guard は deny JSON（exit 0）。Cursor の RTK wrapper は `failClosed: true` + exit 1。Claude の RTK は hook コマンド非 0 で PreToolUse が失敗する。
 

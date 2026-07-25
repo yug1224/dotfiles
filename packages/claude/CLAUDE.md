@@ -1,27 +1,22 @@
 # CLAUDE.md
 
-このファイルは Claude Code 全セッションで自動的にロードされる、ユーザーレベルの常時コンテキスト。共有の AGENTS 本文は `~/.config/shared/ai/` に `make mise` で展開され、`@~/.config/shared/ai/...` で取り込む。`packages/claude/rules/` のラッパーは `~/.claude/rules/` に展開され、`@./rules/...`（`~/.claude/` 基準の相対パス）で取り込む。
+このファイルは Claude Code 全セッションで自動的にロードされる、ユーザーレベルの常時コンテキスト。常時ロードはトークン最適化とルール発見索引のみに絞り、規約・チェックリストの本文はコマンド／明示 Read でオンデマンドに取り込む。
 
-## 共通規約
+- 共有本文の原本は `packages/shared/ai/`。`make mise` で `~/.config/shared/ai/` に展開され、`@~/.config/shared/ai/...` で参照する
+- `packages/claude/rules/` のラッパーは `~/.claude/rules/` に展開され、`@./rules/...`（`~/.claude/` 基準の相対パス）で参照する
 
-@~/.config/shared/ai/AGENTS.md
+## 常時ロード（Tier A）
+
 @./rules/conventions/token-optimization-rule.md
+@./rules/INDEX.md
 
-## 開発規約
+## オンデマンド（Tier B）
 
-@./rules/conventions/commit-message-rule.md
-@./rules/conventions/branch-name-rule.md
-@./rules/conventions/codegraph-rule.md
+以下は常時ロードしない。必要になった時点で取り込む（索引は `INDEX.md`）。
 
-## レビュー / チケット運用
+- スラッシュコマンド: `~/.claude/commands/`（`/suggest-commit-message`、`/suggest-branch-name`、`/review-diff`、`/review-pr` など）
+- サブエージェント: `~/.claude/agents/`
+- ルール本文: `INDEX.md` の表に従い `@./rules/...` を明示 Read
+- 共通メンテ手順・RTK・CodeGraph: `~/.config/shared/ai/AGENTS.md`、`docs/ALLOWLIST-SYNC.md`、`docs/RTK.md`、`docs/CODEGRAPH.md`
 
-@./rules/conventions/review-common-rule.md
-@./rules/conventions/ticket-retrieval-rule.md
-
-## エージェント・コマンド
-
-`~/.claude/agents/` と `~/.claude/commands/` 配下にラッパーを配置している。本文は `packages/shared/ai/{agents,commands}/` の原本を `@`-import（`@~/.config/shared/ai/` 絶対パス）で取り込む。詳細は `@~/.config/shared/ai/AGENTS.md` を参照。
-
-`~/.claude/rules/` 配下のラッパーは `packages/shared/ai/rules/` の原本を `@~/.config/shared/ai/rules/...` で `@`-import する。
-
-@RTK.md
+常時ロード対象の正本は `packages/shared/ai/manifests/always-on.json`（`make check-sync` が照合）。

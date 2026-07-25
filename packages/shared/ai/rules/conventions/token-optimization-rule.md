@@ -1,4 +1,4 @@
-応答の冒頭に「✅️: token-optimization-rule」と出力する。
+応答の冒頭に「✅️: token-optimization-rule」と出力する（コマンド／明示適用時。always-on 単独での毎応答冒頭は不要）。
 
 # トークン節約（エージェント運用）
 
@@ -24,7 +24,7 @@
 
 - 500 行超は offset/limit 付き Read、または Shell `rg` / `head`
 - ライブラリ API・フレームワーク仕様はソース直読より **Context7**（`resolve-library-id` → `query-docs`）。`get-library-docs` の全文取得は避ける
-- インデックスなし、または未知パターンのファイル発見が目的の広域探索（3 ファイル以上）は `Task(subagent_type=explore)` に委譲
+- インデックスなし、または未知パターンのファイル発見が目的の広域探索（3 ファイル以上）は `Task(subagent_type=explore)` に委譲（Worker: 可能なら `composer-2.5`）
 - ライブラリ調査は `docs-researcher` subagent または `/docs` を優先
 
 ## コード構造調査
