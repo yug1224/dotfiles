@@ -65,24 +65,27 @@ Cursor カスタムスラッシュコマンドの定義ファイル。チャッ�
 
 ### コマンド一覧
 
-| ファイル                     | コマンド                   | カテゴリ    | 説明                                                                      |
-| ---------------------------- | -------------------------- | ----------- | ------------------------------------------------------------------------- |
-| `magi.md`                    | `/magi`                    | Decision    | MAGI システムによる多角的意思決定支援（3体合議）                          |
-| `suggest-plan.md`            | `/suggest-plan`            | Development | 要件から計画を松竹梅で提案                                                |
-| `suggest-branch-name.md`     | `/suggest-branch-name`     | Development | 変更内容からブランチ名を松竹梅で提案                                      |
-| `suggest-commit-message.md`  | `/suggest-commit-message`  | Development | ステージング内容からコミットメッセージを松竹梅で提案                      |
-| `apply-coding-rule.md`       | `/apply-coding-rule`       | Development | コーディングルールを読み込んでセッションに適用                            |
-| `analyze-issue.md`           | `/analyze-issue`           | Development | チケット URL/ID の課題の原因調査と対応方針の提案                          |
-| `suggest-pr-description.md`  | `/suggest-pr-description`  | Development | PR テンプレート準拠の Title / Description を生成・改善                    |
-| `suggest-development-log.md` | `/suggest-development-log` | Development | タスク対応の開発ログを MECE 構造で生成                                    |
-| `capture-pr-feedback.md`     | `/capture-pr-feedback`     | Quality     | PR URL からフィードバックログへの追記案を生成（読み取り専用）             |
-| `verify-output.md`           | `/verify-output`           | Quality     | 直前 AI 応答の再検証と最終版出力（単体・追確認用）                        |
-| `review-diff.md`             | `/review-diff`             | Quality     | ステージング済み変更のセルフレビュー（出力前に再検証）                    |
-| `review-pr.md`               | `/review-pr`               | Quality     | GitHub PR のレビュー（出力前に再検証・過剰指摘抑制）                      |
-| `review-pr-magi.md`          | `/review-pr-magi`          | Quality     | MAGI 3体合議 PR レビュー（出力前に再検証）                                |
-| `plan-blog.md`               | `/plan-blog`               | Writing     | テーマと概要からブログ記事の執筆プランを作成                              |
-| `review-blog.md`             | `/review-blog`             | Writing     | ブログ記事を 7 観点で評価                                                 |
-| `write-graphic-prompt.md`    | `/write-graphic-prompt`    | Visual      | PR・ADR・開発ログから Gemini Nano Banana Pro 向け画像生成プロンプトを出力 |
+| ファイル                         | コマンド                       | カテゴリ    | 説明                                                                      |
+| -------------------------------- | ------------------------------ | ----------- | ------------------------------------------------------------------------- |
+| `magi.md`                        | `/magi`                        | Decision    | MAGI システムによる多角的意思決定支援（3体合議）                          |
+| `suggest-plan.md`                | `/suggest-plan`                | Development | 要件から計画を松竹梅で提案                                                |
+| `suggest-branch-name.md`         | `/suggest-branch-name`         | Development | 変更内容からブランチ名を松竹梅で提案                                      |
+| `suggest-commit-message.md`      | `/suggest-commit-message`      | Development | ステージング内容からコミットメッセージを松竹梅で提案                      |
+| `apply-coding-rule.md`           | `/apply-coding-rule`           | Development | コーディングルールを読み込んでセッションに適用                            |
+| `analyze-issue.md`               | `/analyze-issue`               | Development | チケット URL/ID の課題の原因調査と対応方針の提案                          |
+| `suggest-pr-description.md`      | `/suggest-pr-description`      | Development | PR テンプレート準拠の Title / Description を生成・改善                    |
+| `suggest-development-log.md`     | `/suggest-development-log`     | Development | タスク対応の開発ログを MECE 構造で生成                                    |
+| `capture-pr-feedback.md`         | `/capture-pr-feedback`         | Quality     | PR URL からフィードバックログへの追記案を生成（読み取り専用）             |
+| `verify-output.md`               | `/verify-output`               | Quality     | 直前 AI 応答の再検証と最終版出力（単体・追確認用）                        |
+| `review-diff.md`                 | `/review-diff`                 | Quality     | ステージング済み変更のセルフレビュー（出力前に再検証）                    |
+| `review-diff-linus.md`           | `/review-diff-linus`           | Quality     | staged 差分の Linus 風批判的レビュー（出力前に再検証）                    |
+| `review-pr.md`                   | `/review-pr`                   | Quality     | GitHub PR のレビュー（出力前に再検証・過剰指摘抑制）                      |
+| `review-pr-linus.md`             | `/review-pr-linus`             | Quality     | GitHub PR の Linus 風批判的レビュー（出力前に再検証）                     |
+| `review-pr-magi.md`              | `/review-pr-magi`              | Quality     | MAGI 3体合議 PR レビュー（出力前に再検証）                                |
+| `plan-blog.md`                   | `/plan-blog`                   | Writing     | テーマと概要からブログ記事の執筆プランを作成                              |
+| `review-blog.md`                 | `/review-blog`                 | Writing     | ブログ記事を 7 観点で評価                                                 |
+| `apply-japanese-tech-writing.md` | `/apply-japanese-tech-writing` | Writing     | JTW を読み込み、指定スライス（既定 `tech-doc-lite`）でセッションに適用    |
+| `write-graphic-prompt.md`        | `/write-graphic-prompt`        | Visual      | PR・ADR・開発ログから Gemini Nano Banana Pro 向け画像生成プロンプトを出力 |
 
 ラッパーは frontmatter のみ。本文は `@~/.config/shared/ai/commands/<name>.md` で取り込む（[CONVENTIONS.md](../shared/ai/CONVENTIONS.md)）。
 
@@ -270,10 +273,13 @@ Cursor ルールの定義ファイル（`.mdc` 形式）。エージェントや
 
 #### writing/ -- 日本語文章規範
 
-| ファイル                            | 説明                                                             |
-| ----------------------------------- | ---------------------------------------------------------------- |
-| `japanese-tech-writing-rule.mdc`    | 日本語技術文書の整形・論証・LLM 空句禁止（蒸留）                 |
-| `cognitive-rhythm-writing-rule.mdc` | 認知リズム（緩急・緊張）。JTW 併用。blog 読み物時 opt-in（蒸留） |
+| ファイル                            | 説明                                                                                                                         |
+| ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `japanese-tech-writing-rule.mdc`    | 日本語技術文書の整形・論証・LLM 空句禁止（蒸留）。`globs: **/*.md` で `.md` 編集時に自動適用。既定スライスは `tech-doc-lite` |
+| `cognitive-rhythm-writing-rule.mdc` | 認知リズム（緩急・緊張）。JTW 併用。blog 読み物時 opt-in（蒸留）。`globs` なし（既定適用しない）                             |
+
+- **JTW 自動適用**: Cursor のみ。`alwaysApply: false` + `globs: ["**/*.md"]`。適用範囲は `tech-doc-lite`（空句・冗長・根拠なき断言の抑制）。blog は `writing-style-rule` Override / `blog-base` 優先。OpenSpec・仕様テンプレは構造優先
+- **CRW**: 手動 `@` または体験記・読み物時のみ。md glob には載せない
 
 出典一覧の正本: [`packages/shared/ai/README.md`](../shared/ai/README.md)「出典・蒸留」。
 
@@ -285,6 +291,7 @@ Cursor ルールの定義ファイル（`.mdc` 形式）。エージェントや
 | `commit-message-rule.mdc`     | コミットメッセージ規約（`<type>(<scope>): <subject>` 形式）                   |
 | `review-common-rule.mdc`      | PR レビュー・diff レビュー共通の調査手順・観点・出力フォーマット              |
 | `pr-review-rule.mdc`          | PR レビュー基準・重要度・テンプレート（汎用）                                 |
+| `linus-review-rule.mdc`       | Linus スタイル批判的レビュー（ペルソナ・口調・出力差分）                      |
 | `pr-description-rule.mdc`     | PR Title（`type(scope): subject`）・Description の構成・テンプレート          |
 | `development-log-rule.mdc`    | 開発ログの MECE 構成・記載ガイド                                              |
 | `ticket-retrieval-rule.mdc`   | チケット情報の取得手順（GitHub / その他 URL / ID。プロバイダ固有は `.local`） |
@@ -563,13 +570,15 @@ Cursor の Auto-run 時に承認なしで実行を許可するコマンド・MCP
 
 ### レビュー系コマンドの使い分け
 
-| コマンド          | 対象                 | 用途                                 | Advisor                     |
-| ----------------- | -------------------- | ------------------------------------ | --------------------------- |
-| `/review-diff`    | ステージング済み差分 | PR 作成前のローカルセルフレビュー    | `quality-advisor`（明示時） |
-| `/review-pr`      | GitHub PR URL        | リモート PR のレビュー               | `quality-advisor`（明示時） |
-| `/review-pr-magi` | GitHub PR URL        | MAGI 3体合議による多角的 PR レビュー | MAGI 3体                    |
+| コマンド             | 対象                 | 用途                                     | Advisor                     |
+| -------------------- | -------------------- | ---------------------------------------- | --------------------------- |
+| `/review-diff`       | ステージング済み差分 | PR 作成前のローカルセルフレビュー        | `quality-advisor`（明示時） |
+| `/review-diff-linus` | ステージング済み差分 | Linus 風の辛辣・taste 重視セルフレビュー | `quality-advisor`（明示時） |
+| `/review-pr`         | GitHub PR URL        | リモート PR のレビュー                   | `quality-advisor`（明示時） |
+| `/review-pr-linus`   | GitHub PR URL        | Linus 風の辛辣・taste 重視 PR レビュー   | `quality-advisor`（明示時） |
+| `/review-pr-magi`    | GitHub PR URL        | MAGI 3体合議による多角的 PR レビュー     | MAGI 3体                    |
 
-`/review-diff` と `/review-pr` はサブエージェント利用を明示した場合に `quality-advisor` を並列起動し、チェックリストベースの体系的レビューを行う。明示がない場合は親エージェントが同じ観点で直接調査する。`/review-pr-magi` は MAGI ペルソナによる多角的評価を重視し、重要度の高い PR やアーキテクチャ変更を伴う PR に適する。
+`/review-diff` と `/review-pr`（および Linus 版）はサブエージェント利用を明示した場合に `quality-advisor` を並列起動し、チェックリストベースの体系的レビューを行う。明示がない場合は親エージェントが同じ観点で直接調査する。Linus 版は正しさ・単純さ・過剰抽象を辛辣に突くペルソナを親エージェントが適用する（Linus 用 Task は起動しない）。`/review-pr-magi` は MAGI ペルソナによる多角的評価を重視し、重要度の高い PR やアーキテクチャ変更を伴う PR に適する。
 
 ## 既存設定との衝突
 

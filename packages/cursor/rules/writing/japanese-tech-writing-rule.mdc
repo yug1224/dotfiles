@@ -1,6 +1,7 @@
 ---
-description: 日本語技術文書の文章規範
-globs: []
+description: ".md 編集時に適用。既定スライスは tech-doc-lite。blog は writing-style Override / blog-base 優先。OpenSpec・仕様テンプレは構造優先。"
+globs:
+  - "**/*.md"
 alwaysApply: false
 ---
 

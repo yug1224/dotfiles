@@ -47,9 +47,10 @@ dotfiles.default_mode = "symlink"
 "brew-cask:google-chrome" = "latest"
 "brew-cask:microsoft-edge" = "latest"
 
-# gcloud-cli / google-japanese-ime（pkg 状態を mise が追えない）/ raycast 等 / VS Code 拡張 / rtmpdump
+# gcloud-cli / google-japanese-ime（pkg 状態を mise が追えない）/ onyx（Caskroom の .metadata を版と誤認）/ raycast 等 / rtmpdump
+# visual-studio-code は意図的に外す（メインエディタは Cursor）。code CLI がある場合のみ拡張を入れる
 [tasks.bootstrap]
-description = "Install brew-escaped casks, rtmpdump, and VS Code extensions (idempotent)"
+description = "Install brew-escaped casks, rtmpdump, and optional VS Code extensions (idempotent)"
 run = """
 #!/usr/bin/env bash
 set -euo pipefail
@@ -75,9 +76,9 @@ installed_casks="$(brew list --cask 2>/dev/null || true)"
 casks=(
   gcloud-cli
   google-japanese-ime
+  onyx
   raycast
   slack
-  visual-studio-code
   zoom
 )
 for cask in "${casks[@]}"; do

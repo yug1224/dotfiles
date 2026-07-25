@@ -34,6 +34,8 @@ packages/claude/
 | `cognitive-rhythm-writing-rule.md` | `@~/.config/shared/ai/rules/writing/cognitive-rhythm-writing-rule.md` |
 
 - **Tier**: B（コマンド経由 / agent-requestable）。CLAUDE.md Tier A には載せない
+- **Cursor との非対称**: Cursor は `japanese-tech-writing-rule.mdc` の `globs: **/*.md` で `.md` 編集時に自動適用（既定 `tech-doc-lite`）。Claude に glob 相当はないため、同等の自動適用はせずコマンド／明示 `@` に任せる
+- **明示適用**: `/apply-japanese-tech-writing`（引数でスライス指定可。既定 `tech-doc-lite`）。Cursor / Claude 共通
 - **用途**: 日本語出力の基底。Git 管理コマンドからの必須 Read は `plan-blog` / `suggest-development-log` / `suggest-pr-description`（`review-blog` は writing-style 経由）。採用メッセージ系（`.local`）は必須 Read する場合も適用は `tech-doc-lite`
 - **優先**: blog では `writing-style-rule` の Override が優先（JTW は `blog-base`）。開発ログ／PR 説明／採用メッセージは `tech-doc-lite`。CRW は体験記・読み物時のみ opt-in
 - **出典**: [`packages/shared/ai/README.md`](../shared/ai/README.md)「出典・蒸留」（JTW: Unlicense / CRW: 原典に表記なし）
