@@ -28,11 +28,12 @@ Cursor / Claude Code が共通で参照する素材の原本（Gemini CLI 用ホ
 
 外部ソースを蒸留した shared ルールの一覧。手順の正本は [CONVENTIONS.md](./CONVENTIONS.md)「外部ソースの蒸留」。
 
-| ファイル                                         | 原典                                                                                                                                                      | ライセンス     | 扱い         |
-| ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | ------------ |
-| `rules/blog/blog-review-rule.md`                 | [nwiizo gist](https://gist.github.com/nwiizo/c75043438866100452fd249e536341d4)（元: [はてな](https://syu-m-5151.hatenablog.com/entry/2025/05/19/100659)） | 原典に表記なし | 蒸留・再構成 |
-| `rules/writing/japanese-tech-writing-rule.md`    | [k16shikano gist](https://gist.github.com/k16shikano/fd287c3133457c4fd8f5601d34aa817d)                                                                    | Unlicense      | 蒸留・再構成 |
-| `rules/writing/cognitive-rhythm-writing-rule.md` | [k16shikano gist](https://gist.github.com/k16shikano/eb2929f13ed19c97188393d297be8432)                                                                    | 原典に表記なし | 蒸留・再構成 |
+| ファイル                                         | 原典                                                                                                                                                      | ライセンス     | 扱い                          |
+| ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | ----------------------------- |
+| `rules/blog/blog-review-rule.md`                 | [nwiizo gist](https://gist.github.com/nwiizo/c75043438866100452fd249e536341d4)（元: [はてな](https://syu-m-5151.hatenablog.com/entry/2025/05/19/100659)） | 原典に表記なし | 蒸留・再構成                  |
+| `rules/writing/japanese-tech-writing-rule.md`    | [k16shikano gist](https://gist.github.com/k16shikano/fd287c3133457c4fd8f5601d34aa817d)                                                                    | Unlicense      | 蒸留・再構成                  |
+| `rules/writing/cognitive-rhythm-writing-rule.md` | [k16shikano gist](https://gist.github.com/k16shikano/eb2929f13ed19c97188393d297be8432)                                                                    | 原典に表記なし | 蒸留・再構成                  |
+| `rules/conventions/review-common-rule.md`        | [Greptile — Anatomy of a Review (Severity Badges)](https://www.greptile.com/docs/code-review/first-pr-review)                                             | 原典に表記なし | 蒸留・再構成（P0/P1/P2 のみ） |
 
 `rules/blog/writing-style-rule.md` は自ブログ過去記事からの独自抽出であり、外部蒸留ではない。
 

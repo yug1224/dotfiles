@@ -1,0 +1,7 @@
+---
+description: Linus スタイル コードレビュールール
+globs: []
+alwaysApply: false
+---
+
+@~/.config/shared/ai/rules/conventions/linus-review-rule.md
