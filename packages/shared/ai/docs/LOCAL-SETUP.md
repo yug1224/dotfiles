@@ -66,6 +66,32 @@ log / index / registry は **すべて local**:
 
 `~/.cursor/rules/**/*.local.mdc`（`packages/cursor/.gitignore` 対象）
 
+### `coding-rule.local` と alwaysApply（推奨）
+
+- **Git `alwaysApply: true` に載せない**（常時税・過制約の主因になりやすい）
+- Cursor ラッパーは `alwaysApply: false` の agent-requestable、または `/apply-coding-rule` 起動時のみ Read
+- 「実装前に必ずサブエージェント」等の剛性句は、必要時だけ judgement（周囲のコード・タスク規模）に寄せる
+- L2 本文の書き換えは手元で行う（本ドキュメントは指針のみ）
+
+## Meta LOOP（モデル割当の推奨）
+
+親チャット（Orchestrator）: **Grok 4.5**（Cursor モデルプール）。Advisor（design/build/quality）: **Claude Opus 5**（明示時のみ）。Worker（explore / MAGI）: Cursor は **Composer 2.5**（`[fast=false]`）、Claude Code は Composer 非対応のため MAGI を **`sonnet`** に分岐（Worker 相当の判定品質を優先。haiku は使わない）。
+
+### Cursor ラッパーの `model`（bracket オプション）
+
+Cursor 公式 [Subagents](https://cursor.com/docs/subagents) の bracket 構文を使う（Claude Code ラッパーには書かない）。
+
+| 役割          | frontmatter 例                                               |
+| ------------- | ------------------------------------------------------------ |
+| Advisor       | `model: claude-opus-5[thinking=true,effort=high,fast=false]` |
+| MAGI / Worker | `model: composer-2.5[fast=false]`（Claude Code は `sonnet`） |
+
+`composer-2.5` 単体は fast に落ちることがあるため、`[fast=false]` を明示する。
+
+## Cursor と AGENTS.md
+
+Cursor はワークスペース内の nested `AGENTS.md` を自動添付することがある。本リポジトリの `packages/*/AGENTS.md`（shared への symlink）もその対象になりうる。AGENTS.md 本文はメンテ要約に薄くしているが、「常時コンテキストに載せない」は Claude Tier A / Cursor Git 管理 alwaysApply の話であり、Cursor の nested 探索までは止められない。
+
 ## 実装 vs レビューの分離
 
 | フェーズ | 主なファイル                                       | サブエージェント   |

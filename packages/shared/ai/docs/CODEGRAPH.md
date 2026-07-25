@@ -25,7 +25,7 @@ make mise   # shared 本文 + cursor/claude ラッパー・allowlist + ~/.config
 
 - `~/.config/shared/ai/rules/conventions/codegraph-rule.md`
 - `~/.cursor/rules/conventions/codegraph-rule.mdc`
-- `~/.claude/rules/conventions/codegraph-rule.md`（`CLAUDE.md` から import）
+- `~/.claude/rules/conventions/codegraph-rule.md`（コマンド／明示 Read。`CLAUDE.md` Tier A には載せない）
 - `packages/cursor/permissions.json` / `packages/claude/settings.json` の allowlist
 
 ## 2. MCP 手動マージ

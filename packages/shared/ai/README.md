@@ -6,7 +6,9 @@ Cursor / Claude Code が共通で参照する素材の原本（Gemini CLI 用ホ
 
 **CodeGraph**: セマンティックコードインテリジェンスは [docs/CODEGRAPH.md](./docs/CODEGRAPH.md) が正本。MCP 手動マージ・プロジェクト `init` 手順はそちらを参照。
 
-**読む順序**: [docs/BOUNDARY.md](./docs/BOUNDARY.md)（公開境界）→ [docs/LOCAL-SETUP.md](./docs/LOCAL-SETUP.md)（`.local.md`）→ [docs/RTK.md](./docs/RTK.md)（前提）→ [CONVENTIONS.md](./CONVENTIONS.md)（命名）→ [AGENTS.md](./AGENTS.md)（allowlist 同期）
+**読む順序**: [docs/BOUNDARY.md](./docs/BOUNDARY.md)（公開境界）→ [docs/LOCAL-SETUP.md](./docs/LOCAL-SETUP.md)（`.local.md` / Meta LOOP）→ [docs/RTK.md](./docs/RTK.md)（前提）→ [CONVENTIONS.md](./CONVENTIONS.md)（命名）→ [AGENTS.md](./AGENTS.md)（allowlist 要約）→ [docs/ALLOWLIST-SYNC.md](./docs/ALLOWLIST-SYNC.md)（同期手順）
+
+**棚卸し**: `/analyze-ai-config`（傘。引数で `skills` / `rules` / `commands` / `agents` 可）。`/analyze-ai-{skills,rules,commands,agents}` はエイリアス。敵対的検証は `/verify-adversarial`（レビュー系は薄い反証が既定。`/verify-output` と同一ターンで重ねない）。
 
 ## ルール taxonomy
 
@@ -69,9 +71,9 @@ packages/shared/
 | `packages/claude/commands/*.md`        | `@~/.config/shared/ai/commands/...`       |
 | `packages/claude/agents/*.md`          | `@~/.config/shared/ai/agents/...`         |
 | `packages/claude/rules/<subdir>/*.md`  | `@~/.config/shared/ai/rules/<subdir>/...` |
-| `packages/claude/CLAUDE.md`            | `@~/.config/shared/ai/AGENTS.md`          |
+| `packages/claude/CLAUDE.md`            | Tier A: token-opt + `INDEX`（発見索引）   |
 
-**フック**: guard 判定の正本は [`hooks/guard-shell.sh`](hooks/guard-shell.sh)。Cursor / Claude は各パッケージの薄ラッパー経由で共有本体を呼ぶ。RTK hook は guard の**後**に実行される。3 層構成（guard / RTK / allowlist）の詳細は [docs/RTK.md](./docs/RTK.md)。guard 判定の代表ケースは [`guard-shell.test.sh`](hooks/guard-shell.test.sh)、詳細表は [`packages/cursor/README.md`](../../cursor/README.md)。Allowlist 同期は [AGENTS.md](./AGENTS.md)。
+**フック**: guard 判定の正本は [`hooks/guard-shell.sh`](hooks/guard-shell.sh)。Cursor / Claude は各パッケージの薄ラッパー経由で共有本体を呼ぶ。RTK hook は guard の**後**に実行される。3 層構成（guard / RTK / allowlist）の詳細は [docs/RTK.md](./docs/RTK.md)。guard 判定の代表ケースは [`guard-shell.test.sh`](hooks/guard-shell.test.sh)、詳細表は [`packages/cursor/README.md`](../../cursor/README.md)。Allowlist 同期は [docs/ALLOWLIST-SYNC.md](./docs/ALLOWLIST-SYNC.md)（要約: [AGENTS.md](./AGENTS.md)）。
 
 ## ローカル専用ファイル（`*.local.*`）
 

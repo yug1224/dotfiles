@@ -1,6 +1,6 @@
 # AGENTS.md
 
-このファイルは Cursor / Claude Code が共通で参照する規約・運用ルールを集約する（Gemini CLI 用ホストパッケージ `packages/gemini` は **未実装**）。`packages/shared/ai/` の単一原本として管理し、各ツールの設定パッケージから `@`-import（`@~/.config/shared/ai/` 絶対パス）で取り込む。
+このファイルは Cursor / Claude Code 向けの **メンテ・運用メモ**（ツール横断の allowlist / always-on / CodeGraph）。エージェントの常時コンテキストには載せない。必要時のみ Read する（Claude Tier A からは外している）。
 
 ## このリポジトリでの位置付け
 
@@ -8,7 +8,7 @@
 - デプロイ先: `make mise` により `~/.config/shared/ai/` に展開される
 - 各ツール側からの参照（全て `@~/.config/shared/ai/` 絶対パス）:
   - Cursor: `packages/cursor/commands/*.md` → `@~/.config/shared/ai/commands/...`、`packages/cursor/rules/<sub>/*.mdc` → `@~/.config/shared/ai/rules/<sub>/...`
-  - Claude Code: `packages/claude/CLAUDE.md` → `@~/.config/shared/ai/AGENTS.md`、`packages/claude/commands/*.md` → `@~/.config/shared/ai/commands/...`
+  - Claude Code: `packages/claude/commands/*.md` → `@~/.config/shared/ai/commands/...`。常時ロードは `packages/claude/CLAUDE.md` の Tier A（`token-optimization-rule` + `INDEX`）
 
 ## 運用方針
 
@@ -16,49 +16,14 @@
 - ツール固有の frontmatter / 設定 JSON / ホストごとの hook 仕様は各 `packages/<tool>/` に置く
 - 共通本文を編集する場合は `packages/shared/ai/` 配下の原本のみを変更する
 
-## Allowlist 同期チェックリスト
-
-ターミナル / MCP の Auto-run 許可リストは **Cursor と Claude で別ファイル・別フォーマット**に存在する。追加・変更時は両方を同時に更新する。
-
-| ツール | ファイル                                              | 形式例                                         |
-| ------ | ----------------------------------------------------- | ---------------------------------------------- |
-| Cursor | `packages/cursor/permissions.json`                    | `"git status"`, `"github:get_*"`               |
-| Claude | `packages/claude/settings.json` → `permissions.allow` | `"Bash(git status:*)"`, `"mcp__github__get_*"` |
-
-### 変更手順
-
-1. ポリシー意図を決める（読み取り専用 terminal / MCP か、書き込みか）
-2. Cursor `permissions.json` の `terminalAllowlist` または `mcpAllowlist` に追加
-3. Claude `settings.json` の `permissions.allow` に同等エントリを追加（`Bash(<cmd>:*)` または `mcp__<server>__<tool>` 形式）
-4. 破壊的操作は allowlist ではなく **guard-shell**（deny/ask）で制御する — allowlist に載せない
-5. RTK が書き換えるコマンド（`git status` → `rtk git status`）は allowlist を拡張しない — RTK hook が `permission: allow` を返す
-6. **必須**: `make check-sync`（terminal + MCP allowlist / wrapper parity / deny-guard / always-on）
-
-### MCP 意図的非対称
-
-- Playwright MCP は Cursor のみ許可（例外は `scripts/mcp-allowlist-exceptions.txt` に **個別列挙**。新規 Playwright ツールは例外ファイルも更新すること）。
-- 比較時は `user-github` を `github` に正規化する（両ファイルに二重記載があっても可）
-
-### RTK との関係
-
-RTK は **インストール済み・hook 有効** を前提とする。詳細（セットアップ・hook 配線・競合の対処）: [docs/RTK.md](./docs/RTK.md)
-
-## Guard matcher（意図的非対称）
-
-- Cursor `hooks.json`: guard は `git |gh |pnpm `、RTK は `Shell`
-- Claude `settings.json`: guard / RTK とも `Bash` matcher → 同一 `packages/shared/ai/hooks/guard-shell.sh`
-- matcher を同一に揃える必要はない（判定ロジックの正本は shared）
+詳細な allowlist・RTK・CodeGraph の手順は [docs/ALLOWLIST-SYNC.md](./docs/ALLOWLIST-SYNC.md) を参照（本ファイルから移設）。
 
 ## Always-on
 
-正本: [`manifests/always-on.json`](./manifests/always-on.json)。Cursor `alwaysApply` と Claude Tier A は意図的に非対称。`make check-sync` が照合する。
+正本: [`manifests/always-on.json`](./manifests/always-on.json)。Cursor `alwaysApply` は `token-optimization-rule` のみ。Claude Tier A は同ルール + `INDEX`（発見索引・本文はオンデマンド）。`*.local.*` の `alwaysApply: true`（例: `coding-rule.local`）は意図的 L2 で manifest 外（`notes.localAlwaysApply`）。`make check-sync` が照合する。
 
-## CodeGraph
+## CodeGraph（要約）
 
-セマンティックコードインテリジェンス（ローカル知識グラフ）。CLI は mise でグローバルインストール、MCP 配線は手動マージ。
-
-- セットアップ・トラブルシュート: [docs/CODEGRAPH.md](./docs/CODEGRAPH.md)
-- エージェント利用ルール: [rules/conventions/codegraph-rule.md](./rules/conventions/codegraph-rule.md)
-- **プロジェクトごと**に `codegraph init` が必要（`.codegraph/` 作成）。未初期化では MCP 有効でもインデックスなし
-- Cursor: `packages/cursor/rules/conventions/codegraph-rule.mdc`（agent-requestable）
-- Claude: `packages/claude/CLAUDE.md` から `codegraph-rule` を import
+- セットアップ: [docs/CODEGRAPH.md](./docs/CODEGRAPH.md)
+- 利用ルール: [rules/conventions/codegraph-rule.md](./rules/conventions/codegraph-rule.md)（Cursor: agent-requestable。Claude: コマンド／明示 Read）
+- **プロジェクトごと**に `codegraph init` が必要
