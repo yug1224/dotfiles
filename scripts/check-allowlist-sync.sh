@@ -26,6 +26,7 @@ fi
 normalize_server() {
   case "$1" in
     user-github) printf '%s' "github" ;;
+    user-codegraph) printf '%s' "codegraph" ;;
     *) printf '%s' "$1" ;;
   esac
 }

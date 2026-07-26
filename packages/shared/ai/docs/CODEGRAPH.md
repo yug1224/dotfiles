@@ -92,11 +92,11 @@ peer ディレクトリを 1 インデックスにまとめる機能は未対応
 
 ## Allowlist（make mise 済み）
 
-| ツール                     | エントリ                                          |
-| -------------------------- | ------------------------------------------------- |
-| Cursor `terminalAllowlist` | `codegraph`                                       |
-| Cursor `mcpAllowlist`      | `codegraph:*`（現状ツールは `codegraph_explore`） |
-| Claude `permissions.allow` | `Bash(codegraph:*)`, `mcp__codegraph__*`（同上）  |
+| ツール                     | エントリ                                                                   |
+| -------------------------- | -------------------------------------------------------------------------- |
+| Cursor `terminalAllowlist` | `codegraph`                                                                |
+| Cursor `mcpAllowlist`      | `codegraph:*`, `user-codegraph:*`（現状ツールは `codegraph_explore`）      |
+| Claude `permissions.allow` | `Bash(codegraph:*)`, `mcp__codegraph__*`, `mcp__user-codegraph__*`（同上） |
 
 同期確認: `scripts/check-allowlist-sync.sh`
 

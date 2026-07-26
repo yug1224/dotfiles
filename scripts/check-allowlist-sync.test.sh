@@ -100,6 +100,28 @@ else
   fail=1
 fi
 
+echo "== case5: user-codegraph alias normalizes =="
+cat >"$FIX/cursor.json" <<'EOF'
+{
+  "terminalAllowlist": ["git status"],
+  "mcpAllowlist": ["user-codegraph:*"]
+}
+EOF
+cat >"$FIX/claude.json" <<'EOF'
+{
+  "permissions": {
+    "allow": ["Bash(git status:*)", "mcp__codegraph__*"],
+    "deny": []
+  }
+}
+EOF
+if run_case "$FIX/exceptions-empty.txt"; then
+  echo "ok: case5"
+else
+  echo "FAIL: case5 expected pass (user-codegraph ↔ codegraph)" >&2
+  fail=1
+fi
+
 if [[ "$fail" -eq 0 ]]; then
   echo "ok: check-allowlist-sync.test.sh"
   exit 0

@@ -23,7 +23,7 @@
 ### MCP 意図的非対称
 
 - Playwright MCP は Cursor のみ許可（例外は `scripts/mcp-allowlist-exceptions.txt` に **個別列挙**。新規 Playwright ツールは例外ファイルも更新すること）。
-- 比較時は `user-github` を `github` に正規化する（両ファイルに二重記載があっても可）
+- 比較時は `user-github` → `github`、`user-codegraph` → `codegraph` に正規化する（両ファイルに二重記載があっても可）
 
 ### RTK との関係
 
