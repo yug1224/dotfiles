@@ -24,8 +24,22 @@
 
 - 500 行超は offset/limit 付き Read、または Shell `rg` / `head`
 - ライブラリ API・フレームワーク仕様はソース直読より **Context7**（`resolve-library-id` → `query-docs`）。`get-library-docs` の全文取得は避ける
-- インデックスなし、または未知パターンのファイル発見が目的の広域探索（3 ファイル以上）は `Task(subagent_type=explore)` に委譲（Worker: 可能なら `composer-2.5`）
+- インデックスなし、または未知パターンのファイル発見が目的の広域探索（3 ファイル以上）は `Task(subagent_type=explore)` に委譲（下表の model 必須）
+- まとまった**実装・テストの書込**は親直実行より `Task(subagent_type=build-worker, model=composer-2.5)` を優先。設計成果物は `Task(subagent_type=design-worker, model=composer-2.5)`。軽微修正は親のまま（常時フル委譲しない）
 - ライブラリ調査は `docs-researcher` subagent または `/docs` を優先
+
+## Task の model 必須（Worker / MAGI / explore）
+
+Cursor 製品の「`model` はユーザー明示時のみ渡す」は **Advisor（Opus）には従う**。次の `subagent_type` では **例外として `model` を必ず渡す**（省略すると親が Opus のとき Worker も Opus になる）。`claude-opus-*` を Worker / MAGI / explore に渡さない。
+
+| subagent_type                                          | Cursor の Task `model`（必須）            | 備考                                  |
+| ------------------------------------------------------ | ----------------------------------------- | ------------------------------------- |
+| `build-worker` / `design-worker`                       | `composer-2.5`                            | frontmatter の pin だけでは不足しうる |
+| `melchior-1` / `balthasar-2` / `casper-3`              | `composer-2.5`                            | MAGI                                  |
+| `explore`                                              | `composer-2.5` または `composer-2.5-fast` | 広域調査                              |
+| `design-advisor` / `build-advisor` / `quality-advisor` | 省略可（agent frontmatter の Opus）       | 提案のみ。書込しない                  |
+
+Claude Code の Worker / MAGI はラッパー `model: sonnet` に従う（Composer 非対応）。
 
 ## コード構造調査
 

@@ -49,9 +49,11 @@ MAGI System の 3 ユニット（MELCHIOR-1, BALTHASAR-2, CASPER-3）を並列�
 
 Task ツールで以下の 3 つの Subagent を **1つのメッセージ内で同時に** 起動する（逐次起動しない）。
 
-- **MELCHIOR-1**: `subagent_type`: `"melchior-1"`, `readonly: true`
-- **BALTHASAR-2**: `subagent_type`: `"balthasar-2"`, `readonly: true`
-- **CASPER-3**: `subagent_type`: `"casper-3"`, `readonly: true`
+- **MELCHIOR-1**: `subagent_type`: `"melchior-1"`, `model`: `"composer-2.5"`, `readonly`: `true`
+- **BALTHASAR-2**: `subagent_type`: `"balthasar-2"`, `model`: `"composer-2.5"`, `readonly`: `true`
+- **CASPER-3**: `subagent_type`: `"casper-3"`, `model`: `"composer-2.5"`, `readonly`: `true`
+
+Claude Code ではエージェントラッパーの `model: sonnet` に従い、Task の `model` に Composer を渡す必要はない。
 
 エージェント定義は Cursor がサブエージェントファイルから自動ロードするため、プロンプトには議題に必要な情報のみを含める。各ユニットへのプロンプトは以下のテンプレートに従う:
 
