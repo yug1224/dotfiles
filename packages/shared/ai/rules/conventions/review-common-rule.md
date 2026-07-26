@@ -54,6 +54,8 @@
 
 ### a. コードベース調査（`explore`, Worker: Composer 系）
 
+Task ツールで `subagent_type`: `"explore"`, `model`: `"composer-2.5"`, `readonly`: `true` を起動する（`token-optimization-rule`「Task の model 必須」）。
+
 - `.codegraph/` がある場合、構造調査は CodeGraph を優先（`token-optimization-rule`）
 - 変更周辺・呼び出し元／先・既存パターンとの整合・MECE・過剰設計
 

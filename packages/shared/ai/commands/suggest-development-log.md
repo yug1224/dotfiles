@@ -81,7 +81,7 @@ diff が大きい場合は `--stat` で概要を先に取得し、主要な変�
 
 - `.codegraph/` がある場合、構造・フロー調査は `@~/.config/shared/ai/rules/conventions/token-optimization-rule.md` に従い CodeGraph を explore / Grep より先に使う
 
-以下のいずれかに該当する場合、Task ツール（`explore` / `generalPurpose`, `readonly: true`）で関連コードベースを調査する。
+以下のいずれかに該当する場合、Task ツールで関連コードベースを調査する（`subagent_type`: `"explore"` または `"generalPurpose"`, `model`: `"composer-2.5"`, `readonly`: `true`。`token-optimization-rule`「Task の model 必須」）。
 
 - diff だけでは技術的原因が特定できない
 - 変更ファイルが多く（目安: 10ファイル以上）、変更の全体像が把握しにくい
