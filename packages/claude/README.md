@@ -12,7 +12,7 @@ Claude Code の設定ファイル群。`make mise`（ルート `mise.toml` の `
 ```
 packages/claude/
 ├── AGENTS.md → ../shared/ai/AGENTS.md   # メンテ・運用メモ（symlink・常時コンテキスト外）
-├── agents/                       # Claude frontmatter ラッパー
+├── agents/                       # Claude frontmatter ラッパー（Advisor / Worker / MAGI）
 ├── commands/                     # スラッシュコマンドラッパー（本文は shared）
 ├── rules/                        # ルールラッパー（blog/, writing/, conventions/, visual/ 等）
 ├── hooks/                        # Claude 用 adapter（共有 guard は ~/.config/shared/ai/hooks/）
@@ -50,6 +50,8 @@ Claude Code の Agent Skills（`~/.claude/skills/` に `<name>/SKILL.md` を置�
 | `packages/claude/agents/*.md`         | `@~/.config/shared/ai/agents/...`         |
 | `packages/claude/rules/<subdir>/*.md` | `@~/.config/shared/ai/rules/<subdir>/...` |
 | `packages/claude/CLAUDE.md`           | Tier A: token-opt + `INDEX`（発見索引）   |
+
+**Meta LOOP（agents）**: Advisor は `claude-opus-5`（読み取り tools）。専門 Worker（`design-worker` / `build-worker`）と MAGI は `sonnet`（Composer 非対応のため）。Worker は `Write, Edit` を含む（scaffold 既定の読み取りのみにしない）。`quality-worker` は無し。詳細は [`LOCAL-SETUP.md`](../shared/ai/docs/LOCAL-SETUP.md)「Meta LOOP」。エージェント一覧の説明は [`packages/cursor/README.md`](../cursor/README.md) の agents 節を参照。
 
 詳細とフックの委譲先は [`packages/shared/ai/README.md`](../shared/ai/README.md) を参照。命名・`.local.md` 上書きは [CONVENTIONS.md](../shared/ai/CONVENTIONS.md)。運用メモは `shared/ai/README.local.md`（gitignore）。
 

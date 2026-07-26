@@ -56,9 +56,11 @@ PR 本文にチケットリンクまたはチケット ID がある場合、`@~/
 
 Task ツールで 3 つの Subagent を **1つのメッセージ内で同時に** 起動する。
 
-- **MELCHIOR-1**: `subagent_type`: `"melchior-1"`, `readonly`: `true`
-- **BALTHASAR-2**: `subagent_type`: `"balthasar-2"`, `readonly`: `true`
-- **CASPER-3**: `subagent_type`: `"casper-3"`, `readonly`: `true`
+- **MELCHIOR-1**: `subagent_type`: `"melchior-1"`, `model`: `"composer-2.5"`, `readonly`: `true`
+- **BALTHASAR-2**: `subagent_type`: `"balthasar-2"`, `model`: `"composer-2.5"`, `readonly`: `true`
+- **CASPER-3**: `subagent_type`: `"casper-3"`, `model`: `"composer-2.5"`, `readonly`: `true`
+
+Claude Code ではエージェントラッパーの `model: sonnet` に従い、Task の `model` に Composer を渡す必要はない。
 
 各ユニットへのプロンプトは以下のテンプレートに従う（Priority / 横断観点は Step 3 の `review-common-rule` / `pr-review-rule`、確信度はエージェント定義経由の `magi-unit-common-rule` に従い、ここでは重複定義しない）:
 
