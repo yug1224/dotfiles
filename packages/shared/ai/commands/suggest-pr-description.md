@@ -110,7 +110,7 @@ diff が大きい場合は `--stat` の概要で全体像を把握してから�
 
 - `.codegraph/` がある場合、構造・フロー調査は `@~/.config/shared/ai/rules/conventions/token-optimization-rule.md` に従い CodeGraph を explore / Grep より先に使う
 
-diff の読み取りだけでは変更の全体像が把握しにくい場合、Task ツール（`explore`, `readonly: true`）で関連コードを調査する。
+diff の読み取りだけでは変更の全体像が把握しにくい場合、Task ツール（`subagent_type`: `"explore"`, `model`: `"composer-2.5"`, `readonly`: `true`）で関連コードを調査する。
 
 **Step 3 で確定したテンプレートのセクション構成に沿って**、以下の情報を整理する:
 

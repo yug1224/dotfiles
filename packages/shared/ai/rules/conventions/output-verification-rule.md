@@ -55,7 +55,7 @@ AI が生成したテキスト成果物（プラン・説明・レビューレ�
 
 `review-common-rule.md` の「深掘り調査」と同型:
 
-1. ユーザーが「サブエージェントを使って」等と明示 → `explore`（readonly）を並列起動。プラン主体の一般成果物では `design-advisor` も可
+1. ユーザーが「サブエージェントを使って」等と明示 → `subagent_type`: `"explore"`, `model`: `"composer-2.5"`, `readonly`: `true` を並列起動。プラン主体の一般成果物では `design-advisor` も可
 2. 明示がない → 親エージェントが直接再検証（デフォルト）
 3. 判断できない → ユーザーに確認
 

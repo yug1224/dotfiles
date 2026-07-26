@@ -140,7 +140,7 @@ Cursor カスタムエージェントの定義ファイル。起動方法は種�
 
 開発ライフサイクルのフェーズに特化したアドバイザー。すべて `readonly: true`。分析・提案のみを行う。ユーザーがサブエージェント利用を明示した場合、またはサブエージェントを使うコマンドから起動された場合にのみ使用される（description match による自動委譲は行わない）。
 
-**Meta LOOP（モデル割当）**: Orchestrator（親・UI 選択）推奨 Grok 4.5 / Advisor は `claude-opus-5[thinking=true,effort=high,fast=false]`（readonly）/ 専門 Worker（`design-worker` / `build-worker`）と MAGI は Cursor `composer-2.5[fast=false]`（Claude Code は `sonnet`）。`quality-worker` は無し。詳細は [`packages/shared/ai/docs/LOCAL-SETUP.md`](../shared/ai/docs/LOCAL-SETUP.md)「Meta LOOP」。bracket は Cursor [Subagents](https://cursor.com/docs/subagents) 準拠（親と同じなら `inherit`）。
+**Meta LOOP（モデル割当）**: Orchestrator（親・UI 選択）推奨 Grok 4.5 / Advisor は `claude-opus-5[thinking=true,effort=high,fast=false]`（readonly）/ 作業系（`design-worker` / `build-worker`、MAGI、`explore` / `generalPurpose` / `docs-researcher` / `shell`）は Cursor `composer-2.5[fast=false]`（Claude Code は `sonnet`）。`quality-worker` は無し。詳細は [`packages/shared/ai/docs/LOCAL-SETUP.md`](../shared/ai/docs/LOCAL-SETUP.md)「Meta LOOP」。bracket は Cursor [Subagents](https://cursor.com/docs/subagents) 準拠（親と同じなら `inherit`）。
 
 ##### サブエージェントとして Advisor を起動するコマンド
 
@@ -171,14 +171,14 @@ graph LR
 
 #### Worker エージェント（2体）
 
-親 Orchestrator からまとまった**書込**を委譲する実行主体。Advisor と同フェーズ名で対称（提案 vs 実行）。すべて書込可（`readonly` なし）。**ユーザーの「サブエージェント明示」は不要**（親が委譲してよい）。調査専用のカスタム Worker は置かず、組み込み `explore` + Task `model` pin を使う。`quality-worker` は置かない（品質は `quality-advisor`、テストコードは `build-worker`）。
+親 Orchestrator からまとまった**書込**を委譲する実行主体。Advisor と同フェーズ名で対称（提案 vs 実行）。すべて書込可（`readonly` なし）。**ユーザーの「サブエージェント明示」は不要**（親が委譲してよい）。調査専用のカスタム Worker は置かず、組み込み `explore` 等の作業系 Task で `model: composer-2.5` を必須とする。`quality-worker` は置かない（品質は `quality-advisor`、テストコードは `build-worker`）。
 
 | ファイル           | フェーズ | 書込対象                                       | 対になる Advisor |
 | ------------------ | -------- | ---------------------------------------------- | ---------------- |
 | `design-worker.md` | 設計     | ADR / OpenAPI / スキーマ設計文書 / OpenSpec 等 | `design-advisor` |
 | `build-worker.md`  | 実装     | アプリ・インフラコード、テストコード           | `build-advisor`  |
 
-起動時は Task で `model: composer-2.5` を必須（`token-optimization-rule`）。委譲基準・Opus 化の切り分けは [`LOCAL-SETUP.md`](../shared/ai/docs/LOCAL-SETUP.md)「Meta LOOP」。
+起動時は Task で `model: composer-2.5` を必須（`explore` / `generalPurpose` / `docs-researcher` / `shell` 含む。`token-optimization-rule`「Task の model 必須（作業系）」）。委譲基準・Opus 化の切り分けは [`LOCAL-SETUP.md`](../shared/ai/docs/LOCAL-SETUP.md)「Meta LOOP」。
 
 #### MAGI ユニット（3体）
 

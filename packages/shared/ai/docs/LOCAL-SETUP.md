@@ -75,7 +75,7 @@ log / index / registry は **すべて local**:
 
 ## Meta LOOP（モデル割当の推奨）
 
-親チャット（Orchestrator）: **Grok 4.5**（Cursor モデルプール）。Advisor（design/build/quality）: **Claude Opus 5**（明示時のみ・読み取り）。専門 Worker（`design-worker` / `build-worker`）と MAGI・調査 `explore`: Cursor は **Composer 2.5**（`[fast=false]`）、Claude Code は Composer 非対応のため **`sonnet`** に分岐（haiku は使わない）。
+親チャット（Orchestrator）: **Grok 4.5**（Cursor モデルプール）。Advisor（design/build/quality）: **Claude Opus 5**（明示時のみ・読み取り）。作業系（`design-worker` / `build-worker`、MAGI、`explore` / `generalPurpose` / `docs-researcher` / `shell`）: Cursor は **Composer 2.5**（`[fast=false]`）、Claude Code は Composer 非対応のため **`sonnet`** に分岐（haiku は使わない）。
 
 `quality-worker` は置かない。品質は `quality-advisor`（提案・レビュー）、テスト**コード**の書込は `build-worker`。
 
@@ -92,20 +92,21 @@ L2（`coding-rule.local.md`）でもまとまった実装は `build-worker`、�
 
 Cursor 公式 [Subagents](https://cursor.com/docs/subagents) の bracket 構文を使う（Claude Code ラッパーには書かない）。
 
-| 役割                                    | frontmatter 例                                                 |
-| --------------------------------------- | -------------------------------------------------------------- |
-| Advisor                                 | `model: claude-opus-5[thinking=true,effort=high,fast=false]`   |
-| `design-worker` / `build-worker` / MAGI | `model: composer-2.5[fast=false]`（Claude Code は `sonnet`）   |
-| 調査（組み込み `explore`）              | Task 呼び出し時に `composer-2.5` を明示（カスタム agent なし） |
+| 役割                                           | frontmatter 例                                                 |
+| ---------------------------------------------- | -------------------------------------------------------------- |
+| Advisor                                        | `model: claude-opus-5[thinking=true,effort=high,fast=false]`   |
+| `design-worker` / `build-worker` / MAGI        | `model: composer-2.5[fast=false]`（Claude Code は `sonnet`）   |
+| 調査（組み込み `explore`）                     | Task 呼び出し時に `composer-2.5` を明示（カスタム agent なし） |
+| `generalPurpose` / `docs-researcher` / `shell` | Task 呼び出し時に `composer-2.5` を明示（カスタム agent なし） |
 
 `composer-2.5` 単体は fast に落ちることがあるため、`[fast=false]` を明示する。専門 Worker の Cursor ラッパーは **書込可**（`readonly: true` にしない）。`make scaffold-wrappers` の agents 既定は readonly のため、Worker は手書き frontmatter を維持する。
 
-**Task 呼び出し**: Worker / MAGI / `explore` では frontmatter に加え、親が Task の `model` に `composer-2.5`（explore は `composer-2.5-fast` 可）を**必ず**渡す。省略すると親が Opus のとき Worker も Opus になりうる。詳細は `token-optimization-rule`「Task の model 必須」。
+**Task 呼び出し**: 作業系（Worker / MAGI / `explore` / `generalPurpose` / `docs-researcher` / `shell`）では frontmatter に加え、親が Task の `model` に Cursor は `composer-2.5`（explore は `composer-2.5-fast` 可）、Claude Code は **`sonnet`** を**必ず**渡す。省略すると親が Opus のとき作業系も Opus になりうる。Advisor は省略可。詳細は `token-optimization-rule`「Task の model 必須（作業系）」。
 
-### トラブルシュート: Worker が Opus で動く
+### トラブルシュート: 作業系が Opus で動く
 
 1. **親が Task せず直実装していないか** — UI 上「Worker」に見えても親 Opus の書込のことがある。まとまった実装は `build-worker` を Task する
-2. **Task に `model` が付いているか** — `subagent_type=build-worker` でも `model` 省略だと親モデル継承しうる。`composer-2.5` を明示
+2. **Task に `model` が付いているか** — `build-worker` / `explore` / `generalPurpose` 等でも `model` 省略だと親モデル継承しうる。Cursor は `composer-2.5`、Claude Code は `sonnet` を明示
 3. **Worker 本文の Opus 自己判定はソフトガード** — 発火しない場合がある。Task の `model` 指定を正とする
 4. **`build-advisor` と取り違えていないか** — Advisor は Opus・提案のみ。書込は `*-worker`
 5. **プラン / admin 制限** — Composer が使えないと公式フォールバックしうる（[Subagents model configuration](https://cursor.com/docs/subagents.md#model-configuration)）
