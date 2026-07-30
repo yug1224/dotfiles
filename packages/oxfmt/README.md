@@ -11,14 +11,14 @@
 
 ## npm scripts
 
-| コマンド         | 説明                                  |
-| ---------------- | ------------------------------------- |
-| `pnpm run check` | フォーマット差分チェック（CI 向け）   |
-| `pnpm run fmt`   | 全ファイルをフォーマット（`--write`） |
+| コマンド             | 説明                                  |
+| -------------------- | ------------------------------------- |
+| `pnpm run fmt:check` | フォーマット差分チェック（CI 向け）   |
+| `pnpm run fmt:fix`   | 全ファイルをフォーマット（`--write`） |
 
 ## エディタ（OXC）
 
-[`packages/code/settings.json`](../code/settings.json) のユーザー設定では、`oxc.fmt.configPath` / `oxc.path.oxfmt` は **絶対パス**（`/Users/<user>/.dotfiles/...` と mise グローバルの `cli.js`）です。Oxc は `$HOME` を展開せず、パスに `$` があるとバイナリ探索に失敗します。**`mise install` で `npm:oxfmt` が入っていること**が前提です（lefthook / `pnpm run fmt` は引き続きローカル `node_modules` の `oxfmt` も使用）。
+[`packages/code/settings.json`](../code/settings.json) のユーザー設定では、`oxc.fmt.configPath` / `oxc.path.oxfmt` は **絶対パス**（`/Users/<user>/.dotfiles/...` と mise グローバルの `cli.js`）です。Oxc は `$HOME` を展開せず、パスに `$` があるとバイナリ探索に失敗します。**`mise install` で `npm:oxfmt` が入っていること**が前提です（lefthook / `pnpm run fmt:fix` は引き続きローカル `node_modules` の `oxfmt` も使用）。
 
 他リポジトリをワークスペースのルートで開く場合は、そのプロジェクトの `.vscode/settings.json` で `"oxc.fmt.configPath": "oxfmt.config.ts"` のように**ワークスペースルートからの相対パス**で指定する（`${workspaceFolder}` は Oxc LSP では展開されない）。**dotfiles リポジトリ自体**は [`packages/code/settings.json`](../code/settings.json)（ユーザー設定）の絶対パスで足りる。設定ファイルをリネームしたら、参照パスも手動で更新してください（自動追従しません）。
 
@@ -30,7 +30,7 @@
 
 ## 依存の所有権
 
-oxfmt は二重管理です。エディタの `oxc.path.oxfmt` は mise の `npm:oxfmt`（グローバル）を指し、CI / lefthook / `pnpm run fmt|check` はルート [`package.json`](../../package.json) の `devDependencies.oxfmt`（`node_modules`）を使います。npm 側の更新は Dependabot（ecosystem: npm）が担当します。エディタ側を揃えるときは `mise upgrade npm:oxfmt`（または `mise install`）でグローバルを更新してください。
+oxfmt は二重管理です。エディタの `oxc.path.oxfmt` は mise の `npm:oxfmt`（グローバル）を指し、CI / lefthook / `pnpm run fmt:fix|fmt:check` はルート [`package.json`](../../package.json) の `devDependencies.oxfmt`（`node_modules`）を使います。npm 側の更新は Dependabot（ecosystem: npm）が担当します。エディタ側を揃えるときは `mise upgrade npm:oxfmt`（または `mise install`）でグローバルを更新してください。
 
 Node の正本はルート [`.node-version`](../../.node-version)（`24`）です。[`packages/mise/config.toml`](../mise/config.toml) の `node = "24"` と揃え、CI の `actions/setup-node` は `node-version-file: .node-version` で同じ値を読みます。
 

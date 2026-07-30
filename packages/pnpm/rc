@@ -1,1 +1,5 @@
 minimum-release-age=10080 # 7 days
+minimum-release-age-exclude[]=oxlint
+minimum-release-age-exclude[]=@oxlint/*
+minimum-release-age-exclude[]=oxlint-tsgolint
+minimum-release-age-exclude[]=@oxlint-tsgolint/*

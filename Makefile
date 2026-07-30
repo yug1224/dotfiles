@@ -35,7 +35,15 @@ node:
 
 .PHONY: check-fmt
 check-fmt:
-	pnpm run check
+	pnpm run fmt:check
+
+.PHONY: check-lint
+check-lint:
+	pnpm run lint:check
+
+.PHONY: check-typecheck
+check-typecheck:
+	pnpm run type:check
 
 .PHONY: scaffold-wrappers
 scaffold-wrappers:
@@ -70,4 +78,4 @@ check-bootstrap:
 	fi
 
 .PHONY: check
-check: check-fmt check-sync test-scripts check-bootstrap
+check: check-fmt check-lint check-typecheck check-sync test-scripts check-bootstrap

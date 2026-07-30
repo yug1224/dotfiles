@@ -255,6 +255,7 @@
   "oxc.fmt.configPath": "/Users/yujiyamaguchi/.dotfiles/oxfmt.config.ts",
   "oxc.path.oxfmt": "/Users/yujiyamaguchi/.local/share/mise/installs/npm-oxfmt/latest/lib/node_modules/oxfmt/dist/cli.js",
   "oxc.path.oxlint": "/Users/yujiyamaguchi/.local/share/mise/installs/npm-oxlint/latest/lib/node_modules/oxlint/dist/cli.js",
+  "oxc.typeAware": true,
   "oxc.useExecPath": true,
   "reactSnippets.settings.typescript": false,
   // アノテーションコメントの一覧ツリー表示、ツリー表示させたいタグがあれば追加する

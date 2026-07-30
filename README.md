@@ -10,7 +10,7 @@ cd dotfiles
 make install        # Homebrew インストール・Prezto clone（install.sh）
 make mise           # mise bootstrap（packages / dotfiles / tools / bootstrap task）
 make node           # pnpm install（lefthook の pre-commit で oxfmt / secretlint に必要。TypeScript はエディタの言語サービス用）
-make check          # oxfmt check + AI sync 検証（allowlist / wrapper / deny-guard / always-on）+ script 最小テスト + check-bootstrap（macOS）
+make check          # oxfmt check + lint + typecheck + AI sync 検証（allowlist / wrapper / deny-guard / always-on）+ script 最小テスト + check-bootstrap（macOS）
 ```
 
 - `make install`（`install.sh`）は初回 seed として Homebrew・Prezto・mise 導入に加え、`mise.toml` がある場合は **`mise bootstrap --yes` まで**実行する（重い・GUI reconcile の可能性あり）。日常の再適用は **`make mise`**。
@@ -20,6 +20,7 @@ make check          # oxfmt check + AI sync 検証（allowlist / wrapper / deny-
 - `install.sh` は `/usr/bin/curl` で Homebrew を入れます。Intel Mac では `/opt/homebrew` ではなく `/usr/local` 側になる場合があります。
 - AI 設定（Cursor / Claude Code）は **RTK 前提**。`make mise` の後、`rtk --version && rtk gain` で smoke test すること。詳細は [`packages/shared/ai/docs/RTK.md`](packages/shared/ai/docs/RTK.md)。
 - Cursor / AI 用のルールは [`packages/cursor/README.md`](packages/cursor/README.md) を参照。
+- Raycast 拡張は [`packages/raycast/README.md`](packages/raycast/README.md) を参照。
 - oxfmt の構成は [`packages/oxfmt/README.md`](packages/oxfmt/README.md) を参照。
 - 依存の所有権（oxfmt の二重管理・Node 正本は [`.node-version`](.node-version)）は [`packages/oxfmt/README.md`](packages/oxfmt/README.md) を参照。
 - エディタの oxfmt パスは `$HOME/.dotfiles/...`（`make mise` でリポジトリが `~/.dotfiles` に symlink される前提）。
@@ -44,8 +45,9 @@ make check          # oxfmt check + AI sync 検証（allowlist / wrapper / deny-
 ### mise `config.local.toml`（非管理）
 
 - `[tools]` の正本は [`packages/mise/config.toml`](packages/mise/config.toml) → `~/.config/mise/config.toml`（symlink）。
-- マシン固有は **`~/.config/mise/config.local.toml`**（[`packages/mise/config.local.toml`](packages/mise/config.local.toml) は `.gitignore` 済み。**コミットしない**）。
-- 例（パスは自分の作業ルートに置換）:
+- マシン固有の **`[tools]`** は [`packages/mise/config.local.toml`](packages/mise/config.local.toml)（`.gitignore` 済み。**コミットしない**）。`config.toml` の symlink 解決先の隣として読み込まれる。
+- **`trusted_config_paths` 等の trust 系 settings はグローバル専用**（`~/.config/mise/config.local.toml` のみ）。`packages/mise/config.local.toml` に書くと `non-global config ... is ignored` 警告になる。
+- 例（パスは自分の作業ルートに置換。**`~/.config/mise/config.local.toml` に書く**）:
 
 ```toml
 [settings]

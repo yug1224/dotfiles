@@ -1,0 +1,62 @@
+{
+  "$schema": "https://www.raycast.com/schemas/extension.json",
+  "name": "audio-device-settings",
+  "description": "Switch input/output audio devices and mute the input via SwitchAudioSource",
+  "license": "MIT",
+  "author": "yug1224",
+  "scripts": {
+    "build": "ray build -e dist",
+    "dev": "ray develop",
+    "lint:check": "pnpm -w exec oxlint packages/raycast/audio-device-settings/src",
+    "lint:fix": "pnpm -w exec oxlint --fix packages/raycast/audio-device-settings/src",
+    "fmt:check": "pnpm -w exec oxfmt --check --no-error-on-unmatched-pattern -c oxfmt.config.ts packages/raycast/audio-device-settings",
+    "fmt:fix": "pnpm -w exec oxfmt --no-error-on-unmatched-pattern -c oxfmt.config.ts packages/raycast/audio-device-settings",
+    "type:check": "tsc --noEmit",
+    "check": "pnpm run lint:check && pnpm run type:check && pnpm run fmt:check",
+    "publish": "ray publish"
+  },
+  "dependencies": {
+    "@raycast/api": "^1.104.23",
+    "@raycast/utils": "^1.19.1",
+    "execa": "^6.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.19.17",
+    "@types/react": "^19.0.10",
+    "typescript": "^7.0.2"
+  },
+  "icon": "command-icon.png",
+  "commands": [
+    {
+      "name": "input",
+      "title": "Set Input Audio Device",
+      "description": "List and switch the active input audio device",
+      "mode": "view"
+    },
+    {
+      "name": "output",
+      "title": "Set Output Audio Device",
+      "description": "List and switch the active output audio device",
+      "mode": "view"
+    },
+    {
+      "name": "mute",
+      "title": "Mute the input audio device",
+      "description": "Mute the input audio device using Core Audio",
+      "mode": "no-view"
+    },
+    {
+      "name": "unmute",
+      "title": "Unmute the input audio device",
+      "description": "Unmute the input audio device and restore the previous level",
+      "mode": "no-view"
+    },
+    {
+      "name": "toggle",
+      "title": "Toggle input audio device mute",
+      "description": "Toggle input audio device mute on or off",
+      "mode": "no-view"
+    }
+  ],
+  "title": "audio-device-settings"
+}
