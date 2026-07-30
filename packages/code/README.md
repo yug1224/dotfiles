@@ -20,6 +20,7 @@ make mise
 | dotfiles ルート                      | `$HOME/.dotfiles`（`make mise` でリポジトリへ symlink）                              |
 | `oxc.fmt.configPath`                 | **絶対パス**（例: `/Users/<user>/.dotfiles/oxfmt.config.ts`）                        |
 | `oxc.path.oxfmt` / `oxc.path.oxlint` | **絶対パス**（mise グローバルの `.../oxfmt/dist/cli.js` / `.../oxlint/dist/cli.js`） |
+| `oxc.typeAware`                      | `true`（type-aware linting。要 `oxlint-tsgolint` + ルート `oxlint.config.ts`）       |
 | `customLocalFormatters`              | `$HOME/.dotfiles/packages/code/bin/oxfmt-stdin.sh`（シェル経由のため `$HOME` 可）    |
 
 **Oxc は `$HOME` / `${env:...}` を展開しない。** さらにパス文字列に `$` が含まれるとバイナリ探索が即失敗する（拡張側の安全チェック）。そのため `oxc.path.*` / `oxc.fmt.configPath` は絶対パス必須。`custom-local-formatters` だけ `$HOME` でよい。

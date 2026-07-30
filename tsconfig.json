@@ -8,5 +8,5 @@
     "skipLibCheck": true,
     "noEmit": true
   },
-  "include": ["oxfmt.config.ts", "packages/oxfmt/preset.base.ts"]
+  "include": ["oxfmt.config.ts", "oxlint.config.ts", "packages/oxfmt/preset.base.ts"]
 }

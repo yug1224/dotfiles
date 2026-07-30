@@ -6,14 +6,28 @@
   "repository": "https://github.com/yug1224/dotfiles.git",
   "type": "module",
   "scripts": {
-    "check": "oxfmt --check --no-error-on-unmatched-pattern -c oxfmt.config.ts",
-    "fmt": "oxfmt --no-error-on-unmatched-pattern -c oxfmt.config.ts"
+    "lint:check": "oxlint packages/raycast",
+    "lint:fix": "oxlint --fix packages/raycast",
+    "fmt:check": "oxfmt --check --no-error-on-unmatched-pattern -c oxfmt.config.ts",
+    "fmt:fix": "oxfmt --no-error-on-unmatched-pattern -c oxfmt.config.ts",
+    "type:check": "pnpm --filter \"./packages/raycast/*\" run type:check",
+    "check": "pnpm run fmt:check && pnpm run lint:check && pnpm run type:check"
   },
   "devDependencies": {
     "@secretlint/secretlint-rule-preset-recommend": "^11.7.1",
     "oxfmt": "^0.41.0",
+    "oxlint": "^1.76.0",
+    "oxlint-tsgolint": "^7.0.2001",
     "secretlint": "^11.7.1",
-    "typescript": "^5.9.3"
+    "typescript": "^7.0.2"
   },
-  "packageManager": "pnpm@10.34.3"
+  "packageManager": "pnpm@10.34.3",
+  "pnpm": {
+    "minimumReleaseAgeExclude": [
+      "oxlint",
+      "@oxlint/*",
+      "oxlint-tsgolint",
+      "@oxlint-tsgolint/*"
+    ]
+  }
 }
