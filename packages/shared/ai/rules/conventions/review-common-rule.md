@@ -40,32 +40,81 @@
 - エラーハンドリング（例外処理、エラーメッセージ、リカバリー）
 - パフォーマンス（N+1、不要なリクエスト、メモリリーク）
 
-## 深掘り調査
+## depth × intensity（正本）
 
-サブエージェント利用の判定:
+| depth         | 意味                                                                  | 対象コマンド例                                                      |
+| ------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| **AlwaysSub** | `explore-worker` + `quality-advisor` をユーザー明示なしで必ず並列起動 | `/review-pr` `/review-diff` `/review-pr-linus` `/review-diff-linus` |
+| **Magi3**     | MAGI 3体のみ（Advisor 不使用）                                        | `/review-pr-magi`                                                   |
+| **OptIn**     | ユーザー明示時のみサブ起動                                            | `/verify-output` の再検証サブ、`/suggest-plan` の Advisor 等        |
 
-1. ユーザーが「サブエージェントを使って」「マルチエージェントで」等と明示 → 下記「サブエージェントモード」で並列起動
-2. 明示がない → 親エージェントが a. / b. の観点で直接調査（デフォルト）
-3. 判断できない → ユーザーに確認してから 1 または 2 を実行
+| intensity     | 意味                   | 実行者                                                                       |
+| ------------- | ---------------------- | ---------------------------------------------------------------------------- |
+| **Thin**      | 薄い敵対的検証（後述） | 親エージェント（非 Linus レビュー系の既定）                                  |
+| **Full**      | フル敵対的検証         | `quality-advisor`（`/review-*-linus`）または `/verify-adversarial`（明示時） |
+| **DevilOnly** | Devil's Advocate のみ  | `/review-pr-magi` 既定                                                       |
 
-### サブエージェントモード（明示時のみ）
+## レビュー系コマンド共通手順（AlwaysSub 対象）
 
-2 種類のサブエージェントを**並列で**起動する。
+**対象コマンド**: `/review-pr` `/review-diff` `/review-pr-linus` `/review-diff-linus`
 
-### a. コードベース調査（`explore`, Worker: Composer 系）
+各コマンドは Step 0（トレース）と Step 2（差分取得）のみ固有。Step 1 および Step 3–7 は本節に従う。
 
-Task ツールで `subagent_type`: `"explore"`, `model`: `"composer-2.5"`, `readonly`: `true` を起動する（`token-optimization-rule`「Task の model 必須」）。
+### Step 1 ルール読込（共通）
 
-- `.codegraph/` がある場合、構造調査は CodeGraph を優先（`token-optimization-rule`）
+1. `./review-common-rule.md` を Read（必須）
+2. `./pr-review-rule.md` を Read（必須）
+3. **Linus 系コマンド**（`/review-pr-linus` `/review-diff-linus`）のときのみ、コマンドの Step 1 で `./linus-review-rule.md` を追加 Read
+4. 同ディレクトリの `review-common-rule.local.md` / `pr-review-rule.local.md` / `pr-feedback-registry.local.md` を Glob。存在する場合のみ Read
+5. `../../docs/feedback-log.local.md` / `../../docs/feedback-index.local.md` を Glob。存在する場合のみ Read
+
+### Step 3 コンテキスト収集
+
+- **対象リポジトリのルール照合**: `pr-review-rule.md` の「コンテキスト」に従い、対象リポジトリのルール・ドキュメントを動的に参照する
+- **チケット**: 引数または PR 本文にチケット ID / URL がある場合のみ、`ticket-retrieval-rule.md`（および存在すれば `.local.md`）に従い背景・要件を取得する
+
+### Step 4 変更コードの深掘り調査
+
+本ファイルの「深掘り調査（レビュー系・常時）」に従い、`explore-worker` と `quality-advisor` を**必ず並列**起動する。
+
+| コマンド種別 | intensity | 敵対的検証の実行者                                                                                      |
+| ------------ | --------- | ------------------------------------------------------------------------------------------------------- |
+| 非 Linus     | **Thin**  | 親エージェント（薄い敵対的検証）                                                                        |
+| Linus 系     | **Full**  | `quality-advisor`（フル敵対的検証を必須依頼。Linus 口調・ペルソナは付けない。ペルソナは親エージェント） |
+
+### Step 5 重要度判定と下書きレポート作成
+
+「重要度判定」に従い重要度を付与し、下記**出力フォーマット**に従ってレビューレポートの**下書き**を作成する（この Step ではユーザーに提示しない）。
+
+| コマンド種別 | 出力フォーマット                                                         |
+| ------------ | ------------------------------------------------------------------------ |
+| 非 Linus     | `pr-review-rule.md` のテンプレート（本ファイル「出力フォーマット」参照） |
+| Linus 系     | `linus-review-rule.md` の出力フォーマット                                |
+
+### Step 6 出力の再検証（必須）
+
+`output-verification-rule.md` を Read し、**「インライン再検証」**に従って下書きを検証・修正する。**省略禁止**。
+
+### Step 7 最終レポート出力
+
+Step 6 で修正したレビューレポートのみをユーザーに提示する。**省略禁止**。
+
+## 深掘り調査（レビュー系・常時）
+
+**対象**: `/review-pr` `/review-diff` `/review-pr-linus` `/review-diff-linus` のみ。ユーザー明示なしで次の 2 種類を**必ず並列**起動する。
+
+**対象外**: `/review-pr-magi` `/review-blog` `/suggest-plan` `/verify-output` `/verify-adversarial` 等は本節の対象外（各コマンド・ルールの定義に従う）。
+
+### a. コードベース調査（`explore-worker`, Worker: Composer 系・readonly）
+
+Task ツールで `subagent_type`: `"explore-worker"`, `model`: `"composer-2.5"`, `readonly`: `true` を起動する（`agent-delegation-rule`「Task の model 必須」）。
+
+- `.codegraph/` がある場合、構造調査は CodeGraph を優先（`codegraph-rule`）
 - 変更周辺・呼び出し元／先・既存パターンとの整合・MECE・過剰設計
 
-### b. 品質レビュー（`quality-advisor`, Advisor: Opus 系・明示時）
+### b. 品質レビュー（`quality-advisor`, Advisor: Grok 系）
 
-チェックリストに基づく体系的レビュー。明示時はフル敵対的検証（後述）も依頼してよい。
-
-### 直接調査モード（デフォルト）
-
-親エージェントが上記 a. / b. と同じ観点で直接調査する。
+チェックリストに基づく体系的レビュー。敵対の厚み（薄い／フル）は次節「敵対的検証」に従う。
 
 ## 重要度判定（Priority）
 
@@ -83,9 +132,11 @@ Task ツールで `subagent_type`: `"explore"`, `model`: `"composer-2.5"`, `read
 - 保守・可読に実害がある場合のみ **P2**
 - 判断困難なら確認事項を短く書くか省略
 
-## 薄い敵対的検証（レビュー系・既定）
+## 敵対的検証
 
-課題がある前提で反証を試みる。毎回 Opus サブを必須にしない。
+### 薄い敵対的検証（非 Linus レビュー系・既定）
+
+`/review-pr` `/review-diff` では**親エージェント**が実行する（Linus 版では親の薄い敵対は重ねない）。
 
 1. 主張・変更の「成立しない候補」だけを挙げる（良い点の列挙は任意）
 2. 事実はコード／公式 docs で接地。未確認は「未検証」
@@ -93,7 +144,14 @@ Task ツールで `subagent_type`: `"explore"`, `model`: `"composer-2.5"`, `read
 4. 指摘には深刻度・根拠・確度。末尾に「反証できなかった点」（なければ「なし」）
 5. **採否は人間**
 
-フル版（`quality-advisor` Opus）はサブエージェント明示時、または `/verify-adversarial`。`/review-pr-magi` の既定は Devil's Advocate のみ（`/verify-adversarial` を二重起動しない）。
+### フル敵対的検証
+
+次のいずれかで `quality-advisor` にフル敵対的検証を**必須依頼**する（Linus 口調・ペルソナは載せない）:
+
+- `/review-pr-linus` `/review-diff-linus` の Step 4（常時並列の `quality-advisor` プロンプト）
+- `/verify-adversarial`（ユーザーが明示起動。既定は親の薄い敵対、サブエージェント明示時は `quality-advisor` でフル）
+
+`/review-pr-magi` の既定は Devil's Advocate のみ（`/verify-adversarial` を二重起動しない）。
 
 **相互排他（コマンド起動のみ）**: 同一ターンで `/verify-output` と `/verify-adversarial` を**コマンドとして**重ねない。レビュー／MAGI コマンドに内蔵されたインライン再検証・薄い敵対的検証・Devil's Advocate 注記は本排他の対象外（必須 Step を省略しない）。
 

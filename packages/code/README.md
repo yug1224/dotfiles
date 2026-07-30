@@ -13,20 +13,20 @@ make mise
 
 設定変更後は **Developer: Reload Window** を実行する。
 
-## パス（`$HOME` 固定）
+## パス
 
-[`settings.json`](settings.json) の oxfmt 関連パスは **`$HOME` ベースの固定パス**で記述する（Oxc 拡張と custom-local-formatters が展開する）。
+| キー / 用途                          | パス                                                                                 |
+| ------------------------------------ | ------------------------------------------------------------------------------------ |
+| dotfiles ルート                      | `$HOME/.dotfiles`（`make mise` でリポジトリへ symlink）                              |
+| `oxc.fmt.configPath`                 | **絶対パス**（例: `/Users/<user>/.dotfiles/oxfmt.config.ts`）                        |
+| `oxc.path.oxfmt` / `oxc.path.oxlint` | **絶対パス**（mise グローバルの `.../oxfmt/dist/cli.js` / `.../oxlint/dist/cli.js`） |
+| `customLocalFormatters`              | `$HOME/.dotfiles/packages/code/bin/oxfmt-stdin.sh`（シェル経由のため `$HOME` 可）    |
 
-| キー / 用途                          | パス                                                                       |
-| ------------------------------------ | -------------------------------------------------------------------------- |
-| dotfiles ルート                      | `$HOME/.dotfiles`（`make mise` でリポジトリへ symlink）                    |
-| `oxc.fmt.configPath`                 | `$HOME/.dotfiles/oxfmt.config.ts`                                          |
-| `oxc.path.oxfmt` / `oxc.path.oxlint` | `$HOME/.local/share/mise/installs/npm-oxfmt/latest/...`（mise グローバル） |
-| `customLocalFormatters`              | `$HOME/.dotfiles/packages/code/bin/oxfmt-stdin.sh`                         |
+**Oxc は `$HOME` / `${env:...}` を展開しない。** さらにパス文字列に `$` が含まれるとバイナリ探索が即失敗する（拡張側の安全チェック）。そのため `oxc.path.*` / `oxc.fmt.configPath` は絶対パス必須。`custom-local-formatters` だけ `$HOME` でよい。
 
-**前提**: `make mise` によりリポジトリが `$HOME/.dotfiles` に symlink されること（clone 場所は問わない）。適用後は **Developer: Reload Window** を実行する。
+**前提**: `make mise` によりリポジトリが `$HOME/.dotfiles` に symlink されること。適用後は **Developer: Reload Window** を実行する。
 
-Oxc の LSP は `${workspaceFolder}` を展開しない。
+Oxc の LSP は `${workspaceFolder}` も展開しない（相対パスはワークスペースルート基準）。
 
 ## 保存時フォーマット（Oxc）
 
@@ -44,12 +44,13 @@ Oxc の LSP は `${workspaceFolder}` を展開しない。
 
 **「拡張機能 'Oxc' はフォーマッタとして構成されていますが、'TypeScript'-ファイルをフォーマットできません」** は、ほぼ常に **oxfmt の LSP が起動していない**（フォーマッタ未登録）状態。次を確認する。
 
-| 確認                                                                | 対処                                                                                                                                        |
-| ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| ステータスバーに `oxc` が出ない / Output に `No valid oxfmt binary` | `mise install` で `npm:oxfmt` を入れる。dotfiles 以外ではルートに `oxfmt` を入れるか、ユーザー設定の `oxc.path.oxfmt` を確認                |
-| Node を **mise** 等だけで入れている                                 | ユーザー設定の **`oxc.useExecPath`: `true`**（Cursor / VS Code 同梱 Node で `cli.js` を実行）                                               |
-| 他リポジトリで dotfiles の `oxfmt.config.ts` を使いたい             | そのリポジトリの `.vscode/settings.json` に `"oxc.fmt.configPath": "oxfmt.config.ts"` とルートの設定ファイル。無いパスを指すと LSP が落ちる |
-| 設定変更後も直らない                                                | `Oxc: Restart oxfmt Server` → **Developer: Reload Window**                                                                                  |
+| 確認                                                                | 対処                                                                                                                                                    |
+| ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ステータスバーに `oxc` が出ない / Output に `No valid oxfmt binary` | `oxc.path.oxfmt` が `$HOME/...` になっていないか確認（`$` 不可）。`mise install` で `npm:oxfmt`、または絶対パス / 相対 `node_modules/oxfmt/dist/cli.js` |
+| `command 'oxc.restartServerFormatter' not found`                    | 上と同じ。バイナリ未検出だと Formatter が起動せずコマンドも登録されない                                                                                 |
+| Node を **mise** 等だけで入れている                                 | ユーザー設定の **`oxc.useExecPath`: `true`**（Cursor / VS Code 同梱 Node で `cli.js` を実行）                                                           |
+| 他リポジトリで dotfiles の `oxfmt.config.ts` を使いたい             | そのリポジトリの `.vscode/settings.json` に `"oxc.fmt.configPath": "oxfmt.config.ts"` とルートの設定ファイル。無いパスを指すと LSP が落ちる             |
+| 設定変更後も直らない                                                | `Oxc: Restart oxfmt Server` → **Developer: Reload Window**                                                                                              |
 
 ## フォーマッタ（ハイブリッド）
 
@@ -61,7 +62,7 @@ Oxc の LSP は `${workspaceFolder}` を展開しない。
 
 `customLocalFormatters.formatters` は [`bin/oxfmt-stdin.sh`](bin/oxfmt-stdin.sh) 経由で mise グローバルの `oxfmt` を呼ぶ（`$HOME/.local/share/mise/shims/oxfmt`、未インストール時は `node_modules/.bin/oxfmt` にフォールバック）。
 
-`oxc.path.oxfmt` / `oxc.fmt.configPath` / `oxc.useExecPath` は **ユーザー設定（本ファイル）にのみ**書く。dotfiles リポジトリを開いたときも同じ `$HOME` パスで `oxfmt.config.ts` を指すため、[`.vscode/settings.json`](../../.vscode/settings.json) に Oxc 設定は置かない（重複と上書きの混乱を避ける）。
+`oxc.path.oxfmt` / `oxc.fmt.configPath` / `oxc.useExecPath` は **ユーザー設定（本ファイル）にのみ**書く。dotfiles リポジトリを開いたときも同じ絶対パスで `oxfmt.config.ts` を指すため、[`.vscode/settings.json`](../../.vscode/settings.json) に Oxc 設定は置かない（重複と上書きの混乱を避ける）。
 
 [`.vscode/settings.json`](../../.vscode/settings.json) に置くのは **ワークスペース依存だけ**（例: `typescript.tsdk` → このリポジトリの `node_modules/typescript`）。
 

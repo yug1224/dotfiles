@@ -130,7 +130,7 @@ shared には skills を置かない（[templates/skills/README.md](../../docs/t
 ## サブエージェント
 
 - 明示がなくても親エージェントが直接 Glob / Read で実施（デフォルト）
-- ユーザーが「サブエージェントを使って」等と明示した場合のみ `subagent_type`: `"explore"`, `model`: `"composer-2.5"`, `readonly`: `true` を並列起動可
+- ユーザーが「サブエージェントを使って」等と明示した場合のみ `subagent_type`: `"explore-worker"`, `model`: `"composer-2.5"`, `readonly`: `true` を並列起動可
 
 ---
 

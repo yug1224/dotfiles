@@ -1,6 +1,6 @@
 直前の assistant 応答または `@` 添付を、**課題あり前提**で敵対的に検証する。`/verify-output` の 3 軸（誤検証・間違い・ヌケモレ）より攻撃的で、反証に失敗した点を明示する。
 
-**参照ルール**: `@~/.config/shared/ai/rules/conventions/review-common-rule.md`（「薄い敵対的検証」「フル版」）
+**参照ルール**: `@~/.config/shared/ai/rules/conventions/review-common-rule.md`（「敵対的検証」— 薄い敵対／フル敵対）
 
 **Input**: `/verify-adversarial` の後に続く引数は任意。未指定時は直前 assistant 出力を対象とする。`@` 添付があれば併せる。
 
@@ -21,17 +21,15 @@
 
 ### 1. 敵対的検証ルールの読み込み
 
-1. `@~/.config/shared/ai/rules/conventions/review-common-rule.md` を Read（必須）— 「薄い敵対的検証」節
+1. `@~/.config/shared/ai/rules/conventions/review-common-rule.md` を Read（必須）— 「敵対的検証」節
 2. 同ディレクトリの `review-common-rule.local.md` を Glob。存在する場合のみ Read
 
 ### 2. 実行モードの選択
 
 | 条件                                           | 動作                                                                                       |
 | ---------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| ユーザーが「サブエージェントを使って」等と明示 | Task で `quality-advisor`（Opus 系）を **`readonly: true`** で起動し、フル敵対的検証を依頼 |
+| ユーザーが「サブエージェントを使って」等と明示 | Task で `quality-advisor`（Grok 系）を **`readonly: true`** で起動し、フル敵対的検証を依頼 |
 | 上記以外（既定）                               | 親エージェントが `review-common-rule` の「薄い敵対的検証」手順を直接実行                   |
-
-可能ならサブエージェント明示時は `quality-advisor` を優先する（毎回必須ではない）。
 
 ### 3. 敵対的検証の実行
 

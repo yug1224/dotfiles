@@ -23,7 +23,7 @@ dotfiles の AI 設定 PR を出す前に確認する。`ai-config-rule.md` の�
 ## レビュー・実装の分離
 
 - [ ] 実装時サブエージェント方針 → `coding-rule.local.md`
-- [ ] レビュー時サブエージェント方針 → `review-common-rule.md`（明示時のみ）
+- [ ] レビュー時サブエージェント方針 → `review-common-rule.md`（常時並列: `explore-worker` + `quality-advisor`）
 - [ ] 両者を同一ファイルに混在させない
 
 ## フィードバック連携

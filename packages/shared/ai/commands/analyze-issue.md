@@ -68,11 +68,11 @@ Step 1 のアダプタに従いチケット情報を取得する（タイトル�
 - 対象リポジトリの `.cursor/rules/`（または同等）を動的探索し、関連ルールを Read する
 - `analyze-issue.local.md` を Glob。存在する場合のみ Read し、追加観点を適用する
 
-**b. コードベース調査（`explore`）**
+**b. コードベース調査（`explore-worker`）**
 
-Task ツールで `subagent_type`: `"explore"`, `model`: `"composer-2.5"`, `readonly`: `true` を起動する（`token-optimization-rule`「Task の model 必須」）。
+Task ツールで `subagent_type`: `"explore-worker"`, `model`: `"composer-2.5"`, `readonly`: `true` を起動する（`agent-delegation-rule`「Task の model 必須」）。
 
-- `.codegraph/` がある場合、構造・フロー調査は `@~/.config/shared/ai/rules/conventions/token-optimization-rule.md` に従い CodeGraph を explore / Grep より先に使う
+- `.codegraph/` がある場合、構造・フロー調査は `@~/.config/shared/ai/rules/conventions/codegraph-rule.md` に従い CodeGraph を explore-worker / Grep より先に使う
 - 課題に関連するコード・モジュールの特定
 - エラーメッセージやログ出力箇所からの逆引き
 - 関連する最近のコミット・変更履歴の確認（`git log` で変更経緯を追跡）

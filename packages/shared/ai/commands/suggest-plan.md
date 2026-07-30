@@ -1,4 +1,4 @@
-要件（チケット / GitHub Issue / 自然言語）を起点に、設計・実装の両面から分析し Must have / Nice to have の実装計画を策定する。ユーザーが「サブエージェントを使って」「マルチエージェントで」等とサブエージェント利用を明示している場合のみ、Task ツールで `design-advisor` と `build-advisor`（Advisor: Opus 系）を起動する。明示がない場合は親エージェント（推奨 Orchestrator: Grok 4.5）が Step 3 の観点に沿って直接分析する。敵対的検証は本コマンドでは行わない（レビュー系／`/verify-adversarial`）。全ステップが読み取り専用のため、Plan モードでの実行を推奨する。
+要件（チケット / GitHub Issue / 自然言語）を起点に、設計・実装の両面から分析し Must have / Nice to have の実装計画を策定する。ユーザーが「サブエージェントを使って」「マルチエージェントで」等とサブエージェント利用を明示している場合のみ、Task ツールで `design-advisor` と `build-advisor`（Advisor: Grok 系）を起動する。明示がない場合は親エージェント（推奨 Orchestrator: Grok 4.5）が Step 3 の観点に沿って直接分析する。敵対的検証は本コマンドでは行わない（レビュー系／`/verify-adversarial`）。全ステップが読み取り専用のため、Plan モードでの実行を推奨する。
 
 **参照ルール**: `@~/.config/shared/ai/rules/checklists/nfr-checklist.md`（Cursor ラッパー: `packages/cursor/rules/checklists/nfr-checklist.mdc`）
 

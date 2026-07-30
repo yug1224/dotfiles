@@ -32,10 +32,12 @@ packages/claude/
 | ---------------------------------- | --------------------------------------------------------------------- |
 | `japanese-tech-writing-rule.md`    | `@~/.config/shared/ai/rules/writing/japanese-tech-writing-rule.md`    |
 | `cognitive-rhythm-writing-rule.md` | `@~/.config/shared/ai/rules/writing/cognitive-rhythm-writing-rule.md` |
+| `x-post-rule.md`                   | `@~/.config/shared/ai/rules/writing/x-post-rule.md`                   |
 
 - **Tier**: B（コマンド経由 / agent-requestable）。CLAUDE.md Tier A には載せない
 - **Cursor との非対称**: Cursor は `japanese-tech-writing-rule.mdc` の docs/README 系 `globs` で自動適用（既定 `tech-doc-lite`）。Claude に glob 相当はないため、同等の自動適用はせずコマンド／明示 `@` に任せる
 - **明示適用**: `/apply-japanese-tech-writing`（引数でスライス指定可。既定 `tech-doc-lite`）。Cursor / Claude 共通
+- **X投稿**: `/suggest-x-post` が `x-post-rule` を参照（コマンド経由。`globs` 自動適用なし）
 - **用途**: 日本語出力の基底。Git 管理コマンドからの必須 Read は `plan-blog` / `suggest-development-log` / `suggest-pr-description`（`review-blog` は writing-style 経由）。採用メッセージ系（`.local`）は必須 Read する場合も適用は `tech-doc-lite`
 - **優先**: blog では `writing-style-rule` の Override が優先（JTW は `blog-base`）。開発ログ／PR 説明／採用メッセージは `tech-doc-lite`。CRW は体験記・読み物時のみ opt-in
 - **出典**: [`packages/shared/ai/README.md`](../shared/ai/README.md)「出典・蒸留」（JTW: Unlicense / CRW: 原典に表記なし）
@@ -51,7 +53,7 @@ Claude Code の Agent Skills（`~/.claude/skills/` に `<name>/SKILL.md` を置�
 | `packages/claude/rules/<subdir>/*.md` | `@~/.config/shared/ai/rules/<subdir>/...` |
 | `packages/claude/CLAUDE.md`           | Tier A: token-opt + `INDEX`（発見索引）   |
 
-**Meta LOOP（agents）**: Advisor は `claude-opus-5`（読み取り tools）。専門 Worker（`design-worker` / `build-worker`）と MAGI は `sonnet`（Composer 非対応のため）。Worker は `Write, Edit` を含む（scaffold 既定の読み取りのみにしない）。`quality-worker` は無し。詳細は [`LOCAL-SETUP.md`](../shared/ai/docs/LOCAL-SETUP.md)「Meta LOOP」。エージェント一覧の説明は [`packages/cursor/README.md`](../cursor/README.md) の agents 節を参照。
+**Meta LOOP（agents）**: Advisor は `sonnet`（読み取り tools。Cursor は Grok 4.5、Claude Code は Grok 非対応のため）。専門 Worker（`design-worker` / `build-worker` / `general-worker`）、調査 `explore-worker`、MAGI は `sonnet`（Composer 非対応のため）。書込 Worker は `Write, Edit` を含む（scaffold 既定の読み取りのみにしない）。`explore-worker` は読み取り + Bash（`codegraph explore` 用。`Write`/`Edit` なし）。`quality-worker` は無し。Advisor は原則明示時のみ起動（未委譲の主戦場は Worker）。委譲ゲート・Task `model` 必須の正本は `agent-delegation-rule`（Tier B。`packages/claude/rules/conventions/agent-delegation-rule.md`）。**例外**: `/review-diff` `/review-pr` `/review-diff-linus` `/review-pr-linus` はコマンド定義により `explore-worker` + `quality-advisor` を常時並列起動。詳細は [`LOCAL-SETUP.md`](../shared/ai/docs/LOCAL-SETUP.md)「Meta LOOP」。エージェント一覧の説明は [`packages/cursor/README.md`](../cursor/README.md) の agents 節を参照。
 
 詳細とフックの委譲先は [`packages/shared/ai/README.md`](../shared/ai/README.md) を参照。命名・`.local.md` 上書きは [CONVENTIONS.md](../shared/ai/CONVENTIONS.md)。運用メモは `shared/ai/README.local.md`（gitignore）。
 

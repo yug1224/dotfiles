@@ -16,17 +16,13 @@
 
 応答の冒頭に `✅️: /review-pr` と出力する。
 
-### 1. ルールの読み込み
+### 1. ルール読込
 
-1. `@~/.config/shared/ai/rules/conventions/review-common-rule.md` を Read（必須。薄い敵対的検証を含む）
-2. `@~/.config/shared/ai/rules/conventions/pr-review-rule.md` を Read（必須）
-3. 同ディレクトリの `review-common-rule.local.md` / `pr-review-rule.local.md` / `pr-feedback-registry.local.md` を Glob。存在する場合のみ Read
-4. `@~/.config/shared/ai/docs/feedback-log.local.md` / `feedback-index.local.md` を Glob。存在する場合のみ Read
+`review-common-rule.md` の「レビュー系コマンド共通手順」Step 1 に従う。
 
 ### 2. PR 情報の取得
 
-引数から GitHub PR URL を取得し、owner / repo / PR番号 を抽出する。
-引数が未指定の場合はユーザーに入力を求める。
+引数から GitHub PR URL を取得し、owner / repo / PR番号 を抽出する。引数が未指定の場合はユーザーに入力を求める。
 
 gh CLI（`gh pr view`, `gh pr diff`, `gh pr checks`）を優先使用し、以下を取得する:
 
@@ -34,27 +30,9 @@ gh CLI（`gh pr view`, `gh pr diff`, `gh pr checks`）を優先使用し、以�
 - 差分（diff）・変更ファイル一覧
 - CI ステータス・既存レビューコメント
 
-### 3. コンテキスト収集
+### 3–7. 共通レビュー手順
 
-共通ルールの「対象リポジトリのルール照合」に従い、ルール照合とタスク背景取得を行う。
-
-- PR 本文にチケットリンクまたはチケット ID がある場合、`@~/.config/shared/ai/rules/conventions/ticket-retrieval-rule.md`（および存在すれば `.local.md`）に従い背景・要件を取得する
-
-### 4. 変更コードの深掘り調査
-
-`review-common-rule.md` の「深掘り調査」に従い、サブエージェント利用の判定を行う。
-
-### 5. 重要度判定と下書きレポート作成
-
-共通ルールの「重要度判定」「出力フォーマット」に従い、レビューレポートの**下書き**を作成する（この Step ではユーザーに提示しない）。
-
-### 6. 出力の再検証（必須）
-
-`@~/.config/shared/ai/rules/conventions/output-verification-rule.md` を Read し、**「インライン再検証」**に従って下書きを検証・修正する。
-
-### 7. 最終レポート出力
-
-Step 6 で修正したレビューレポートのみをユーザーに提示する。
+`review-common-rule.md` の「レビュー系コマンド共通手順」Step 3–7 に従う（intensity: **Thin**／出力: `pr-review-rule`）。
 
 ---
 

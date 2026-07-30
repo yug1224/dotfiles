@@ -20,59 +20,39 @@
 | `git -C /path ...`         | リポジトリの cwd を合わせて `git`                                                                                     |
 | Bash に `#` コメントのみ   | 説明は応答本文へ。実行が必要なコマンドだけ送る                                                                        |
 
-## Read / Grep / Search（ネイティブツール）
+## Read / Grep / Search
 
 - 500 行超は offset/limit 付き Read、または Shell `rg` / `head`
-- ライブラリ API・フレームワーク仕様はソース直読より **Context7**（`resolve-library-id` → `query-docs`）。`get-library-docs` の全文取得は避ける
-- インデックスなし、または未知パターンのファイル発見が目的の広域探索（3 ファイル以上）は `Task(subagent_type=explore, model=composer-2.5)` に委譲（下表参照）
-- まとまった**実装・テストの書込**は親直実行より `Task(subagent_type=build-worker, model=composer-2.5)` を優先。設計成果物は `Task(subagent_type=design-worker, model=composer-2.5)`。軽微修正は親のまま（常時フル委譲しない）
+- ライブラリ API・フレームワーク仕様は **Context7**（`resolve-library-id` → `query-docs`）。`get-library-docs` の全文取得は避ける
 - ライブラリ調査は `Task(subagent_type=docs-researcher, model=composer-2.5)`、`docs-researcher` subagent、または `/docs` を優先
 
-## Task の model 必須（作業系）
+## 委譲（MUST・要約）
 
-Cursor 製品の「`model` はユーザー明示時のみ渡す」は **提案系 Advisor（Opus）に従う**。次の作業系 `subagent_type` では **例外として `model` を必ず渡す**。省略すると親が Opus のとき作業系も Opus になりうる。`claude-opus-*` を作業系に渡さない。
+親が高コストモデルのまま広域調査・複数ファイル書込を続けることは**禁止**。閾値超えは Task で Worker に委譲し **`model` 省略禁止**（Cursor: `composer-2.5`、Claude Code: `sonnet`。`composer-2.5-fast` 禁止）。Advisor / MAGI はゲート対象外。
 
-| subagent_type                                          | Cursor の Task `model`（必須）            | 備考                                                     |
-| ------------------------------------------------------ | ----------------------------------------- | -------------------------------------------------------- |
-| `build-worker` / `design-worker`                       | `composer-2.5`                            | リポジトリ書込。frontmatter pin だけでは不足しうる       |
-| `melchior-1` / `balthasar-2` / `casper-3`              | `composer-2.5`                            | MAGI                                                     |
-| `explore`                                              | `composer-2.5` または `composer-2.5-fast` | ファイル発見・広域探索                                   |
-| `generalPurpose`                                       | `composer-2.5`                            | 複数ステップ調査・実行（設計判断が必要なら別途 Advisor） |
-| `docs-researcher` / `shell`                            | `composer-2.5`                            | ドキュメント調査・コマンド実行委譲                       |
-| `design-advisor` / `build-advisor` / `quality-advisor` | 省略可（agent frontmatter の Opus）       | 提案のみ。書込しない                                     |
+| 条件（要約）                                 | 委譲先             |
+| -------------------------------------------- | ------------------ |
+| 1〜数行・貼付済み・要約の続き                | 親が直接           |
+| 外部 URL 取得が主目的 / 複数 URL             | `general-worker`   |
+| 構造・意味・影響範囲調査                     | `explore-worker`   |
+| 新規機能 / 3 ファイル以上 / まとまったテスト | `build-worker`     |
+| ADR / OpenAPI 等の設計書込                   | `design-worker`    |
+| 専門曖昧・複数ステップ                       | `general-worker`   |
+| 軽いファイル発見のみ                         | 組み込み `explore` |
 
-起動例（Task ツール）:
-
-- **explore**: `subagent_type`: `"explore"`, `model`: `"composer-2.5"`（軽い広域のみ `"composer-2.5-fast"`）, `readonly`: `true`
-- **generalPurpose**: `subagent_type`: `"generalPurpose"`, `model`: `"composer-2.5"`, `readonly`: `true`（調査時）
-- **build-worker**: `subagent_type`: `"build-worker"`, `model`: `"composer-2.5"`
-- **design-worker**: `subagent_type`: `"design-worker"`, `model`: `"composer-2.5"`
-- **MAGI**: `subagent_type`: `"melchior-1"` / `"balthasar-2"` / `"casper-3"`, `model`: `"composer-2.5"`, `readonly`: `true`（各 1 体ずつ並列）
-- **docs-researcher** / **shell**: `model`: `"composer-2.5"`
-
-Cursor では上表の Composer pin を使う。Claude Code は Composer 非対応のため、作業系は Task の `model` に **`sonnet`** を渡す（Worker / MAGI はラッパー `sonnet` と整合。親 Opus 継承を避ける。haiku は使わない）。
+ゲート全文・Task `model` 必須表・起動例は `@~/.config/shared/ai/rules/conventions/agent-delegation-rule.md` を Read。
 
 ## コード構造調査
 
-構造・フロー・影響範囲（「X はどう動くか」「誰が呼ぶか」）は `@~/.config/shared/ai/rules/conventions/codegraph-rule.md` に従い CodeGraph を優先する。`Task(subagent_type=explore, model=composer-2.5)` や Grep ループと競合ではなく用途分担（explore = ファイル発見、CodeGraph = グラフ済み構造の surgical context）。
-
-| 条件                                              | 優先ツール                                                                           |
-| ------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| `.codegraph/` あり                                | MCP `codegraph_explore` → CLI `codegraph explore`                                    |
-| マルチルートの別ルート（対象ルートに index あり） | MCP `projectPath` または `cd` + CLI                                                  |
-| インデックスなし                                  | Grep / Read / `Task(explore, model=composer-2.5)`（init は提案のみ、自動実行しない） |
-| 文字列横断検索                                    | `rg` / Grep                                                                          |
-| ライブラリ API                                    | Context7                                                                             |
+構造・フロー・影響範囲は `@~/.config/shared/ai/rules/conventions/codegraph-rule.md` に従い CodeGraph を優先。`explore-worker`（品質調査）・組み込み `explore`（軽い発見）・CodeGraph（グラフ済み構造）の用途分担。インデックスなしは Grep / Read / `Task(explore-worker, model=composer-2.5)`。詳細表は `codegraph-rule`。
 
 ## MCP
 
-- 構造・フロー調査: `.codegraph/` ありなら **CodeGraph** `codegraph_explore`（読み取り専用、allowlist 済み）
-- PR レビュー: GitHub MCP の `get_file_contents` 連打より `gh` + Shell（RTK）
-- Playwright `browser_snapshot` は E2E 時のみ。ドメイン固有の例外は `*.local.md` にのみ書く（本ルールには列挙しない）
+- WebFetch 主目的・複数 URL / 長文 → `Task(general-worker, model=composer-2.5, readonly: true)`（構造化要約のみ）
+- ライブラリ docs → Context7 / `docs-researcher`（WebFetch 不可）
+- 構造・フロー → `.codegraph/` ありなら CodeGraph `codegraph_explore`
+- PR レビュー → `gh` + Shell（RTK）、MCP `get_file_contents` 連打より優先
 
 ## 計測（開発者向け）
 
-```bash
-rtk discover --all --since 7   # 必ず --all（CWD で sessions が変わる）
-rtk gain --history
-```
+`@~/.config/shared/ai/docs/RTK.md`（`rtk discover --all --since 7`、`rtk gain --history`）。

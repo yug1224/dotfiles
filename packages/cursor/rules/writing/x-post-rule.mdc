@@ -1,0 +1,7 @@
+---
+description: X投稿要約の記述ルール
+globs: []
+alwaysApply: false
+---
+
+@~/.config/shared/ai/rules/writing/x-post-rule.md

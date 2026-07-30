@@ -2,7 +2,7 @@
 
 # PR レビュールール（汎用）
 
-重要度・出力骨格・薄い敵対的検証は [`review-common-rule.md`](./review-common-rule.md) に従う。本ファイルは観点とテンプレート骨格を定義する。
+重要度・出力骨格・敵対的検証の厚み（薄い／フル）は [`review-common-rule.md`](./review-common-rule.md) に従う。本ファイルは観点とテンプレート骨格を定義する。
 
 ## コンテキスト
 

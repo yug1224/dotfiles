@@ -1,4 +1,4 @@
-ステージング済み（`git diff --staged`）の変更を、Linus Torvalds 風の辛辣・本質重視の批判的レビューで調査し、既存実装やルールとの整合性を踏まえた重要度別の指摘レポートを出力する。PR を作成する前のセルフレビューとして活用する。Linus ペルソナは親エージェントが適用する（ペルソナ適用のために Task サブエージェントは起動しない）。
+ステージング済み（`git diff --staged`）の変更を、Linus Torvalds 風の辛辣・本質重視の批判的レビューで調査し、既存実装やルールとの整合性を踏まえた重要度別の指摘レポートを出力する。PR を作成する前のセルフレビューとして活用する。Linus ペルソナは親エージェントが適用する（ペルソナ適用のために Task サブエージェントは起動しない）。フル敵対的検証は `quality-advisor` が担当する。深掘り調査は `explore-worker` + `quality-advisor` を常時並列起動する。
 
 **参照ルール**: `@~/.config/shared/ai/rules/conventions/review-common-rule.md` / `@~/.config/shared/ai/rules/conventions/linus-review-rule.md`
 
@@ -19,13 +19,9 @@
 
 応答の冒頭に `✅️: /review-diff-linus` と出力する。
 
-### 1. ルールの読み込み
+### 1. ルール読込
 
-1. `@~/.config/shared/ai/rules/conventions/review-common-rule.md` を Read（必須。薄い敵対的検証を含む）
-2. `@~/.config/shared/ai/rules/conventions/pr-review-rule.md` を Read（必須）
-3. `@~/.config/shared/ai/rules/conventions/linus-review-rule.md` を Read（必須）
-4. 同ディレクトリの `review-common-rule.local.md` / `pr-review-rule.local.md` / `pr-feedback-registry.local.md` を Glob。存在する場合のみ Read
-5. `@~/.config/shared/ai/docs/feedback-log.local.md` / `feedback-index.local.md` を Glob。存在する場合のみ Read
+`review-common-rule.md` の「レビュー系コマンド共通手順」Step 1 に従う。加えて `linus-review-rule.md` を Read（必須）。
 
 ### 2. ステージング内容の取得
 
@@ -37,27 +33,9 @@ git diff --staged --name-only
 - ステージングされた変更がない場合は、その旨を伝えて終了する
 - 引数にファイルパスが指定された場合は `git diff --staged -- <filepath>` で絞る
 
-### 3. コンテキスト収集
+### 3–7. 共通レビュー手順
 
-対象リポジトリのルール・ドキュメントを参照し、ルール照合を行う。
-
-引数にチケット ID / URL が渡された場合のみ、`@~/.config/shared/ai/rules/conventions/ticket-retrieval-rule.md`（および存在すれば `.local.md`）に従いタスク背景を取得する。
-
-### 4. 変更コードの深掘り調査
-
-`review-common-rule.md` の「深掘り調査」に従い、サブエージェント利用の判定を行う。
-
-### 5. 重要度判定と下書きレポート作成
-
-`review-common-rule.md` の「重要度判定」に従い重要度を付与し、`linus-review-rule.md` の**出力フォーマット**に従ってレビューレポートの**下書き**を作成する（この Step ではユーザーに提示しない）。
-
-### 6. 出力の再検証（必須）
-
-`@~/.config/shared/ai/rules/conventions/output-verification-rule.md` を Read し、**「インライン再検証」**に従って下書きを検証・修正する。
-
-### 7. 最終レポート出力
-
-Step 6 で修正したレビューレポートのみをユーザーに提示する。
+`review-common-rule.md` の「レビュー系コマンド共通手順」Step 3–7 に従う（intensity: **Full**／出力: `linus-review-rule`）。
 
 ---
 
@@ -67,5 +45,5 @@ Step 6 で修正したレビューレポートのみをユーザーに提示す�
 - チケット情報の取得は引数で ID/URL が渡された場合のみ実行する
 - 共通ルールの Guardrails を遵守する
 - `linus-review-rule.md` の Guardrails を遵守する
-- Linus ペルソナ適用のために Task サブエージェントを起動しない（深掘り調査の explore / quality-advisor は `review-common-rule` に従う）
+- Linus ペルソナ適用のために Task サブエージェントを起動しない（深掘り調査の `explore-worker` / `quality-advisor` は常時並列。フル敵対は `quality-advisor`、ペルソナは親）
 - 最終 Step の再検証完了前に、成果物をユーザーへ出力しない
