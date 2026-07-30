@@ -30,13 +30,13 @@
 
 ## CLAUDE.md Tier 判定
 
-| Tier          | 内容                             | 例                                                |
-| ------------- | -------------------------------- | ------------------------------------------------- |
-| A（常時）     | `CLAUDE.md` から `@./rules/...`  | `token-optimization-rule` + `INDEX`（発見索引）   |
-| B（参照）     | agent-requestable / コマンド経由 | commit/review、meta、`pr-feedback-registry.local` |
-| C（ローカル） | `.local.md` のみ                 | coding-rule.local, pr-review-rule.local           |
+| Tier          | 内容                             | 例                                                                         |
+| ------------- | -------------------------------- | -------------------------------------------------------------------------- |
+| A（常時）     | `CLAUDE.md` から `@./rules/...`  | `token-optimization-rule` + `INDEX`（発見索引）                            |
+| B（参照）     | agent-requestable / コマンド経由 | commit/review、meta、`agent-delegation-rule`、`pr-feedback-registry.local` |
+| C（ローカル） | `.local.md` のみ                 | coding-rule.local, pr-review-rule.local                                    |
 
-新規 convention は Tier B をデフォルトとし、`alwaysApply: true` は token-optimization のみ。Claude Tier A は token-opt + INDEX（本文は載せない）。`make check-sync` は `check-context-bloat.sh`（肥大警告）も含む。
+新規 convention は Tier B をデフォルトとし、`alwaysApply: true` は token-optimization のみ。委譲ゲート・Task model 必須の詳細は `agent-delegation-rule`（Tier B）に分離し、token-opt は always-on 要約のみ載せる。Claude Tier A は token-opt + INDEX（本文は載せない）。`make check-sync` は `check-context-bloat.sh`（肥大警告）も含む。
 
 ## 禁止
 

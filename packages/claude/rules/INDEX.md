@@ -10,7 +10,9 @@
 | diff / PR レビュー   | `conventions/review-common-rule.md` + `pr-review-rule.md`（または `/review-*`）  |
 | PR 説明              | `conventions/pr-description-rule.md`（または `/suggest-pr-description`）         |
 | コード構造調査       | `conventions/codegraph-rule.md`                                                  |
+| エージェント委譲     | `conventions/agent-delegation-rule.md`（Worker 起動・Task model 必須）           |
 | 日本語技術文書       | `writing/japanese-tech-writing-rule.md`（または `/apply-japanese-tech-writing`） |
+| X投稿要約            | `writing/x-post-rule.md`（または `/suggest-x-post`）                             |
 | 実装規約（ローカル） | 存在すれば `conventions/coding-rule.local.md`                                    |
 | AI 設定変更          | `meta/ai-config-rule.md`                                                         |
 | 出力再検証           | `~/.config/shared/ai/rules/conventions/output-verification-rule.md`              |

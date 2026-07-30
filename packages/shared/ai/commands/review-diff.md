@@ -19,12 +19,9 @@
 
 応答の冒頭に `✅️: /review-diff` と出力する。
 
-### 1. ルールの読み込み
+### 1. ルール読込
 
-1. `@~/.config/shared/ai/rules/conventions/review-common-rule.md` を Read（必須。薄い敵対的検証を含む）
-2. `@~/.config/shared/ai/rules/conventions/pr-review-rule.md` を Read（必須）
-3. 同ディレクトリの `review-common-rule.local.md` / `pr-review-rule.local.md` / `pr-feedback-registry.local.md` を Glob。存在する場合のみ Read
-4. `@~/.config/shared/ai/docs/feedback-log.local.md` / `feedback-index.local.md` を Glob。存在する場合のみ Read
+`review-common-rule.md` の「レビュー系コマンド共通手順」Step 1 に従う。
 
 ### 2. ステージング内容の取得
 
@@ -36,27 +33,9 @@ git diff --staged --name-only
 - ステージングされた変更がない場合は、その旨を伝えて終了する
 - 引数にファイルパスが指定された場合は `git diff --staged -- <filepath>` で絞る
 
-### 3. コンテキスト収集
+### 3–7. 共通レビュー手順
 
-対象リポジトリのルール・ドキュメントを参照し、ルール照合を行う。
-
-引数にチケット ID / URL が渡された場合のみ、`@~/.config/shared/ai/rules/conventions/ticket-retrieval-rule.md`（および存在すれば `.local.md`）に従いタスク背景を取得する。
-
-### 4. 変更コードの深掘り調査
-
-`review-common-rule.md` の「深掘り調査」に従い、サブエージェント利用の判定を行う。
-
-### 5. 重要度判定と下書きレポート作成
-
-`review-common-rule.md` の「重要度判定」「出力フォーマット」に従い、レビューレポートの**下書き**を作成する（この Step ではユーザーに提示しない）。
-
-### 6. 出力の再検証（必須）
-
-`@~/.config/shared/ai/rules/conventions/output-verification-rule.md` を Read し、**「インライン再検証」**に従って下書きを検証・修正する。
-
-### 7. 最終レポート出力
-
-Step 6 で修正したレビューレポートのみをユーザーに提示する。
+`review-common-rule.md` の「レビュー系コマンド共通手順」Step 3–7 に従う（intensity: **Thin**／出力: `pr-review-rule`）。
 
 ---
 

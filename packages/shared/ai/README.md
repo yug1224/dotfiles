@@ -8,7 +8,7 @@ Cursor / Claude Code が共通で参照する素材の原本（Gemini CLI 用ホ
 
 **読む順序**: [docs/BOUNDARY.md](./docs/BOUNDARY.md)（公開境界）→ [docs/LOCAL-SETUP.md](./docs/LOCAL-SETUP.md)（`.local.md` / Meta LOOP）→ [docs/RTK.md](./docs/RTK.md)（前提）→ [CONVENTIONS.md](./CONVENTIONS.md)（命名）→ [AGENTS.md](./AGENTS.md)（allowlist 要約）→ [docs/ALLOWLIST-SYNC.md](./docs/ALLOWLIST-SYNC.md)（同期手順）
 
-**棚卸し**: `/analyze-ai-config`（傘。引数で `skills` / `rules` / `commands` / `agents` 可）。`/analyze-ai-{skills,rules,commands,agents}` はエイリアス。敵対的検証は `/verify-adversarial`（レビュー系は薄い反証が既定。`/verify-output` と同一ターンで重ねない）。
+**棚卸し**: `/analyze-ai-config`（傘。引数で `skills` / `rules` / `commands` / `agents` 可）。`/analyze-ai-{skills,rules,commands,agents}` はエイリアス。敵対的検証は非 Linus レビュー系は親が薄い反証、Linus 版は `quality-advisor` がフル敵対（`/verify-adversarial` はスタンドアロン）。`/verify-output` と同一ターンで重ねない。
 
 ## ルール taxonomy
 
@@ -17,8 +17,11 @@ Cursor / Claude Code が共通で参照する素材の原本（Gemini CLI 用ホ
 | Convention        | `rules/conventions/`                                                  | 行動規範（レビュー、CodeGraph、自己申告、チケット取得）   |
 | Checklist         | `rules/checklists/`                                                   | PASS/FAIL 列挙                                            |
 | Blog              | `rules/blog/`                                                         | 執筆・公開（`publish-checklist` / `blog-review-rule` 等） |
-| Writing           | `rules/writing/`                                                      | 媒体非依存の日本語文章規範（JTW / CRW）                   |
+| Writing           | `rules/writing/`                                                      | 媒体非依存の日本語文章規範（JTW / CRW / `x-post-rule`）   |
+| Advisor           | `rules/advisor/`                                                      | Advisor エージェント共通行動（`advisor-behavior-rule`）   |
+| Visual            | `rules/visual/`                                                       | グラフィックレコード用（`graphic-record-*-rule`）         |
 | Meta              | `rules/meta/`                                                         | dotfiles AI 設定変更（3 ラッパー、`alwaysApply: false`）  |
+| Recruiting        | `rules/recruiting/*.local.md`                                         | 採用・スカウト文面（**L2 only / Git 管理外**）            |
 | Domain-only local | `rules/<domain>/*.local.md`                                           | ドメイン固有・自社固有（**Git 管理外**）                  |
 | Local registry    | `~/.config/shared/ai/rules/conventions/pr-feedback-registry.local.md` | 再発防止 FB 全系列（Git 外）                              |
 | Command-only ref  | 例: `output-verification-rule.md`                                     | ラッパーなし、cmd から直接 `@`                            |

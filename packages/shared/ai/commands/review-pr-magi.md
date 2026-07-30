@@ -1,4 +1,4 @@
-MAGI System の 3 ユニット（MELCHIOR-1, BALTHASAR-2, CASPER-3）を並列投入し、異なる視点から GitHub PR のレビューを行う。MAGI は Worker（Cursor: Composer 系 / Claude: `sonnet`）。フル敵対的検証（Opus）は既定オフ — 必要なら合議後に `/verify-adversarial`。
+MAGI System の 3 ユニット（MELCHIOR-1, BALTHASAR-2, CASPER-3）を並列投入し、異なる視点から GitHub PR のレビューを行う。MAGI は Worker（Cursor: Composer 系 / Claude: `sonnet`）。フル敵対的検証（`quality-advisor`）は既定オフ — 必要なら合議後に `/verify-adversarial`。
 
 **参照ルール**: `@~/.config/shared/ai/rules/conventions/review-common-rule.md`
 

@@ -75,41 +75,49 @@ log / index / registry は **すべて local**:
 
 ## Meta LOOP（モデル割当の推奨）
 
-親チャット（Orchestrator）: **Grok 4.5**（Cursor モデルプール）。Advisor（design/build/quality）: **Claude Opus 5**（明示時のみ・読み取り）。作業系（`design-worker` / `build-worker`、MAGI、`explore` / `generalPurpose` / `docs-researcher` / `shell`）: Cursor は **Composer 2.5**（`[fast=false]`）、Claude Code は Composer 非対応のため **`sonnet`** に分岐（haiku は使わない）。
+親チャット（Orchestrator）: **Grok 4.5**（Cursor モデルプール）。Advisor（design/build/quality）: Cursor は **Grok 4.5**（明示時のみ・読み取り）、Claude Code は Grok 非対応のため **`sonnet`**。作業系（`design-worker` / `build-worker` / `explore-worker` / `general-worker`、MAGI、組み込み `explore` / `generalPurpose` / `docs-researcher` / `shell`）: Cursor は **Composer 2.5**（カスタム agent は `[fast=false]`）、Claude Code は Composer 非対応のため **`sonnet`** に分岐（haiku / `composer-2.5-fast` は使わない）。
 
-`quality-worker` は置かない。品質は `quality-advisor`（提案・レビュー）、テスト**コード**の書込は `build-worker`。
+`quality-worker` は置かない。品質は `quality-advisor`（提案・レビュー）、テスト**コード**の書込は `build-worker`。品質・意味・影響範囲の調査は `explore-worker`（readonly）。
 
 ### 委譲基準
 
-- **親が直接**: 1〜数行・既知コンテキストの続き・統合・ユーザー返答
-- **`design-worker`**: ADR / OpenAPI / スキーマ設計文書 / OpenSpec 等の設計成果物をリポジトリに書くとき
-- **`build-worker`**: 複数ファイル／まとまった実装・テストコード
-- **呼び出さない**: Advisor / MAGI の代替、毎タスク強制、品質レビュー用途。「実装前に必ずサブエージェント」は剛性にしない（必要時だけ judgement）
+`agent-delegation-rule`「委譲ゲート（MUST）」と同じ閾値（正本: `@~/.config/shared/ai/rules/conventions/agent-delegation-rule.md`）:
 
-L2（`coding-rule.local.md`）でもまとまった実装は `build-worker`、設計成果物の書込は `design-worker` を優先してよい。
+- **親が直接**: 1〜数行・ユーザー貼付済み・直前ターンで得た要約の続き・統合・ユーザー返答（WebFetch し直さない）
+- **`explore-worker`**: 構造・意味・影響範囲の品質調査（読み取り専用。ユーザー明示不要）
+- **`design-worker`**: ADR / OpenAPI / スキーマ設計文書 / OpenSpec 等の設計成果物をリポジトリに書くとき
+- **`build-worker`**: 新規機能、または変更見込み 3 ファイル以上、またはまとまった実装・テストコード
+- **`general-worker`**: 専門が曖昧な複数ステップ（迷ったらこれ。直実行しない）。外部 URL の WebFetch（主目的または複数 URL）の取得・構造化要約も含む
+- **組み込み `explore`**: 軽いファイル発見・広域探索のみ（品質調査には使わない）
+- **組み込み `generalPurpose`**: 互換・非推奨。可能な限り `general-worker`
+- **呼び出さない**: Advisor / MAGI の代替、毎タスク強制、品質レビュー用途
+
+L2（`coding-rule.local.md`）でもまとまった実装は `build-worker`、設計成果物の書込は `design-worker`、品質調査は `explore-worker`、曖昧時は `general-worker` を優先してよい。
 
 ### Cursor ラッパーの `model`（bracket オプション）
 
 Cursor 公式 [Subagents](https://cursor.com/docs/subagents) の bracket 構文を使う（Claude Code ラッパーには書かない）。
 
-| 役割                                           | frontmatter 例                                                 |
-| ---------------------------------------------- | -------------------------------------------------------------- |
-| Advisor                                        | `model: claude-opus-5[thinking=true,effort=high,fast=false]`   |
-| `design-worker` / `build-worker` / MAGI        | `model: composer-2.5[fast=false]`（Claude Code は `sonnet`）   |
-| 調査（組み込み `explore`）                     | Task 呼び出し時に `composer-2.5` を明示（カスタム agent なし） |
-| `generalPurpose` / `docs-researcher` / `shell` | Task 呼び出し時に `composer-2.5` を明示（カスタム agent なし） |
+| 役割                                                       | frontmatter 例                                                                                          |
+| ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| Advisor                                                    | `model: grok-4.5[effort=high,fast=false]`（Claude Code は `sonnet`）                                    |
+| `design-worker` / `build-worker` / `general-worker` / MAGI | `model: composer-2.5[fast=false]`（Claude Code は `sonnet`）                                            |
+| `explore-worker`（調査・readonly）                         | `model: composer-2.5[fast=false]` + `readonly: true`（Claude は `sonnet`）                              |
+| 軽いファイル発見（組み込み `explore`）                     | Task 呼び出し時に `composer-2.5` を明示（カスタム agent なし）                                          |
+| `generalPurpose` / `docs-researcher` / `shell`             | Task 呼び出し時に `composer-2.5` を明示（`generalPurpose` は互換・非推奨。可能な限り `general-worker`） |
 
-`composer-2.5` 単体は fast に落ちることがあるため、`[fast=false]` を明示する。専門 Worker の Cursor ラッパーは **書込可**（`readonly: true` にしない）。`make scaffold-wrappers` の agents 既定は readonly のため、Worker は手書き frontmatter を維持する。
+`composer-2.5` 単体は fast に落ちることがあるため、カスタム agent では `[fast=false]` を明示する。書込 Worker（`design-worker` / `build-worker`）の Cursor ラッパーは **書込可**（`readonly: true` にしない）。`explore-worker` は調査専用のため **`readonly: true`**（Worker 命名の明示例外）。`make scaffold-wrappers` の agents 既定は readonly + `inherit` のため、モデル pin は手書き frontmatter を維持する。
 
-**Task 呼び出し**: 作業系（Worker / MAGI / `explore` / `generalPurpose` / `docs-researcher` / `shell`）では frontmatter に加え、親が Task の `model` に Cursor は `composer-2.5`（explore は `composer-2.5-fast` 可）、Claude Code は **`sonnet`** を**必ず**渡す。省略すると親が Opus のとき作業系も Opus になりうる。Advisor は省略可。詳細は `token-optimization-rule`「Task の model 必須（作業系）」。
+**Task 呼び出し**: 作業系（Worker / MAGI / `explore-worker` / `explore` / `general-worker` / `generalPurpose` / `docs-researcher` / `shell`）では frontmatter に加え、親が Task の `model` に Cursor は **`composer-2.5`**（`composer-2.5-fast` は使わない）、Claude Code は **`sonnet`** を**必ず**渡す。省略すると親が高コストモデルのとき作業系もそれになりうる。Advisor は省略可。詳細は `agent-delegation-rule`「Task の model 必須（作業系）」。
 
-### トラブルシュート: 作業系が Opus で動く
+### トラブルシュート: 作業系が高コストモデルで動く
 
-1. **親が Task せず直実装していないか** — UI 上「Worker」に見えても親 Opus の書込のことがある。まとまった実装は `build-worker` を Task する
-2. **Task に `model` が付いているか** — `build-worker` / `explore` / `generalPurpose` 等でも `model` 省略だと親モデル継承しうる。Cursor は `composer-2.5`、Claude Code は `sonnet` を明示
-3. **Worker 本文の Opus 自己判定はソフトガード** — 発火しない場合がある。Task の `model` 指定を正とする
-4. **`build-advisor` と取り違えていないか** — Advisor は Opus・提案のみ。書込は `*-worker`
+1. **親が Task せず直実装していないか** — UI 上「Worker」に見えても親の書込のことがある。まとまった実装は `build-worker` を Task する
+2. **Task に `model` が付いているか** — `build-worker` / `explore-worker` / `general-worker` / `explore` / `generalPurpose` 等でも `model` 省略だと親モデル継承しうる。Cursor は `composer-2.5`、Claude Code は `sonnet` を明示
+3. **Worker 本文の高コストモデル自己判定はソフトガード** — 発火しない場合がある。Task の `model` 指定を正とする
+4. **`build-advisor` と取り違えていないか** — Advisor は Grok（Claude は sonnet）・提案のみ。書込は `design-worker` / `build-worker`、調査は `explore-worker`
 5. **プラン / admin 制限** — Composer が使えないと公式フォールバックしうる（[Subagents model configuration](https://cursor.com/docs/subagents.md#model-configuration)）
+6. **調査が Composer 2.5 fast になる** — 品質調査は組み込み `explore` ではなく `explore-worker`（frontmatter `[fast=false]`）を Task する。UI/ログでモデル名を確認する煙テスト: 親から `subagent_type: "explore-worker"`, `model: "composer-2.5"` を起動し、非 fast であること。`general-worker` も同様に `model: "composer-2.5"`（Claude は `sonnet`）で起動確認
 
 ## Cursor と AGENTS.md
 
@@ -117,10 +125,12 @@ Cursor はワークスペース内の nested `AGENTS.md` を自動添付する�
 
 ## 実装 vs レビューの分離
 
-| フェーズ | 主なファイル                                       | サブエージェント   |
-| -------- | -------------------------------------------------- | ------------------ |
-| 実装     | `coding-rule.local.md`                             | ローカル定義に従う |
-| レビュー | `review-common-rule` + `pr-review-rule` + registry | **明示時のみ**     |
+| フェーズ | 主なファイル                                       | サブエージェント                                      |
+| -------- | -------------------------------------------------- | ----------------------------------------------------- |
+| 実装     | `coding-rule.local.md`                             | ローカル定義に従う                                    |
+| レビュー | `review-common-rule` + `pr-review-rule` + registry | **常時**（`explore-worker` + `quality-advisor` 並列） |
+
+**ローカル overlay 注意**: `review-common-rule.local.md` に旧「明示時のみ」「直接調査モード」等が残っていると、正本の常時並列方針を上書きする。`make mise` 後に overlay を見直すこと。
 
 ## Git に載せないもの
 

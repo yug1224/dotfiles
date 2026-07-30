@@ -56,6 +56,7 @@ check-sync:
 	REQUIRE_JQ=1 ./scripts/check-deny-guard-sync.sh
 	REQUIRE_JQ=1 ./scripts/check-always-on-sync.sh
 	./scripts/check-context-bloat.sh
+	./scripts/check-work-task-model-pin.sh
 
 .PHONY: test-scripts
 test-scripts:

@@ -1,0 +1,7 @@
+---
+description: エージェント委譲ゲートと Task model 必須（Worker/MAGI）
+globs: []
+alwaysApply: false
+---
+
+@~/.config/shared/ai/rules/conventions/agent-delegation-rule.md

@@ -57,6 +57,7 @@
       "Bash(pnpm test:*)",
       "Bash(pnpm why:*)",
       "Bash(read:*)",
+      "Bash(rg:*)",
       "Bash(sed:*)",
       "Bash(sort:*)",
       "Bash(tail:*)",

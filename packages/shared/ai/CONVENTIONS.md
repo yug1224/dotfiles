@@ -106,10 +106,10 @@
 
 ### 実装系 vs レビュー系（意図的分離）
 
-| フェーズ     | 主なファイル                                                                                                            | サブエージェント                     |
-| ------------ | ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
-| **実装**     | `coding-rule.local.md`                                                                                                  | ローカル定義（例: 積極利用）         |
-| **レビュー** | `review-common-rule.md` + `pr-review-rule.md`（必須）+ 任意 `pr-review-rule.local.md` + `pr-feedback-registry.local.md` | **明示時のみ**（review-common 準拠） |
+| フェーズ     | 主なファイル                                                                                                            | サブエージェント                                                          |
+| ------------ | ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| **実装**     | `coding-rule.local.md`                                                                                                  | ローカル定義（例: 積極利用）                                              |
+| **レビュー** | `review-common-rule.md` + `pr-review-rule.md`（必須）+ 任意 `pr-review-rule.local.md` + `pr-feedback-registry.local.md` | **常時**（`explore-worker` + `quality-advisor` 並列。review-common 準拠） |
 
 両方の方針を 1 ファイルに混在させない。
 
@@ -185,10 +185,11 @@ dotfiles 変更時 → `rules/meta/`
 
 AI 設定は **RTK インストール済み・hook 有効** を前提とする。詳細は [docs/RTK.md](./docs/RTK.md) を参照。
 
-| 項目                | 正本                                                         |
-| ------------------- | ------------------------------------------------------------ |
-| RTK 利用ガイド      | `packages/shared/ai/docs/RTK.md`                             |
-| hook 設定（Claude） | `packages/claude/settings.json`                              |
-| hook 設定（Cursor） | `packages/cursor/hooks.json`                                 |
-| RTK 設定            | `packages/rtk/config.toml` → `~/.config/rtk/`（`make mise`） |
-| エージェント運用    | `rules/conventions/token-optimization-rule.md`               |
+| 項目                | 正本                                                             |
+| ------------------- | ---------------------------------------------------------------- |
+| RTK 利用ガイド      | `packages/shared/ai/docs/RTK.md`                                 |
+| hook 設定（Claude） | `packages/claude/settings.json`                                  |
+| hook 設定（Cursor） | `packages/cursor/hooks.json`                                     |
+| RTK 設定            | `packages/rtk/config.toml` → `~/.config/rtk/`（`make mise`）     |
+| エージェント運用    | `rules/conventions/token-optimization-rule.md`（always-on 要約） |
+| エージェント委譲    | `rules/conventions/agent-delegation-rule.md`（Tier B 正本）      |

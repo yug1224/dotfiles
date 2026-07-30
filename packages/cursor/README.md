@@ -8,7 +8,7 @@ Cursor の設定ファイル群。`make mise`（ルート `mise.toml` の `[dotf
 
 ```
 packages/cursor/
-├── agents/          # エージェント定義（advisor 3体 + worker 2体 + MAGI 3体）
+├── agents/          # エージェント定義（advisor 3体 + 書込 worker 2体 + 調査 explore-worker + 汎用 general-worker + MAGI 3体）
 ├── commands/        # カスタムスラッシュコマンド
 ├── hooks/           # Cursor Hooks スクリプト
 ├── hooks.json       # Cursor Hooks 定義（グローバル）
@@ -65,33 +65,34 @@ Cursor カスタムスラッシュコマンドの定義ファイル。チャッ�
 
 ### コマンド一覧
 
-| ファイル                         | コマンド                       | カテゴリ    | 説明                                                                      |
-| -------------------------------- | ------------------------------ | ----------- | ------------------------------------------------------------------------- |
-| `magi.md`                        | `/magi`                        | Decision    | MAGI システムによる多角的意思決定支援（3体合議）                          |
-| `suggest-plan.md`                | `/suggest-plan`                | Development | 要件から計画を松竹梅で提案                                                |
-| `suggest-branch-name.md`         | `/suggest-branch-name`         | Development | 変更内容からブランチ名を松竹梅で提案                                      |
-| `suggest-commit-message.md`      | `/suggest-commit-message`      | Development | ステージング内容からコミットメッセージを松竹梅で提案                      |
-| `apply-coding-rule.md`           | `/apply-coding-rule`           | Development | コーディングルールを読み込んでセッションに適用                            |
-| `analyze-issue.md`               | `/analyze-issue`               | Development | チケット URL/ID の課題の原因調査と対応方針の提案                          |
-| `suggest-pr-description.md`      | `/suggest-pr-description`      | Development | PR テンプレート準拠の Title / Description を生成・改善                    |
-| `suggest-development-log.md`     | `/suggest-development-log`     | Development | タスク対応の開発ログを MECE 構造で生成                                    |
-| `capture-pr-feedback.md`         | `/capture-pr-feedback`         | Quality     | PR URL からフィードバックログへの追記案を生成（読み取り専用）             |
-| `verify-output.md`               | `/verify-output`               | Quality     | 直前 AI 応答の再検証と最終版出力（単体・追確認用）                        |
-| `verify-adversarial.md`          | `/verify-adversarial`          | Quality     | 敵対的検証（主張の反証。フル版はサブエージェント明示時）                  |
-| `analyze-ai-config.md`           | `/analyze-ai-config`           | Meta        | AI 資産の総合棚卸し（引数で skills/rules/commands/agents）                |
-| `analyze-ai-skills.md`           | `/analyze-ai-skills`           | Meta        | → `/analyze-ai-config skills` エイリアス                                  |
-| `analyze-ai-rules.md`            | `/analyze-ai-rules`            | Meta        | → `/analyze-ai-config rules` エイリアス                                   |
-| `analyze-ai-commands.md`         | `/analyze-ai-commands`         | Meta        | → `/analyze-ai-config commands` エイリアス                                |
-| `analyze-ai-agents.md`           | `/analyze-ai-agents`           | Meta        | → `/analyze-ai-config agents` エイリアス                                  |
-| `review-diff.md`                 | `/review-diff`                 | Quality     | ステージング済み変更のセルフレビュー（出力前に再検証）                    |
-| `review-diff-linus.md`           | `/review-diff-linus`           | Quality     | staged 差分の Linus 風批判的レビュー（出力前に再検証）                    |
-| `review-pr.md`                   | `/review-pr`                   | Quality     | GitHub PR のレビュー（出力前に再検証・過剰指摘抑制）                      |
-| `review-pr-linus.md`             | `/review-pr-linus`             | Quality     | GitHub PR の Linus 風批判的レビュー（出力前に再検証）                     |
-| `review-pr-magi.md`              | `/review-pr-magi`              | Quality     | MAGI 3体合議 PR レビュー（出力前に再検証）                                |
-| `plan-blog.md`                   | `/plan-blog`                   | Writing     | テーマと概要からブログ記事の執筆プランを作成                              |
-| `review-blog.md`                 | `/review-blog`                 | Writing     | ブログ記事を 7 観点で評価                                                 |
-| `apply-japanese-tech-writing.md` | `/apply-japanese-tech-writing` | Writing     | JTW を読み込み、指定スライス（既定 `tech-doc-lite`）でセッションに適用    |
-| `write-graphic-prompt.md`        | `/write-graphic-prompt`        | Visual      | PR・ADR・開発ログから Gemini Nano Banana Pro 向け画像生成プロンプトを出力 |
+| ファイル                         | コマンド                       | カテゴリ    | 説明                                                                          |
+| -------------------------------- | ------------------------------ | ----------- | ----------------------------------------------------------------------------- |
+| `magi.md`                        | `/magi`                        | Decision    | MAGI システムによる多角的意思決定支援（3体合議）                              |
+| `suggest-plan.md`                | `/suggest-plan`                | Development | 要件から計画を松竹梅で提案                                                    |
+| `suggest-branch-name.md`         | `/suggest-branch-name`         | Development | 変更内容からブランチ名を松竹梅で提案                                          |
+| `suggest-commit-message.md`      | `/suggest-commit-message`      | Development | ステージング内容からコミットメッセージを松竹梅で提案                          |
+| `apply-coding-rule.md`           | `/apply-coding-rule`           | Development | コーディングルールを読み込んでセッションに適用                                |
+| `analyze-issue.md`               | `/analyze-issue`               | Development | チケット URL/ID の課題の原因調査と対応方針の提案                              |
+| `suggest-pr-description.md`      | `/suggest-pr-description`      | Development | PR テンプレート準拠の Title / Description を生成・改善                        |
+| `suggest-development-log.md`     | `/suggest-development-log`     | Development | タスク対応の開発ログを MECE 構造で生成                                        |
+| `capture-pr-feedback.md`         | `/capture-pr-feedback`         | Quality     | PR URL からフィードバックログへの追記案を生成（読み取り専用）                 |
+| `verify-output.md`               | `/verify-output`               | Quality     | 直前 AI 応答の再検証と最終版出力（単体・追確認用）                            |
+| `verify-adversarial.md`          | `/verify-adversarial`          | Quality     | 敵対的検証（主張の反証。既定は親の薄い敵対、明示時は quality-advisor でフル） |
+| `analyze-ai-config.md`           | `/analyze-ai-config`           | Meta        | AI 資産の総合棚卸し（引数で skills/rules/commands/agents）                    |
+| `analyze-ai-skills.md`           | `/analyze-ai-skills`           | Meta        | → `/analyze-ai-config skills` エイリアス                                      |
+| `analyze-ai-rules.md`            | `/analyze-ai-rules`            | Meta        | → `/analyze-ai-config rules` エイリアス                                       |
+| `analyze-ai-commands.md`         | `/analyze-ai-commands`         | Meta        | → `/analyze-ai-config commands` エイリアス                                    |
+| `analyze-ai-agents.md`           | `/analyze-ai-agents`           | Meta        | → `/analyze-ai-config agents` エイリアス                                      |
+| `review-diff.md`                 | `/review-diff`                 | Quality     | ステージング済み変更のセルフレビュー（出力前に再検証）                        |
+| `review-diff-linus.md`           | `/review-diff-linus`           | Quality     | staged 差分の Linus 風批判的レビュー（出力前に再検証）                        |
+| `review-pr.md`                   | `/review-pr`                   | Quality     | GitHub PR のレビュー（出力前に再検証・過剰指摘抑制）                          |
+| `review-pr-linus.md`             | `/review-pr-linus`             | Quality     | GitHub PR の Linus 風批判的レビュー（出力前に再検証）                         |
+| `review-pr-magi.md`              | `/review-pr-magi`              | Quality     | MAGI 3体合議 PR レビュー（出力前に再検証）                                    |
+| `plan-blog.md`                   | `/plan-blog`                   | Writing     | テーマと概要からブログ記事の執筆プランを作成                                  |
+| `review-blog.md`                 | `/review-blog`                 | Writing     | ブログ記事を 7 観点で評価                                                     |
+| `apply-japanese-tech-writing.md` | `/apply-japanese-tech-writing` | Writing     | JTW を読み込み、指定スライス（既定 `tech-doc-lite`）でセッションに適用        |
+| `suggest-x-post.md`              | `/suggest-x-post`              | Writing     | テック記事URLからX投稿用の二文要約を提案                                      |
+| `write-graphic-prompt.md`        | `/write-graphic-prompt`        | Visual      | PR・ADR・開発ログから Gemini Nano Banana Pro 向け画像生成プロンプトを出力     |
 
 ラッパーは frontmatter のみ。本文は `@~/.config/shared/ai/commands/<name>.md` で取り込む（[CONVENTIONS.md](../shared/ai/CONVENTIONS.md)）。
 
@@ -140,14 +141,14 @@ Cursor カスタムエージェントの定義ファイル。起動方法は種�
 
 開発ライフサイクルのフェーズに特化したアドバイザー。すべて `readonly: true`。分析・提案のみを行う。ユーザーがサブエージェント利用を明示した場合、またはサブエージェントを使うコマンドから起動された場合にのみ使用される（description match による自動委譲は行わない）。
 
-**Meta LOOP（モデル割当）**: Orchestrator（親・UI 選択）推奨 Grok 4.5 / Advisor は `claude-opus-5[thinking=true,effort=high,fast=false]`（readonly）/ 作業系（`design-worker` / `build-worker`、MAGI、`explore` / `generalPurpose` / `docs-researcher` / `shell`）は Cursor `composer-2.5[fast=false]`（Claude Code は `sonnet`）。`quality-worker` は無し。詳細は [`packages/shared/ai/docs/LOCAL-SETUP.md`](../shared/ai/docs/LOCAL-SETUP.md)「Meta LOOP」。bracket は Cursor [Subagents](https://cursor.com/docs/subagents) 準拠（親と同じなら `inherit`）。
+**Meta LOOP（モデル割当）**: Orchestrator（親・UI 選択）推奨 Grok 4.5 / Advisor は `grok-4.5[effort=high,fast=false]`（readonly。Claude Code は `sonnet`）/ 作業系（`design-worker` / `build-worker` / `explore-worker` / `general-worker`、MAGI、組み込み `explore` / `generalPurpose` / `docs-researcher` / `shell`）は Cursor `composer-2.5`（カスタム agent は `[fast=false]`。Claude Code は `sonnet`）。`composer-2.5-fast` は使わない。`quality-worker` は無し。詳細は [`packages/shared/ai/docs/LOCAL-SETUP.md`](../shared/ai/docs/LOCAL-SETUP.md)「Meta LOOP」。bracket は Cursor [Subagents](https://cursor.com/docs/subagents) 準拠（親と同じなら `inherit`）。
 
 ##### サブエージェントとして Advisor を起動するコマンド
 
-| コマンド                                               | 対象 Advisor                      | 備考                                                                                                          |
-| ------------------------------------------------------ | --------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| `/suggest-plan`（サブエージェント明示時）              | `design-advisor`, `build-advisor` | Git 管理。明示がなければ親エージェントが直接分析（[commands/suggest-plan.md](commands/suggest-plan.md) 参照） |
-| `/review-diff`, `/review-pr`（サブエージェント明示時） | `quality-advisor`                 | Git 管理。明示がなければ親エージェントが直接分析                                                              |
+| コマンド                                                               | 対象 Advisor                                 | 備考                                                                                                          |
+| ---------------------------------------------------------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `/suggest-plan`（サブエージェント明示時）                              | `design-advisor`, `build-advisor`            | Git 管理。明示がなければ親エージェントが直接分析（[commands/suggest-plan.md](commands/suggest-plan.md) 参照） |
+| `/review-diff`, `/review-pr`, `/review-diff-linus`, `/review-pr-linus` | `quality-advisor`（+ `explore-worker` 並列） | Git 管理。**常時**並列起動。Linus 版はフル敵対を `quality-advisor` に必須依頼                                 |
 
 > `/magi` は MAGI 3体を起動するコマンドであり、Advisor は使用しない。`/review-pr-magi` も MAGI 3体による PR レビューであり、Advisor は使用しない。いずれも詳細は下記の「MAGI ユニット（3体）」セクションを参照。
 
@@ -169,20 +170,36 @@ graph LR
     QA -->|"実装修正"| BA
 ```
 
-#### Worker エージェント（2体）
+#### Worker エージェント（書込 2体 + 調査 1体 + 汎用 1体）
 
-親 Orchestrator からまとまった**書込**を委譲する実行主体。Advisor と同フェーズ名で対称（提案 vs 実行）。すべて書込可（`readonly` なし）。**ユーザーの「サブエージェント明示」は不要**（親が委譲してよい）。調査専用のカスタム Worker は置かず、組み込み `explore` 等の作業系 Task で `model: composer-2.5` を必須とする。`quality-worker` は置かない（品質は `quality-advisor`、テストコードは `build-worker`）。
+親 Orchestrator からまとまった作業を委譲する実行主体。**ユーザーの「サブエージェント明示」は不要**（親が委譲してよい）。`quality-worker` は置かない（品質は `quality-advisor`、テストコードは `build-worker`）。
+
+**書込 Worker**（Advisor と同フェーズ名で対称。書込可・`readonly` なし）:
 
 | ファイル           | フェーズ | 書込対象                                       | 対になる Advisor |
 | ------------------ | -------- | ---------------------------------------------- | ---------------- |
 | `design-worker.md` | 設計     | ADR / OpenAPI / スキーマ設計文書 / OpenSpec 等 | `design-advisor` |
 | `build-worker.md`  | 実装     | アプリ・インフラコード、テストコード           | `build-advisor`  |
 
-起動時は Task で `model: composer-2.5` を必須（`explore` / `generalPurpose` / `docs-researcher` / `shell` 含む。`token-optimization-rule`「Task の model 必須（作業系）」）。委譲基準・Opus 化の切り分けは [`LOCAL-SETUP.md`](../shared/ai/docs/LOCAL-SETUP.md)「Meta LOOP」。
+**調査 Worker**（命名は Worker だが **readonly**。Composer の `[fast=false]` 固定が目的。組み込み `explore` は軽いファイル発見のみ）:
+
+| ファイル            | 用途                                       | 備考                                                 |
+| ------------------- | ------------------------------------------ | ---------------------------------------------------- |
+| `explore-worker.md` | 構造・意味・影響範囲の品質調査（読み取り） | `model: composer-2.5[fast=false]` + `readonly: true` |
+
+**汎用 Worker**（専門フェーズが曖昧な複数ステップのフォールバック。明確なら上記 Worker を優先）:
+
+| ファイル            | 用途                                     | 備考                                        |
+| ------------------- | ---------------------------------------- | ------------------------------------------- |
+| `general-worker.md` | 調査＋軽い実行など、専門が決まらない作業 | `model: composer-2.5[fast=false]`（書込可） |
+
+起動時は Task で `model: composer-2.5` を必須（`explore-worker` / `general-worker` / 組み込み `explore` / `generalPurpose` / `docs-researcher` / `shell` 含む。`composer-2.5-fast` は使わない。`agent-delegation-rule`「Task の model 必須（作業系）」）。委譲基準・モデル割当の切り分けは [`LOCAL-SETUP.md`](../shared/ai/docs/LOCAL-SETUP.md)「Meta LOOP」。
+
+**FAQ**: Advisor（design/build/quality-advisor）は、原則ユーザーがサブエージェント利用を明示した場合、またはサブエージェントを使うコマンドから起動された場合にのみ動く。**例外**: `/review-diff` `/review-pr` `/review-diff-linus` `/review-pr-linus` はコマンド定義により `explore-worker` + `quality-advisor` を常時並列起動する。未委譲の主戦場は Worker — 閾値超えの調査・書込は親が Task で Worker に委譲する。
 
 #### MAGI ユニット（3体）
 
-`/magi` コマンドから並列起動される合議システムのユニット。起動時は Task で `model: composer-2.5` を必須（`token-optimization-rule`。Claude Code はラッパー `sonnet`）。
+`/magi` コマンドから並列起動される合議システムのユニット。起動時は Task で `model: composer-2.5` を必須（`agent-delegation-rule`。Claude Code はラッパー `sonnet`）。
 
 | ファイル         | ペルソナ     | 判断傾向                                       |
 | ---------------- | ------------ | ---------------------------------------------- |
@@ -294,8 +311,10 @@ Cursor ルールの定義ファイル（`.mdc` 形式）。エージェントや
 | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
 | `japanese-tech-writing-rule.mdc`    | 日本語技術文書の整形・論証・LLM 空句禁止（蒸留）。`globs` は docs/README 系に限定。既定スライスは `tech-doc-lite` |
 | `cognitive-rhythm-writing-rule.mdc` | 認知リズム（緩急・緊張）。JTW 併用。blog 読み物時 opt-in（蒸留）。`globs` なし（既定適用しない）                  |
+| `x-post-rule.mdc`                   | X投稿用二文要約の文字数・文体・セルフレビュー正本。`globs` なし（コマンド経由）                                   |
 
 - **JTW 自動適用**: Cursor のみ。`alwaysApply: false` + `globs: ["**/docs/**/*.md", "**/*README*.md", ...]`（全 `.md` ではない）。適用範囲は `tech-doc-lite`。blog は `writing-style-rule` Override / `blog-base` 優先。OpenSpec・仕様テンプレは構造優先
+- **X投稿**: `/suggest-x-post` が `x-post-rule` を参照（コマンド経由。`globs` 自動適用なし）
 - **CRW**: 手動 `@` または体験記・読み物時のみ。md glob には載せない
 
 出典一覧の正本: [`packages/shared/ai/README.md`](../shared/ai/README.md)「出典・蒸留」。
@@ -314,6 +333,7 @@ Cursor ルールの定義ファイル（`.mdc` 形式）。エージェントや
 | `ticket-retrieval-rule.mdc`    | チケット情報の取得手順（GitHub / その他 URL / ID。プロバイダ固有は `.local`） |
 | `codegraph-rule.mdc`           | CodeGraph によるセマンティックコード調査（MCP / CLI）                         |
 | `token-optimization-rule.mdc`  | 全ワークスペース共通のトークン節約運用（`alwaysApply: true`）                 |
+| `agent-delegation-rule.mdc`    | エージェント委譲ゲート・Task model 必須（Tier B / `alwaysApply: false`）      |
 | `ai-config-inventory-rule.mdc` | AI 資産棚卸し手順（`/analyze-ai-*` から参照。`alwaysApply: false`）           |
 
 #### meta/ -- dotfiles AI 設定変更
@@ -485,7 +505,7 @@ Cursor の Auto-run 時に承認なしで実行を許可するコマンド・MCP
 
 | カテゴリ             | エントリ                                                                                                                                                                                                                                 | 備考                                                                                                 |
 | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| Unix ユーティリティ  | `awk`, `cat`, `cd`, `comm`, `cp`, `cut`, `diff`, `echo`, `env`, `find`, `grep`, `head`, `kill`, `ls`, `mkdir`, `node`, `paste`, `read`, `sed`, `sort`, `tail`, `timeout`, `uniq`, `wc`                                                   | 個別指定。`curl`（ネットワーク）と `npx`（任意実行）は除外し Cursor の ask で制御                    |
+| Unix ユーティリティ  | `awk`, `cat`, `cd`, `comm`, `cp`, `cut`, `diff`, `echo`, `env`, `find`, `grep`, `head`, `kill`, `ls`, `mkdir`, `node`, `paste`, `read`, `rg`, `sed`, `sort`, `tail`, `timeout`, `uniq`, `wc`                                             | 個別指定。`curl`（ネットワーク）と `npx`（任意実行）は除外し Cursor の ask で制御                    |
 | パッケージマネージャ | `pnpm add`, `pnpm audit`, `pnpm exec oxlint`, `pnpm exec vitest`, `pnpm install`, `pnpm list`, `pnpm ls`, `pnpm outdated`, `pnpm remove`, `pnpm run`, `pnpm store`, `pnpm test`, `pnpm why`                                              | サブコマンド単位で指定。`pnpm exec`（上記以外）/ `pnpm dlx`（任意実行）は除外し Cursor / Hook が制御 |
 | VCS (git)            | `git diff`, `git diff-tree`, `git log`, `git rev-parse`, `git show`, `git status`, `git --no-pager diff`, `git --no-pager log`, `git --no-pager show`                                                                                    | 読み取り系のみ個別指定                                                                               |
 | GitHub CLI (gh)      | `gh api`, `gh issue list`, `gh issue status`, `gh issue view`, `gh pr checks`, `gh pr diff`, `gh pr list`, `gh pr status`, `gh pr view`, `gh release list`, `gh release view`, `gh repo view`, `gh run list`, `gh run view`, `gh search` | 読み取り系のみ個別指定。`gh api` の書き込み（`-X POST` 等 / `-f`）は guard が ask                    |
@@ -520,7 +540,7 @@ Cursor の Auto-run 時に承認なしで実行を許可するコマンド・MCP
 
 `~/.cursor/mcp.json` はシークレットを含むため dotfiles 未管理。CodeGraph 追加は [CODEGRAPH.md](../shared/ai/docs/CODEGRAPH.md) の手動マージ手順に従う。`codegraph install` をそのまま実行しない（mise [dotfiles] 正本とドリフトする）。
 
-**調査フロー**: 構造・フロー・影響範囲の調査優先順位は `token-optimization-rule.mdc`（`alwaysApply`）と `codegraph-rule.mdc`（agent-requestable）に定義。正本は `@~/.config/shared/ai/rules/conventions/token-optimization-rule.md` と `codegraph-rule.md`。
+**調査フロー**: 構造・フロー・影響範囲の調査優先順位は `codegraph-rule.mdc`（agent-requestable）が正本。`token-optimization-rule.mdc`（always-on）に要約、`agent-delegation-rule.mdc` に委譲・用途分担。正本は `@~/.config/shared/ai/rules/conventions/codegraph-rule.md`、`token-optimization-rule.md`、`agent-delegation-rule.md`。
 
 ## 自己申告プロトコル
 
@@ -588,15 +608,15 @@ Cursor の Auto-run 時に承認なしで実行を許可するコマンド・MCP
 
 ### レビュー系コマンドの使い分け
 
-| コマンド             | 対象                 | 用途                                     | Advisor                     |
-| -------------------- | -------------------- | ---------------------------------------- | --------------------------- |
-| `/review-diff`       | ステージング済み差分 | PR 作成前のローカルセルフレビュー        | `quality-advisor`（明示時） |
-| `/review-diff-linus` | ステージング済み差分 | Linus 風の辛辣・taste 重視セルフレビュー | `quality-advisor`（明示時） |
-| `/review-pr`         | GitHub PR URL        | リモート PR のレビュー                   | `quality-advisor`（明示時） |
-| `/review-pr-linus`   | GitHub PR URL        | Linus 風の辛辣・taste 重視 PR レビュー   | `quality-advisor`（明示時） |
-| `/review-pr-magi`    | GitHub PR URL        | MAGI 3体合議による多角的 PR レビュー     | MAGI 3体                    |
+| コマンド             | 対象                 | 用途                                     | サブエージェント（常時）             |
+| -------------------- | -------------------- | ---------------------------------------- | ------------------------------------ |
+| `/review-diff`       | ステージング済み差分 | PR 作成前のローカルセルフレビュー        | `explore-worker` + `quality-advisor` |
+| `/review-diff-linus` | ステージング済み差分 | Linus 風の辛辣・taste 重視セルフレビュー | 同上（フル敵対は `quality-advisor`） |
+| `/review-pr`         | GitHub PR URL        | リモート PR のレビュー                   | `explore-worker` + `quality-advisor` |
+| `/review-pr-linus`   | GitHub PR URL        | Linus 風の辛辣・taste 重視 PR レビュー   | 同上（フル敵対は `quality-advisor`） |
+| `/review-pr-magi`    | GitHub PR URL        | MAGI 3体合議による多角的 PR レビュー     | MAGI 3体（Advisor 不使用）           |
 
-`/review-diff` と `/review-pr`（および Linus 版）はサブエージェント利用を明示した場合に `quality-advisor` を並列起動し、チェックリストベースの体系的レビューを行う。明示がない場合は親エージェントが同じ観点で直接調査する。Linus 版は正しさ・単純さ・過剰抽象を辛辣に突くペルソナを親エージェントが適用する（Linus 用 Task は起動しない）。`/review-pr-magi` は MAGI ペルソナによる多角的評価を重視し、重要度の高い PR やアーキテクチャ変更を伴う PR に適する。
+`/review-diff` と `/review-pr`（および Linus 版）は `explore-worker` + `quality-advisor` を**常時並列**起動し、チェックリストベースの体系的レビューを行う。非 Linus 版は親が薄い敵対的検証を実行する。Linus 版は正しさ・単純さ・過剰抽象を辛辣に突くペルソナを親エージェントが適用し、フル敵対的検証は `quality-advisor` に委譲する（Linus 用 Task は起動しない）。`/review-pr-magi` は MAGI ペルソナによる多角的評価を重視し、重要度の高い PR やアーキテクチャ変更を伴う PR に適する。
 
 ## 既存設定との衝突
 
