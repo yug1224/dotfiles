@@ -14,7 +14,7 @@
     "check": "pnpm run fmt:check && pnpm run lint:check && pnpm run type:check"
   },
   "devDependencies": {
-    "@secretlint/secretlint-rule-preset-recommend": "^11.7.1",
+    "@secretlint/secretlint-rule-preset-recommend": "^13.0.4",
     "oxfmt": "^0.41.0",
     "oxlint": "^1.76.0",
     "oxlint-tsgolint": "^7.0.2001",
