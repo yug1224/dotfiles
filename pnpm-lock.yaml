@@ -30,11 +30,11 @@ importers:
   packages/raycast/audio-device-settings:
     dependencies:
       '@raycast/api':
-        specifier: ^1.104.23
-        version: 1.104.23(@types/node@22.20.1)(@types/react@19.2.17)
+        specifier: ^1.104.24
+        version: 1.104.24(@types/node@22.20.1)(@types/react@19.2.17)
       '@raycast/utils':
         specifier: ^1.19.1
-        version: 1.19.1(@raycast/api@1.104.23(@types/node@22.20.1)(@types/react@19.2.17))
+        version: 1.19.1(@raycast/api@1.104.24(@types/node@22.20.1)(@types/react@19.2.17))
       execa:
         specifier: ^6.1.0
         version: 6.1.0
@@ -367,20 +367,20 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@oclif/core@4.12.0':
-    resolution: {integrity: sha512-xoUX6ZDixfyHSkllriITpq/3kA78E/oXOliz4em+De6qe22kg2CcKN9KKxMB4NyD4U1SFUsd0tfnG9uyeV5P7w==}
+  '@oclif/core@4.13.3':
+    resolution: {integrity: sha512-wBp2igI2KVwq2ZmpnfmGtOROo7aXZIr3OEtAS16g1wHFBqyEuswL+9K50NJWJvlpAmxd+4dVj/ycawXESU3wQQ==}
     engines: {node: '>=18.0.0'}
 
-  '@oclif/plugin-autocomplete@3.2.53':
-    resolution: {integrity: sha512-cGAgN9ujTDxa6C84d6XNVsmoFnDFfHwdiykAnAfym3oBLxoXBNYMZhmfnZ8KBWDy/r/DYf11BrGJwqKl2P0iSA==}
+  '@oclif/plugin-autocomplete@3.2.55':
+    resolution: {integrity: sha512-3s3xLlfHarctGcZt8HlbDeEIoOCcsjAzHvvq8pHTy8LpQNag78DwXgvUwFE/RtTme8ahTZEBteD5IPN/B2NTgQ==}
     engines: {node: '>=18.0.0'}
 
-  '@oclif/plugin-help@6.2.53':
-    resolution: {integrity: sha512-njx2nTH87EQEEuz4ShNtL0gzzN981MRkDPqScbu+Tkd7NpIv30OHdTjQK1GzGtkf+V2RvSYIrX+LrLsUVh9DJw==}
+  '@oclif/plugin-help@6.2.56':
+    resolution: {integrity: sha512-0LkCjFGRGY7AaZb5p8gDcSPNkFrn+vNLKvGe1f7j/Z6U9Uy1cV6R2eWVsjuZTGQ3RvBvjquFPwLy1jTgR5l87w==}
     engines: {node: '>=18.0.0'}
 
-  '@oclif/plugin-not-found@3.2.88':
-    resolution: {integrity: sha512-5YTKSpuV77910/iGnGsj0fr9kOazCy/h1brki1CocbfawdvaVPedcwCH25wMcdRfo8mFD656bG9/kdki/+Wb9A==}
+  '@oclif/plugin-not-found@3.2.91':
+    resolution: {integrity: sha512-ICFrUeotKD3gsBOZR5mrgz2y1QDPM/C6hcu1i2tFjfW7AVnKINvsgANFou0ObLJGkslNS+6uX+1qcny37vJcyg==}
     engines: {node: '>=18.0.0'}
 
   '@oxfmt/binding-android-arm-eabi@0.41.0':
@@ -657,8 +657,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@raycast/api@1.104.23':
-    resolution: {integrity: sha512-8ZdL9Jhc7C/+nQkUIM78pP0ODPR6wVvPjgg0uU6+n5hEaYABmrCIyA/gFcjfAYjU6EUFV2ZDHp6JNPFjQNyBWQ==}
+  '@raycast/api@1.104.24':
+    resolution: {integrity: sha512-Jppfyi1T7wcGXZFxpzXuvNAKUPQ+BQkKC0N3rJBz1epp/z22SH9aLA23YZRk/ickGwEm6DI/7OY7Jin8dD53Sg==}
     engines: {node: '>=22.22.2'}
     hasBin: true
     peerDependencies:
@@ -915,11 +915,11 @@ packages:
   boundary@2.0.0:
     resolution: {integrity: sha512-rJKn5ooC9u8q13IMCrW0RSp31pxBCHE3y9V/tp3TdWSLf8Em3p6Di4NBpfzbJge9YjjFEsD0RtFEjtvHL5VyEA==}
 
-  brace-expansion@2.1.2:
-    resolution: {integrity: sha512-w5JZcKgdhDOgOwm8H+KgbosopHMuGcl6qbulwjtz3SM7I7P3yW1eAjzMPLrIE+NQ9vjgANKHWeMHnrT0OXW1oA==}
+  brace-expansion@2.1.4:
+    resolution: {integrity: sha512-hGfVzPxthbf3+2yjg/RBs60cB0FhqBS/zvdV/4wn4/BmN0bNMMHPc4V/BbFieqf1TKAGGAHnY4eSjajCl0f2Xg==}
 
-  brace-expansion@5.0.8:
-    resolution: {integrity: sha512-JZyDyq3D4AUifKTPOB7DELf6XsB3WdPuNxCtob1vFXPsSXhdAiHBWJ/tJ8HAc9aH84BK+5JFZLNkJKx3G9kzQg==}
+  brace-expansion@5.0.9:
+    resolution: {integrity: sha512-ScQ4IuvIEF1TMlP7Zt+vjJ//9zlPb2SDcxWxM3bk8s6t6GGdJ7KO1dCcTidOPJKePW30LE/2cT7wCyPho9/Wxg==}
     engines: {node: 20 || >=22}
 
   braces@3.0.3:
@@ -1172,8 +1172,8 @@ packages:
     resolution: {integrity: sha512-vqiC06CuhBTUdZH+RYl8sFrL096vA45Ok5ISO6sE/Mr1jRbGH4Csnhi8f3wKVl7x8mO4Au7Ir9D3Oyv1VYMFJw==}
     engines: {node: '>=12'}
 
-  minimatch@10.2.5:
-    resolution: {integrity: sha512-MULkVLfKGYDFYejP07QOurDLLQpcjk7Fw+7jXS2R2czRQzR56yHRveU5NDJEOviH+hETZKSkIk5c+T23GjFUMg==}
+  minimatch@10.2.6:
+    resolution: {integrity: sha512-vpLQEs+VLCr1nU0BXS07maYoFwlDAH0gngQuuttxIwutDFEMHq2blX+8vpgxDdK3J1PwjCJiep77OitTZ4Ll1A==}
     engines: {node: 18 || 20 || >=22}
 
   minimatch@5.1.9:
@@ -1307,6 +1307,11 @@ packages:
 
   semver@7.8.1:
     resolution: {integrity: sha512-rkVq3IXh+4FDGch+KwzX3aV9W3kO54GyEgpvBzSyctDA6Xtd7RJQV1xmXbeQp5v7+VzLOfVqiutSE6GICgPFvg==}
+    engines: {node: '>=10'}
+    hasBin: true
+
+  semver@7.8.5:
+    resolution: {integrity: sha512-Y7/KDsb8LjooZpwaqGyulO6DQlksgCncchHGk+sZIY4SBvUocMBEFH5Ur1fI4dV+Jvl0w6cjvucaIi40puRioA==}
     engines: {node: '>=10'}
     hasBin: true
 
@@ -1704,7 +1709,7 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.20.1
 
-  '@oclif/core@4.12.0':
+  '@oclif/core@4.13.3':
     dependencies:
       ansi-escapes: 4.3.2
       ansis: 3.17.0
@@ -1716,8 +1721,8 @@ snapshots:
       indent-string: 4.0.0
       is-wsl: 2.2.0
       lilconfig: 3.1.3
-      minimatch: 10.2.5
-      semver: 7.8.1
+      minimatch: 10.2.6
+      semver: 7.8.5
       string-width: 4.2.3
       supports-color: 8.1.1
       tinyglobby: 0.2.17
@@ -1725,23 +1730,23 @@ snapshots:
       wordwrap: 1.0.0
       wrap-ansi: 7.0.0
 
-  '@oclif/plugin-autocomplete@3.2.53':
+  '@oclif/plugin-autocomplete@3.2.55':
     dependencies:
-      '@oclif/core': 4.12.0
+      '@oclif/core': 4.13.3
       ansis: 3.17.0
       debug: 4.4.3(supports-color@8.1.1)
       ejs: 3.1.10
     transitivePeerDependencies:
       - supports-color
 
-  '@oclif/plugin-help@6.2.53':
+  '@oclif/plugin-help@6.2.56':
     dependencies:
-      '@oclif/core': 4.12.0
+      '@oclif/core': 4.13.3
 
-  '@oclif/plugin-not-found@3.2.88(@types/node@22.20.1)':
+  '@oclif/plugin-not-found@3.2.91(@types/node@22.20.1)':
     dependencies:
       '@inquirer/prompts': 7.10.1(@types/node@22.20.1)
-      '@oclif/core': 4.12.0
+      '@oclif/core': 4.13.3
       ansis: 3.17.0
       fast-levenshtein: 3.0.0
     transitivePeerDependencies:
@@ -1879,12 +1884,12 @@ snapshots:
   '@oxlint/binding-win32-x64-msvc@1.76.0':
     optional: true
 
-  '@raycast/api@1.104.23(@types/node@22.20.1)(@types/react@19.2.17)':
+  '@raycast/api@1.104.24(@types/node@22.20.1)(@types/react@19.2.17)':
     dependencies:
-      '@oclif/core': 4.12.0
-      '@oclif/plugin-autocomplete': 3.2.53
-      '@oclif/plugin-help': 6.2.53
-      '@oclif/plugin-not-found': 3.2.88(@types/node@22.20.1)
+      '@oclif/core': 4.13.3
+      '@oclif/plugin-autocomplete': 3.2.55
+      '@oclif/plugin-help': 6.2.56
+      '@oclif/plugin-not-found': 3.2.91(@types/node@22.20.1)
       esbuild: 0.27.7
       react: 19.0.0
     optionalDependencies:
@@ -1893,9 +1898,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@raycast/utils@1.19.1(@raycast/api@1.104.23(@types/node@22.20.1)(@types/react@19.2.17))':
+  '@raycast/utils@1.19.1(@raycast/api@1.104.24(@types/node@22.20.1)(@types/react@19.2.17))':
     dependencies:
-      '@raycast/api': 1.104.23(@types/node@22.20.1)(@types/react@19.2.17)
+      '@raycast/api': 1.104.24(@types/node@22.20.1)(@types/react@19.2.17)
       cross-fetch: 3.2.0
       dequal: 2.0.3
       object-hash: 3.0.0
@@ -2113,11 +2118,11 @@ snapshots:
 
   boundary@2.0.0: {}
 
-  brace-expansion@2.1.2:
+  brace-expansion@2.1.4:
     dependencies:
       balanced-match: 1.0.2
 
-  brace-expansion@5.0.8:
+  brace-expansion@5.0.9:
     dependencies:
       balanced-match: 4.0.4
 
@@ -2355,13 +2360,13 @@ snapshots:
 
   mimic-fn@4.0.0: {}
 
-  minimatch@10.2.5:
+  minimatch@10.2.6:
     dependencies:
-      brace-expansion: 5.0.8
+      brace-expansion: 5.0.9
 
   minimatch@5.1.9:
     dependencies:
-      brace-expansion: 2.1.2
+      brace-expansion: 2.1.4
 
   ms@2.1.3: {}
 
@@ -2512,6 +2517,8 @@ snapshots:
       - supports-color
 
   semver@7.8.1: {}
+
+  semver@7.8.5: {}
 
   shebang-command@2.0.0:
     dependencies:
