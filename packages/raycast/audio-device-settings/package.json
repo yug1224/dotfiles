@@ -21,7 +21,7 @@
     "execa": "^6.1.0"
   },
   "devDependencies": {
-    "@types/node": "^22.19.17",
+    "@types/node": "^26.1.2",
     "@types/react": "^19.0.10",
     "typescript": "^7.0.2"
   },
