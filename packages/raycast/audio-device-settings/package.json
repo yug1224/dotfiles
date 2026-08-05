@@ -16,7 +16,7 @@
     "publish": "ray publish"
   },
   "dependencies": {
-    "@raycast/api": "^1.104.23",
+    "@raycast/api": "^1.104.24",
     "@raycast/utils": "^1.19.1",
     "execa": "^6.1.0"
   },
