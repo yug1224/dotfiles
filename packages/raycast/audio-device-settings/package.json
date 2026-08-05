@@ -18,7 +18,7 @@
   "dependencies": {
     "@raycast/api": "^1.104.23",
     "@raycast/utils": "^1.19.1",
-    "execa": "^6.1.0"
+    "execa": "^10.0.1"
   },
   "devDependencies": {
     "@types/node": "^22.19.17",
