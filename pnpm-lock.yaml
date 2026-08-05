@@ -33,8 +33,8 @@ importers:
         specifier: ^1.104.23
         version: 1.104.23(@types/node@22.20.1)(@types/react@19.2.17)
       '@raycast/utils':
-        specifier: ^1.19.1
-        version: 1.19.1(@raycast/api@1.104.23(@types/node@22.20.1)(@types/react@19.2.17))
+        specifier: ^2.2.7
+        version: 2.2.7(@raycast/api@1.104.23(@types/node@22.20.1)(@types/react@19.2.17))(react@19.0.0)
       execa:
         specifier: ^6.1.0
         version: 6.1.0
@@ -673,10 +673,14 @@ packages:
       react-devtools:
         optional: true
 
-  '@raycast/utils@1.19.1':
-    resolution: {integrity: sha512-/udUGcTZCgZZwzesmjBkqG5naQZTD/ZLHbqRwkWcF+W97vf9tr9raxKyQjKsdZ17OVllw2T3sHBQsVUdEmCm2g==}
+  '@raycast/utils@2.2.7':
+    resolution: {integrity: sha512-1jV9tKLluP0Av/ICcl/yvVzCj7mY6F3wnKsh8SJpy/Fsqq/LCFXcI6TgMabIJ45AaDVhEV+JH9jS1lJSwBgiMw==}
     peerDependencies:
-      '@raycast/api': '>=1.69.0'
+      '@raycast/api': '>=1.99.4'
+      react: '>=19.0.0'
+    peerDependenciesMeta:
+      react:
+        optional: true
 
   '@secretlint/config-creator@11.7.1':
     resolution: {integrity: sha512-ET4EXYzSjl1EgwZRJmU/2NjQVIW4u+2nIZu4hs6Og5ys2MbSEheHNoBXOifQOZDgObleP8S9aU3BV2bUqPEQxw==}
@@ -956,9 +960,6 @@ packages:
   color-name@1.1.4:
     resolution: {integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==}
 
-  cross-fetch@3.2.0:
-    resolution: {integrity: sha512-Q+xVJLoGOeIMXZmbUK4HYk+69cQH6LudR0Vu/pRm2YlU/hDV9CiS0gKUMaWY5f2NeUH9C1nV3bsTlCo0FsTV1Q==}
-
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
     engines: {node: '>= 8'}
@@ -1187,15 +1188,6 @@ packages:
     resolution: {integrity: sha512-WWdIxpyjEn+FhQJQQv9aQAYlHoNVdzIzUySNV1gHUPDSdZJ3yZn7pAAbQcV7B56Mvu881q9FZV+0Vx2xC44VWA==}
     engines: {node: ^18.17.0 || >=20.5.0}
 
-  node-fetch@2.7.0:
-    resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}
-    engines: {node: 4.x || >=6.0.0}
-    peerDependencies:
-      encoding: ^0.1.0
-    peerDependenciesMeta:
-      encoding:
-        optional: true
-
   normalize-package-data@6.0.2:
     resolution: {integrity: sha512-V6gygoYb/5EmNI+MEGrWkC+e6+Rr7mTmfHrxDbLzxQogBkgzo76rkok0Am6thgSF7Mv2nLOajAJj5vDJZEFn7g==}
     engines: {node: ^16.14.0 || >=18.0.0}
@@ -1203,10 +1195,6 @@ packages:
   npm-run-path@5.3.0:
     resolution: {integrity: sha512-ppwTtiJZq0O/ai0z7yfudtBpWIoxM8yE6nHi1X47eFR2EWORqfbu6CnPlNsjeN683eT0qG6H/Pyf9fCcvjnnnQ==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
-
-  object-hash@3.0.0:
-    resolution: {integrity: sha512-RSn9F68PjH9HqtltsSnqYC1XXoWe9Bju5+213R98cNGttag9q9yAOTzdbsqvIa7aNm5WffBZFpWYr2aWrklWAw==}
-    engines: {node: '>= 6'}
 
   onetime@6.0.0:
     resolution: {integrity: sha512-1FlR+gjXK7X+AsAHso35MnyN5KqGwJRi/31ft6x0M194ht7S+rWAvd7PHss9xSKMzE0asv1pyIHaJYq+BbacAQ==}
@@ -1345,12 +1333,6 @@ packages:
   spdx-license-ids@3.0.23:
     resolution: {integrity: sha512-CWLcCCH7VLu13TgOH+r8p1O/Znwhqv/dbb6lqWy67G+pT1kHmeD/+V36AVb/vq8QMIQwVShJ6Ssl5FPh0fuSdw==}
 
-  stream-chain@2.2.5:
-    resolution: {integrity: sha512-1TJmBx6aSWqZ4tx7aTpBDXK0/e2hhcNSTV8+CbFJtDjbb+I1mZ8lHit0Grw9GRT+6JbIrrDd8esncgBi8aBXGA==}
-
-  stream-json@1.9.1:
-    resolution: {integrity: sha512-uWkjJ+2Nt/LO9Z/JyKZbMusL8Dkh97uUBTv3AJQ74y07lVahLY4eEFsPsE97pxYBwr8nnjMAIch5eqI0gPShyw==}
-
   string-width@4.2.3:
     resolution: {integrity: sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==}
     engines: {node: '>=8'}
@@ -1409,9 +1391,6 @@ packages:
     resolution: {integrity: sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==}
     engines: {node: '>=8.0'}
 
-  tr46@0.0.3:
-    resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
-
   type-fest@0.21.3:
     resolution: {integrity: sha512-t0rzBq87m3fVcduHDUFhKmyyX+9eo6WQjZvf51Ea/M0Q7+T374Jp1aUiyUl0GKxp8M/OETVHSDvmkyPgvX+X2w==}
     engines: {node: '>=10'}
@@ -1442,12 +1421,6 @@ packages:
   version-range@4.15.0:
     resolution: {integrity: sha512-Ck0EJbAGxHwprkzFO966t4/5QkRuzh+/I1RxhLgUKKwEn+Cd8NwM60mE3AqBZg5gYODoXW0EFsQvbZjRlvdqbg==}
     engines: {node: '>=4'}
-
-  webidl-conversions@3.0.1:
-    resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
-
-  whatwg-url@5.0.0:
-    resolution: {integrity: sha512-saE57nupxk6v3HY35+jzBwYa0rKSy0XR8JSxZPwgLr7ys0IBzhGviA1/TUGJLmSVqs8pb9AnvICXEuOHLprYTw==}
 
   which@2.0.2:
     resolution: {integrity: sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==}
@@ -1893,17 +1866,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@raycast/utils@1.19.1(@raycast/api@1.104.23(@types/node@22.20.1)(@types/react@19.2.17))':
+  '@raycast/utils@2.2.7(@raycast/api@1.104.23(@types/node@22.20.1)(@types/react@19.2.17))(react@19.0.0)':
     dependencies:
       '@raycast/api': 1.104.23(@types/node@22.20.1)(@types/react@19.2.17)
-      cross-fetch: 3.2.0
       dequal: 2.0.3
-      object-hash: 3.0.0
-      signal-exit: 4.1.0
-      stream-chain: 2.2.5
-      stream-json: 1.9.1
-    transitivePeerDependencies:
-      - encoding
+    optionalDependencies:
+      react: 19.0.0
 
   '@secretlint/config-creator@11.7.1':
     dependencies:
@@ -2148,12 +2116,6 @@ snapshots:
 
   color-name@1.1.4: {}
 
-  cross-fetch@3.2.0:
-    dependencies:
-      node-fetch: 2.7.0
-    transitivePeerDependencies:
-      - encoding
-
   cross-spawn@7.0.6:
     dependencies:
       path-key: 3.1.1
@@ -2367,10 +2329,6 @@ snapshots:
 
   mute-stream@2.0.0: {}
 
-  node-fetch@2.7.0:
-    dependencies:
-      whatwg-url: 5.0.0
-
   normalize-package-data@6.0.2:
     dependencies:
       hosted-git-info: 7.0.2
@@ -2380,8 +2338,6 @@ snapshots:
   npm-run-path@5.3.0:
     dependencies:
       path-key: 4.0.0
-
-  object-hash@3.0.0: {}
 
   onetime@6.0.0:
     dependencies:
@@ -2545,12 +2501,6 @@ snapshots:
 
   spdx-license-ids@3.0.23: {}
 
-  stream-chain@2.2.5: {}
-
-  stream-json@1.9.1:
-    dependencies:
-      stream-chain: 2.2.5
-
   string-width@4.2.3:
     dependencies:
       emoji-regex: 8.0.0
@@ -2614,8 +2564,6 @@ snapshots:
     dependencies:
       is-number: 7.0.0
 
-  tr46@0.0.3: {}
-
   type-fest@0.21.3: {}
 
   type-fest@4.41.0: {}
@@ -2655,13 +2603,6 @@ snapshots:
       spdx-expression-parse: 3.0.1
 
   version-range@4.15.0: {}
-
-  webidl-conversions@3.0.1: {}
-
-  whatwg-url@5.0.0:
-    dependencies:
-      tr46: 0.0.3
-      webidl-conversions: 3.0.1
 
   which@2.0.2:
     dependencies:
