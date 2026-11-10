@@ -198,8 +198,10 @@ run = """
 #!/usr/bin/env bash
 set -euo pipefail
 claude plugin marketplace update
+# install は入っていれば何もしない。未導入の端末でも update が失敗しないよう先に呼ぶ
 for p in $(jq -r '.enabledPlugins | to_entries[] | select(.value) | .key' packages/claude/settings.json); do
-  claude plugin update "$p" || claude plugin install "$p"
+  claude plugin install "$p"
+  claude plugin update "$p"
 done
 """
 

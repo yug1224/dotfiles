@@ -1,27 +1,42 @@
-## 📝 PR概要 📝
+## PR内容
 
-- **目的**:
-  - 機能追加
-  - 仕様変更
-  - バグ修正
-  - リファクタリング
-- **関連リンク**:
-  - [todo](todo)
-- **変更点の概要**:
-  - todo
+<!--
+簡潔にPRの内容をまとめる。
 
-### 主な実装内容
+例）
+- [ ] hogehogeの追加
+-->
 
-1. **タスク概要**
-   - タスク詳細
+## 理由/目的
 
-## 👮‍♂️ 動作確認 👮‍♂️
+<!--
+PRの理由や目的を書く。
+関連するissueがあればリンクを貼る。
+closeなのかrefなのかも合わせて記述。
 
-- [ ] ローカルで動作確認済み
-- [ ] `make check` が通る
+例）
+- hogehoge ref #1
+-->
 
-## ✅ 困ったらこの辺をチェック ✅
+## 確認方法
 
-- [README.md](https://github.com/yug1224/dotfiles/blob/main/README.md)
-- [CONVENTIONS.md](https://github.com/yug1224/dotfiles/blob/main/packages/shared/ai/CONVENTIONS.md)
-- [ai-config-rule.md](https://github.com/yug1224/dotfiles/blob/main/packages/shared/ai/rules/meta/ai-config-rule.md)
+<!--
+追加しないといけないデータがあればその追加手順などを記述。
+質問がなくても確認が出来るようにする。
+周知のレベルのものは不要。
+-->
+
+## スクリーンショット
+
+<!--
+キャプチャの有無で、何をどう確認するのかの理解が全然違うので、出来るだけキャプチャを添付。
+-->
+
+## その他
+
+<!--
+確認してほしいことや、気になっていることなど、その他何かアレば記述。
+
+例）
+- もうちょっとpathsにパスをまとめられそう＆リファクタ出来そうな気がする。
+-->
