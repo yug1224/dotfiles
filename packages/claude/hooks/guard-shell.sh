@@ -1,50 +1,47 @@
 #!/bin/bash
 # Claude Code PreToolUse adapter for the shared guard-shell.
-#
-# Reads Claude Code's hook JSON from stdin, extracts the Bash command,
-# delegates to ~/.config/shared/ai/hooks/guard-shell.sh (Cursor-style {command} JSON),
-# and translates the response to Claude Code's PreToolUse permission format.
-#
-# Stdin (Claude):  { "hook_event_name": "PreToolUse", "tool_name": "Bash",
-#                    "tool_input": { "command": "...", ... }, ... }
-# Stdout (Claude): { "hookSpecificOutput": {
-#                     "hookEventName": "PreToolUse",
-#                     "permissionDecision": "allow"|"ask"|"deny",
-#                     "permissionDecisionReason": "..."
-#                   } }
+# Cursor も Third-Party Imports で ~/.claude/settings.json のフックを読む。そのとき tool_name は Shell になる。
+# Deny only. On allow, stay silent (exit 0, no output) so settings.json permissions
+# and auto mode still decide; an explicit "allow" would skip the permission prompt.
 set -u
 
-# GUI hook は login zsh の mise activate を通らないため shim を絶対指定
-JQ="${JQ:-$HOME/.local/share/mise/shims/jq}"
+if [[ -z "${JQ:-}" ]]; then
+  if [[ -x "$HOME/.local/share/mise/shims/jq" ]]; then
+    JQ="$HOME/.local/share/mise/shims/jq"
+  else
+    JQ="$(command -v jq || true)"
+  fi
+fi
 
-if [[ ! -x "$JQ" ]]; then
-  echo '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"guard-shell (claude adapter): jq が未インストール。make mise（packages/mise/config.toml の jq）でインストールしてください。"}}'
+deny() {
+  # jq が壊れていても deny を出せるよう printf で組む
+  local reason="${1//\\/\\\\}"
+  reason="${reason//\"/\\\"}"
+  printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"%s"}}\n' "$reason"
   exit 0
+}
+
+if [[ -z "$JQ" || ! -x "$JQ" ]]; then
+  deny "guard-shell (claude adapter): jq が未インストール。make mise（packages/mise/config.toml の jq）でインストールしてください。"
 fi
 
 input=$(cat)
-tool=$(echo "$input" | "$JQ" -r '.tool_name // empty')
+tool=$(printf '%s' "$input" | "$JQ" -r '.tool_name // empty' 2>/dev/null) \
+  || deny "guard-shell (claude adapter): 入力 JSON を解釈できません（jq: ${JQ}）。"
 
-# Bash 以外は本フックの責務外 → そのまま通す
-if [[ "$tool" != "Bash" ]]; then
-  "$JQ" -n '{ hookSpecificOutput: { hookEventName: "PreToolUse", permissionDecision: "allow" } }'
-  exit 0
+[[ "$tool" == "Bash" || "$tool" == "Shell" ]] || exit 0
+
+SHARED_GUARD="${HOME}/.config/shared/ai/hooks/guard-shell.sh"
+if [[ ! -f "$SHARED_GUARD" ]]; then
+  deny "guard-shell (claude adapter): ~/.config/shared/ai/hooks/guard-shell.sh が見つかりません。make mise を実行してください。"
 fi
 
-# 共有ガードに Cursor 形式の入力で問い合わせ
-result=$(echo "$input" \
+result=$(printf '%s' "$input" \
   | "$JQ" '{ command: (.tool_input.command // ""), cwd: (.cwd // ""), sandbox: false }' \
-  | "$HOME/.config/shared/ai/hooks/guard-shell.sh")
+  | JQ="$JQ" "$SHARED_GUARD")
 
-permission=$(echo "$result" | "$JQ" -r '.permission // "deny"')
-message=$(echo "$result" | "$JQ" -r '[.user_message, .agent_message] | map(select(. != null and . != "")) | join(" / ")')
+permission=$(printf '%s' "$result" | "$JQ" -r '.permission // "deny"' 2>/dev/null || echo deny)
+[[ "$permission" == "allow" ]] && exit 0
 
-case "$permission" in
-  allow|ask|deny) ;;
-  *) permission="deny"; message="${message:-guard-shell adapter: 不正な permission 値}";;
-esac
-
-"$JQ" -n \
-  --arg p "$permission" \
-  --arg m "$message" \
-  '{ hookSpecificOutput: { hookEventName: "PreToolUse", permissionDecision: $p, permissionDecisionReason: $m } }'
+message=$(printf '%s' "$result" | "$JQ" -r '[.user_message, .agent_message] | map(select(. != null and . != "")) | join(" / ")' 2>/dev/null || true)
+deny "${message:-guard-shell: 破壊的コマンドのため拒否しました（git push / rm -rf / 破壊的な gh）。ユーザーに実行を依頼してください。}"

@@ -4,14 +4,6 @@
     "beforeShellExecution": [
       {
         "command": "./hooks/guard-shell.sh",
-        "matcher": "git |gh |pnpm ",
-        "failClosed": true
-      }
-    ],
-    "preToolUse": [
-      {
-        "command": "./hooks/rtk-hook.sh",
-        "matcher": "Shell",
         "failClosed": true
       }
     ]

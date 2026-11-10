@@ -5,3 +5,4 @@ package-lock.json
 .codegraph/
 .playwright-mcp/
 dist/
+mise.local.toml

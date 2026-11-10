@@ -16,13 +16,13 @@
 | `pnpm run fmt:check` | フォーマット差分チェック（CI 向け）   |
 | `pnpm run fmt:fix`   | 全ファイルをフォーマット（`--write`） |
 
-## エディタ（OXC）
+## エディタ
 
 [`packages/code/settings.json`](../code/settings.json) のユーザー設定では、`oxc.fmt.configPath` / `oxc.path.oxfmt` は **絶対パス**（`/Users/<user>/.dotfiles/...` と mise グローバルの `cli.js`）です。Oxc は `$HOME` を展開せず、パスに `$` があるとバイナリ探索に失敗します。**`mise install` で `npm:oxfmt` が入っていること**が前提です（lefthook / `pnpm run fmt:fix` は引き続きローカル `node_modules` の `oxfmt` も使用）。
 
 他リポジトリをワークスペースのルートで開く場合は、そのプロジェクトの `.vscode/settings.json` で `"oxc.fmt.configPath": "oxfmt.config.ts"` のように**ワークスペースルートからの相対パス**で指定する（`${workspaceFolder}` は Oxc LSP では展開されない）。**dotfiles リポジトリ自体**は [`packages/code/settings.json`](../code/settings.json)（ユーザー設定）の絶対パスで足りる。設定ファイルをリネームしたら、参照パスも手動で更新してください（自動追従しません）。
 
-保存時フォーマットは [`packages/code/README.md`](../code/README.md) の `editor.formatOnSaveMode` / `source.format.oxc` を参照。
+保存時フォーマットは `jkillian.custom-local-formatters` + `oxfmt` CLI（stdin）。詳細は [`packages/code/README.md`](../code/README.md) を参照。
 
 ## 他リポジトリで汎用だけ使う
 

@@ -1,18 +1,7 @@
 #!/usr/bin/env bash
-# Shared guard: reads Cursor beforeShellExecution–style JSON on stdin
-# ({ "command", "cwd", "sandbox" }) and prints one JSON line with
-# { "permission": "allow" | "ask" | "deny", ... }.
-#
-# Deployed to ~/.config/shared/ai/hooks/ (via make mise). Cursor invokes
-# ~/.cursor/hooks/guard-shell.sh, a thin wrapper that execs this file. Claude uses
-# ~/.claude/hooks/guard-shell.sh (adapter) piping the same JSON shape into
-# ~/.config/shared/ai/hooks/guard-shell.sh.
-#
-# This file must NOT exec or source other scripts for its core decision.
+# Shared guard: Cursor beforeShellExecution JSON on stdin → { "permission": "allow"|"deny" }.
 set -uo pipefail
 
-# GUI hook は login zsh の mise activate を通らないため shim を絶対指定（oxfmt-stdin と同型）。
-# CI / 非 mise 環境は PATH の jq にフォールバック（check-deny-guard-sync 等）。
 if [[ -z "${JQ:-}" ]]; then
   if [[ -x "$HOME/.local/share/mise/shims/jq" ]]; then
     JQ="$HOME/.local/share/mise/shims/jq"
@@ -24,285 +13,363 @@ if [[ -z "${JQ:-}" ]]; then
 fi
 
 deny_json() {
-  "$JQ" -nc \
-    --arg u "${1:-guard-shell: コマンドをブロックしました}" \
-    --arg a "${2:-}" \
-    '{permission:"deny", user_message: $u, agent_message: (if $a == "" then null else $a end)}'
+  printf '%s\n' '{"permission":"deny","user_message":"guard-shell: jq が未インストールです。make mise（packages/mise/config.toml の jq）でインストールしてください。","agent_message":"Shell ガードを実行できません。"}'
 }
 
-# Drain stdin before early exit so callers with pipefail + jq don't get Broken pipe.
 input=$(cat || true)
 
 if [[ -z "$JQ" || ! -x "$JQ" ]]; then
-  printf '%s\n' '{"permission":"deny","user_message":"guard-shell: jq が未インストールです。make mise（packages/mise/config.toml の jq）でインストールしてください。","agent_message":"Shell ガードを実行できません。"}'
-  exit 0
-fi
-if [[ -z "$input" ]]; then
-  deny_json "guard-shell: stdin が空です。"
+  deny_json
   exit 0
 fi
 
-if ! "$JQ" -e . >/dev/null 2>&1 <<<"$input"; then
-  deny_json "guard-shell: stdin が不正な JSON です。"
+if [[ -z "$input" ]] || ! "$JQ" -e . >/dev/null 2>&1 <<<"$input"; then
+  "$JQ" -nc '{permission:"deny", user_message:"guard-shell: 不正な入力です。"}'
   exit 0
 fi
 
 cmd=$("$JQ" -r '.command // ""' <<<"$input")
 if [[ -z "$cmd" ]]; then
-  deny_json "guard-shell: command が空か、command キーがありません。"
+  "$JQ" -nc '{permission:"deny", user_message:"guard-shell: command が空です。"}'
   exit 0
 fi
 
-# --- helpers ---
+# --- 判定ロジック本体（単一 jq プロセス） ------------------------------
+# bash 側はここから下の探索・fail-closed・入力検証・出力 JSON のみを担う。
+# 判定仕様（区切り／反復正規化／ラッパー／git・gh・rm の判定）はすべて
+# 以下の jq プログラム 1 本に集約している（jq プロセスは 1 回のみ起動）。
+read -r -d '' JQ_PROGRAM <<'JQEOF' || true
+def MAXDEPTH: 3;
 
-strip_rtk_prefix() {
-  local s="$1"
-  while [[ "$s" =~ ^rtk[[:space:]]+(.+)$ ]]; do
-    s="${BASH_REMATCH[1]}"
-  done
-  printf '%s' "$s"
-}
+def ltrim: sub("^[\\s]+"; "");
+def rtrim: sub("[\\s]+$"; "");
+def trim: ltrim | rtrim;
 
-normalize_git_cmd() {
-  local s="$1"
-  local prev=""
-  while [[ "$s" != "$prev" ]]; do
-    prev="$s"
-    if [[ "$s" =~ ^git[[:space:]]+-C[[:space:]]+[^[:space:]]+[[:space:]]+(.+)$ ]]; then
-      s="git ${BASH_REMATCH[1]}"
-    elif [[ "$s" =~ ^git[[:space:]]+-c[[:space:]]+[^[:space:]]+=[^[:space:]]+[[:space:]]+(.+)$ ]]; then
-      s="git ${BASH_REMATCH[1]}"
-    elif [[ "$s" =~ ^git[[:space:]]+--no-pager[[:space:]]+(.+)$ ]]; then
-      s="git ${BASH_REMATCH[1]}"
+def strip_quotes:
+  if (length >= 2) and
+     ( (.[0:1] == "'" and .[length-1:length] == "'")
+       or (.[0:1] == "\"" and .[length-1:length] == "\"") )
+  then .[1:length-1]
+  else .
+  end;
+
+def firstword_rest:
+  if . == "" then {w:"", rest:""}
+  else capture("^(?<w>\\S+)(?<rest>.*)$")
+  end;
+
+# 先頭のオプション（値を取るものは次トークンごと消費）を反復して剥がす。
+def strip_leading_opts($valueOpts):
+  def go:
+    (ltrim) as $t
+    | if ($t | test("^-")) then
+        ($t | firstword_rest) as $m
+        | ($m.rest | ltrim) as $r1
+        | if ($valueOpts | index($m.w)) then
+            ($r1 | firstword_rest) as $m2
+            | ($m2.rest | ltrim | go)
+          else
+            ($r1 | go)
+          end
+      else
+        $t
+      end;
+  go;
+
+# env: 先頭の "-*" または "*=*" トークンを反復して剥がす。
+# 値を取るオプション（-u/--unset, -C/--chdir）は次トークンも消費する。
+# -S/--split-string は「分割されたコマンド列」を渡す指定なので、
+# 引用符を保ったまま eval 形式へ変換し、既存の eval 再帰判定に委ねる。
+def strip_env_prefix:
+  def go:
+    (ltrim) as $t
+    | if $t == "" then $t
+      else
+        ($t | firstword_rest) as $m
+        | ($m.w) as $w
+        | if ($w == "-S") or ($w == "--split-string") then
+            "eval " + ($m.rest | ltrim)
+          elif ($w | test("^--split-string=")) then
+            "eval " + ($w | sub("^--split-string="; "")) + $m.rest
+          elif ($w == "-u") or ($w == "--unset") then
+            ($m.rest | ltrim | firstword_rest) as $m2
+            | ($m2.rest | ltrim | go)
+          elif ($w | test("^--unset=")) then
+            ($m.rest | go)
+          elif ($w == "-C") or ($w == "--chdir") then
+            ($m.rest | ltrim | firstword_rest) as $m2
+            | ($m2.rest | ltrim | go)
+          elif ($w | test("^--chdir=")) then
+            ($m.rest | go)
+          elif ($w | test("^-")) or ($w | test("=")) then
+            ($m.rest | go)
+          else
+            $t
+          end
+      end;
+  go;
+
+def nice_strip:
+  . as $r
+  | if ($r | test("^-n\\s+")) then
+      (($r | capture("^-n\\s+(?<rest>.*)$")).rest | ltrim) as $r1
+      | ($r1 | firstword_rest) as $m2
+      | ($m2.rest | ltrim)
+    elif ($r | test("^-[0-9]+\\s+")) then
+      ($r | capture("^-[0-9]+\\s+(?<rest>.*)$")).rest
+    elif ($r | test("^-")) then
+      ($r | firstword_rest) as $m2
+      | ($m2.rest | ltrim)
     else
-      break
-    fi
-  done
-  printf '%s' "$s"
-}
+      $r
+    end;
 
-classify_git_tail() {
-  local tail="$1"
+def timeout_strip:
+  strip_leading_opts(["-s", "-k", "--signal", "--kill-after"])
+  | firstword_rest
+  | .rest | ltrim;
 
-  # Destructive / agent-restricted (deny)
-  if [[ "$tail" =~ ^reset[[:space:]] ]] && [[ "$tail" == *--hard* ]]; then echo deny; return; fi
+# 先頭ラッパー語 $w に応じて残り文字列 $rest を剥がす。マッチしなければ null。
+def wrapper_strip($w; $rest):
+  if $w == "env" then ($rest | strip_env_prefix)
+  elif ($w == "command" or $w == "builtin" or $w == "exec" or $w == "time" or $w == "nohup") then ($rest | ltrim)
+  elif $w == "sudo" then
+    ($rest | ltrim | strip_leading_opts(
+      ["-u", "-g", "-p", "-r", "-C", "-D", "-R", "-T", "-U",
+       "--user", "--group", "--prompt", "--role", "--close-from", "--directory", "--type"]))
+  elif $w == "nice" then ($rest | ltrim | nice_strip)
+  elif $w == "timeout" then ($rest | ltrim | timeout_strip)
+  elif $w == "xargs" then ($rest | ltrim | strip_leading_opts(["-n", "-I", "-P", "-s", "-L"]))
+  else null
+  end;
 
-  if [[ "$tail" =~ ^clean[[:space:]] ]]; then
-    if [[ "$tail" == *--force* ]] || [[ "$tail" == *xfd* ]] || [[ "$tail" == *-fd* ]] \
-      || [[ "$tail" == *-f* ]]; then echo deny; return; fi
-  fi
+# 1 段階だけ剥がす。変化なければ入力をそのまま返す（呼び出し側が同一判定で停止）。
+def strip_layer_once:
+  . as $s
+  | if ($s | test("^\\([\\s]*")) then
+      ($s | capture("^\\([\\s]*(?<r>.*)$")).r
+    elif ($s | test("^\\{[\\s]+")) then
+      ($s | capture("^\\{[\\s]+(?<r>.*)$")).r
+    elif ($s | test("^![\\s]+")) then
+      ($s | capture("^![\\s]+(?<r>.*)$")).r
+    elif ($s | test("^\\\\")) then
+      ($s | sub("^\\\\"; ""))
+    elif ($s | test("^(.*[^\\s])[\\s]*\\)[\\s]*$")) then
+      ($s | capture("^(?<r>.*[^\\s])[\\s]*\\)[\\s]*$")).r
+    elif ($s | test("^(.*[^\\s])[\\s]*\\}[\\s]*$")) then
+      ($s | capture("^(?<r>.*[^\\s])[\\s]*\\}[\\s]*$")).r
+    elif ($s | test("^[A-Za-z_][A-Za-z0-9_]*=\\S*[\\s]+")) then
+      ($s | capture("^[A-Za-z_][A-Za-z0-9_]*=\\S*[\\s]+(?<r>.+)$")).r
+    else
+      ($s | firstword_rest) as $m
+      | ($m.w) as $w
+      | if $w == "" then $s
+        elif ($w | test("/")) then
+          ($w | sub(".*/"; "")) as $wn
+          | $wn + $m.rest
+        else
+          (wrapper_strip($w; $m.rest)) as $ws
+          | if $ws == null then $s else $ws end
+        end
+    end;
 
-  if [[ "$tail" =~ ^branch[[:space:]]+-D ]] \
-    || [[ "$tail" =~ ^branch[[:space:]]+--delete[[:space:]]+--force ]] \
-    || [[ "$tail" =~ ^branch[[:space:]]+--force[[:space:]]+--delete ]]; then
-    echo deny
-    return
-  fi
+# strip_layer_once を変化しなくなるまで（上限 20 回）反復。
+def stabilize:
+  def go($n):
+    if $n <= 0 then .
+    else
+      . as $s
+      | (strip_layer_once) as $s2
+      | if $s2 == $s then $s else ($s2 | go($n - 1)) end
+    end;
+  go(20);
 
-  if [[ "$tail" =~ ^stash[[:space:]]+drop ]] || [[ "$tail" =~ ^stash[[:space:]]+clear ]]; then
-    echo deny
-    return
-  fi
+# 文字列内の全ての ' " を削除する（分割で片側だけ残った引用符 / 引用符で囲まれた
+# コマンド名対策）。
+def deleted_quotes:
+  gsub("'"; "") | gsub("\""; "");
 
-  if [[ "$tail" =~ ^reflog[[:space:]]+delete ]] || [[ "$tail" =~ ^reflog[[:space:]]+expire ]]; then
-    echo deny
-    return
-  fi
+def normalize_gh_once:
+  . as $s
+  | if ($s | test("^gh\\s+-R\\s+\\S+\\s+.+$")) then
+      "gh " + ($s | capture("^gh\\s+-R\\s+\\S+\\s+(?<r>.+)$")).r
+    elif ($s | test("^gh\\s+--repo\\s+\\S+\\s+.+$")) then
+      "gh " + ($s | capture("^gh\\s+--repo\\s+\\S+\\s+(?<r>.+)$")).r
+    elif ($s | test("^gh\\s+--repo=\\S*\\s+.+$")) then
+      "gh " + ($s | capture("^gh\\s+--repo=\\S*\\s+(?<r>.+)$")).r
+    else $s
+    end;
 
-  if [[ "$tail" =~ ^commit([[:space:]]|$) ]]; then echo deny; return; fi
-  if [[ "$tail" =~ ^push([[:space:]]|$) ]]; then echo deny; return; fi
-  if [[ "$tail" =~ ^checkout([[:space:]]|$) ]]; then echo deny; return; fi
-  if [[ "$tail" =~ ^switch([[:space:]]|$) ]]; then echo deny; return; fi
-  if [[ "$tail" =~ ^fetch([[:space:]]|$) ]]; then echo deny; return; fi
-  if [[ "$tail" =~ ^pull([[:space:]]|$) ]]; then echo deny; return; fi
-  if [[ "$tail" =~ ^clone([[:space:]]|$) ]]; then echo deny; return; fi
-  if [[ "$tail" =~ ^config([[:space:]]|$) ]]; then echo deny; return; fi
-  if [[ "$tail" =~ ^restore([[:space:]]|$) ]]; then echo deny; return; fi
+def normalize_gh:
+  def go:
+    . as $s
+    | (normalize_gh_once) as $s2
+    | if $s2 == $s then $s else ($s2 | go) end;
+  go;
 
-  if [[ "$tail" =~ ^rebase([[:space:]]|$) ]]; then echo ask; return; fi
+def normalize_git_once:
+  . as $s
+  | if ($s | test("^git\\s+-C\\s+\"[^\"]*\"\\s+.+$")) then
+      "git " + ($s | capture("^git\\s+-C\\s+\"[^\"]*\"\\s+(?<r>.+)$")).r
+    elif ($s | test("^git\\s+-C\\s+'[^']*'\\s+.+$")) then
+      "git " + ($s | capture("^git\\s+-C\\s+'[^']*'\\s+(?<r>.+)$")).r
+    elif ($s | test("^git\\s+-C\\s+\\S+\\s+.+$")) then
+      "git " + ($s | capture("^git\\s+-C\\s+\\S+\\s+(?<r>.+)$")).r
+    elif ($s | test("^git\\s+-c\\s+\\S+=\\S*\\s+.+$")) then
+      "git " + ($s | capture("^git\\s+-c\\s+\\S+=\\S*\\s+(?<r>.+)$")).r
+    elif ($s | test("^git\\s+--no-pager\\s+.+$")) then
+      "git " + ($s | capture("^git\\s+--no-pager\\s+(?<r>.+)$")).r
+    elif ($s | test("^git\\s+--git-dir=\\S*\\s+.+$")) then
+      "git " + ($s | capture("^git\\s+--git-dir=\\S*\\s+(?<r>.+)$")).r
+    elif ($s | test("^git\\s+--git-dir\\s+\\S+\\s+.+$")) then
+      "git " + ($s | capture("^git\\s+--git-dir\\s+\\S+\\s+(?<r>.+)$")).r
+    elif ($s | test("^git\\s+--work-tree=\\S*\\s+.+$")) then
+      "git " + ($s | capture("^git\\s+--work-tree=\\S*\\s+(?<r>.+)$")).r
+    elif ($s | test("^git\\s+--work-tree\\s+\\S+\\s+.+$")) then
+      "git " + ($s | capture("^git\\s+--work-tree\\s+\\S+\\s+(?<r>.+)$")).r
+    elif ($s | test("^git\\s+--namespace=\\S*\\s+.+$")) then
+      "git " + ($s | capture("^git\\s+--namespace=\\S*\\s+(?<r>.+)$")).r
+    elif ($s | test("^git\\s+--namespace\\s+\\S+\\s+.+$")) then
+      "git " + ($s | capture("^git\\s+--namespace\\s+\\S+\\s+(?<r>.+)$")).r
+    elif ($s | test("^git\\s+(-P|--paginate|--bare|--literal-pathspecs|--no-replace-objects|--no-optional-locks)\\s+.+$")) then
+      "git " + ($s | capture("^git\\s+(-P|--paginate|--bare|--literal-pathspecs|--no-replace-objects|--no-optional-locks)\\s+(?<r>.+)$")).r
+    else $s
+    end;
 
-  # Allow (read / low-risk git per policy)
-  if [[ "$tail" =~ ^status([[:space:]]|$) ]]; then echo allow; return; fi
-  if [[ "$tail" =~ ^diff([[:space:]]|$) ]]; then echo allow; return; fi
-  if [[ "$tail" =~ ^log([[:space:]]|$) ]]; then echo allow; return; fi
-  if [[ "$tail" =~ ^show([[:space:]]|$) ]]; then echo allow; return; fi
-  if [[ "$tail" =~ ^add([[:space:]]|$) ]]; then echo allow; return; fi
-  if [[ "$tail" =~ ^blame([[:space:]]|$) ]]; then echo allow; return; fi
+def normalize_git:
+  def go:
+    . as $s
+    | (normalize_git_once) as $s2
+    | if $s2 == $s then $s else ($s2 | go) end;
+  go;
 
-  if [[ "$tail" == "stash" ]] || [[ "$tail" =~ ^stash[[:space:]]*$ ]]; then echo allow; return; fi
-  if [[ "$tail" =~ ^stash[[:space:]]+pop ]]; then echo allow; return; fi
+def is_denied_rm:
+  . as $s
+  | if (($s | test("^rm\\s")) | not) then false
+    else
+      ( ($s | test("(^|\\s)-[A-Za-z]*[rR]")) or ($s | test("--recursive")) ) as $has_r
+      | ( ($s | test("(^|\\s)-[A-Za-z]*[fF]")) or ($s | test("--force")) ) as $has_f
+      | $has_r and $has_f
+    end;
 
-  if [[ "$tail" =~ ^reflog ]]; then echo allow; return; fi
+def is_denied_gh:
+  . as $s
+  | if (($s | test("^gh(\\s|$)")) | not) then false
+    else
+      ($s | normalize_gh) as $s2
+      | ["^gh\\s+pr\\s+merge", "^gh\\s+repo\\s+delete", "^gh\\s+repo\\s+archive",
+         "^gh\\s+release\\s+delete", "^gh\\s+issue\\s+delete", "^gh\\s+gist\\s+delete",
+         "^gh\\s+run\\s+delete"] as $pats
+      | any($pats[]; . as $p | $s2 | test($p))
+    end;
 
-  if [[ "$tail" == "branch" ]] || [[ "$tail" =~ ^branch[[:space:]]*$ ]]; then echo allow; return; fi
-  if [[ "$tail" =~ ^branch[[:space:]]+-a([[:space:]]|$) ]]; then echo allow; return; fi
-  if [[ "$tail" =~ ^branch[[:space:]]+-d([[:space:]]|$) ]]; then echo allow; return; fi
-  if [[ "$tail" =~ ^branch[[:space:]]+[^-] ]]; then echo allow; return; fi
+def is_denied_git:
+  . as $s
+  | if (($s | test("^git(\\s|$)")) | not) then false
+    else
+      ($s | normalize_git) as $s2
+      | ($s2 | sub("^git\\s*"; "")) as $tail
+      | ($tail | test("^push(\\s|$)"))
+    end;
 
-  if [[ "$tail" =~ ^tag([[:space:]]|$) ]]; then echo allow; return; fi
+# 最終判定: 引用符を残したまま一度、全削除して一度、どちらかで deny なら deny。
+def final_judgement:
+  . as $s
+  | if (($s | is_denied_gh) or ($s | is_denied_rm) or ($s | is_denied_git)) then true
+    else
+      ($s | deleted_quotes) as $s2
+      | (($s2 | is_denied_gh) or ($s2 | is_denied_rm) or ($s2 | is_denied_git))
+    end;
 
-  echo allow
-}
+# $(...) （1 段ネスト許容）とバッククォートの中身を全て抽出する。
+def extract_subs:
+  ( [scan("\\$\\(([^()]*(?:\\([^()]*\\)[^()]*)*)\\)")] | map(.[0]) ) as $dollar
+  | ( [scan("`([^`]*)`")] | map(.[0]) ) as $backtick
+  | $dollar + $backtick;
 
-classify_git() {
-  local s tail
-  s=$(normalize_git_cmd "$1")
-  if [[ ! "$s" =~ ^git([[:space:]]|$) ]]; then
-    echo allow
-    return
-  fi
-  tail=$(printf '%s' "${s#git}" | sed 's/^[[:space:]]*//')
-  classify_git_tail "$tail"
-}
-
-classify_gh() {
-  local s="$1"
-
-  if [[ "$s" =~ ^gh[[:space:]]+pr[[:space:]]+merge ]]; then echo deny; return; fi
-  if [[ "$s" =~ ^gh[[:space:]]+repo[[:space:]]+delete ]]; then echo deny; return; fi
-  if [[ "$s" =~ ^gh[[:space:]]+release[[:space:]]+delete ]]; then echo deny; return; fi
-  if [[ "$s" =~ ^gh[[:space:]]+issue[[:space:]]+delete ]]; then echo deny; return; fi
-  if [[ "$s" =~ ^gh[[:space:]]+gist[[:space:]]+delete ]]; then echo deny; return; fi
-  if [[ "$s" =~ ^gh[[:space:]]+run[[:space:]]+delete ]]; then echo deny; return; fi
-  if [[ "$s" =~ ^gh[[:space:]]+repo[[:space:]]+archive ]]; then echo deny; return; fi
-
-  # Read-only allowlist (before broad ask patterns)
-  if [[ "$s" =~ ^gh[[:space:]]+pr[[:space:]]+list([[:space:]]|$) ]]; then echo allow; return; fi
-  if [[ "$s" =~ ^gh[[:space:]]+pr[[:space:]]+view([[:space:]]|$) ]]; then echo allow; return; fi
-  if [[ "$s" =~ ^gh[[:space:]]+pr[[:space:]]+diff([[:space:]]|$) ]]; then echo allow; return; fi
-  if [[ "$s" =~ ^gh[[:space:]]+pr[[:space:]]+checks([[:space:]]|$) ]]; then echo allow; return; fi
-  if [[ "$s" =~ ^gh[[:space:]]+pr[[:space:]]+status([[:space:]]|$) ]]; then echo allow; return; fi
-
-  if [[ "$s" =~ ^gh[[:space:]]+issue[[:space:]]+list([[:space:]]|$) ]]; then echo allow; return; fi
-  if [[ "$s" =~ ^gh[[:space:]]+issue[[:space:]]+view([[:space:]]|$) ]]; then echo allow; return; fi
-  if [[ "$s" =~ ^gh[[:space:]]+issue[[:space:]]+status([[:space:]]|$) ]]; then echo allow; return; fi
-
-  if [[ "$s" =~ ^gh[[:space:]]+run[[:space:]]+list([[:space:]]|$) ]]; then echo allow; return; fi
-  if [[ "$s" =~ ^gh[[:space:]]+run[[:space:]]+view([[:space:]]|$) ]]; then echo allow; return; fi
-
-  if [[ "$s" =~ ^gh[[:space:]]+repo[[:space:]]+view([[:space:]]|$) ]]; then echo allow; return; fi
-
-  if [[ "$s" =~ ^gh[[:space:]]+release[[:space:]]+list([[:space:]]|$) ]]; then echo allow; return; fi
-  if [[ "$s" =~ ^gh[[:space:]]+release[[:space:]]+view([[:space:]]|$) ]]; then echo allow; return; fi
-
-  if [[ "$s" =~ ^gh[[:space:]]+search[[:space:]]+repos([[:space:]]|$) ]]; then echo allow; return; fi
-
-  if [[ "$s" =~ ^gh[[:space:]]+api([[:space:]]|$) ]]; then
-    if [[ "$s" =~ [[:space:]]-X[[:space:]]+(POST|PUT|DELETE|PATCH)([[:space:]]|$) ]]; then echo ask; return; fi
-    if [[ "$s" =~ [[:space:]]--method[[:space:]]+(POST|PUT|DELETE|PATCH)([[:space:]]|$) ]]; then echo ask; return; fi
-    if [[ "$s" =~ [[:space:]]-f[[:space:]] ]] || [[ "$s" =~ [[:space:]]-f= ]]; then echo ask; return; fi
-    if [[ "$s" =~ [[:space:]]-F[[:space:]] ]] || [[ "$s" =~ [[:space:]]-F= ]]; then echo ask; return; fi
-    if [[ "$s" =~ [[:space:]]--field[[:space:]] ]]; then echo ask; return; fi
-    if [[ "$s" =~ [[:space:]]--raw-field[[:space:]] ]]; then echo ask; return; fi
-    echo allow
-    return
-  fi
-
-  if [[ "$s" =~ ^gh[[:space:]]+pr[[:space:]]+(create|comment|edit|close|reopen|review|ready|lock|unlock)([[:space:]]|$) ]]; then
-    echo ask
-    return
-  fi
-
-  if [[ "$s" =~ ^gh[[:space:]]+issue[[:space:]]+(create|comment|edit|close|reopen|transfer|pin|unpin|lock|unlock)([[:space:]]|$) ]]; then
-    echo ask
-    return
-  fi
-
-  if [[ "$s" =~ ^gh[[:space:]]+release[[:space:]]+(create|edit|upload)([[:space:]]|$) ]]; then echo ask; return; fi
-
-  if [[ "$s" =~ ^gh[[:space:]]+repo[[:space:]]+(create|edit|fork|rename)([[:space:]]|$) ]]; then echo ask; return; fi
-
-  if [[ "$s" =~ ^gh[[:space:]]+gist[[:space:]]+(create|edit)([[:space:]]|$) ]]; then echo ask; return; fi
-
-  if [[ "$s" =~ ^gh[[:space:]]+label[[:space:]]+(create|edit|delete)([[:space:]]|$) ]]; then echo ask; return; fi
-
-  if [[ "$s" =~ ^gh[[:space:]]+secret[[:space:]]+(set|delete|remove)([[:space:]]|$) ]]; then echo ask; return; fi
-
-  if [[ "$s" =~ ^gh[[:space:]]+variable[[:space:]]+(set|delete)([[:space:]]|$) ]]; then echo ask; return; fi
-
-  if [[ "$s" =~ ^gh[[:space:]]+workflow[[:space:]]+(run|enable|disable)([[:space:]]|$) ]]; then echo ask; return; fi
-
-  if [[ "$s" =~ ^gh[[:space:]]+run[[:space:]]+(cancel|rerun)([[:space:]]|$) ]]; then echo ask; return; fi
-
-  echo allow
-}
-
-classify_pnpm() {
-  local s="$1"
-
-  # Package scripts / test runners the agent must not run.
-  if [[ "$s" =~ ^pnpm[[:space:]]+(run[[:space:]]+)?(typecheck|test|sql-test|vitest)([[:space:]]|$) ]] \
-    || [[ "$s" =~ ^pnpm[[:space:]]+exec[[:space:]]+vitest([[:space:]]|$) ]] \
-    || [[ "$s" =~ ^pnpm[[:space:]]+dlx[[:space:]]+vitest([[:space:]]|$) ]]; then
-    echo deny
-    return
-  fi
-
-  # Local linter. Other pnpm exec can run arbitrary binaries.
-  if [[ "$s" =~ ^pnpm[[:space:]]+exec[[:space:]]+oxlint([[:space:]]|$) ]]; then
-    echo allow
-    return
-  fi
-
-  if [[ "$s" =~ ^pnpm[[:space:]]+exec([[:space:]]|$) ]] \
-    || [[ "$s" =~ ^pnpm[[:space:]]+dlx([[:space:]]|$) ]]; then
-    echo ask
-    return
-  fi
-
-  echo allow
-}
-
-classify_one() {
-  local s="$1"
-  s=$(printf '%s' "$s" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
-  if [[ -z "$s" ]]; then
-    echo allow
-    return
-  fi
-
-  s=$(strip_rtk_prefix "$s")
-
-  if [[ "$s" =~ ^gh[[:space:]] ]]; then
-    classify_gh "$s"
-    return
-  fi
-
-  if [[ "$s" =~ ^git([[:space:]]|$) ]]; then
-    classify_git "$s"
-    return
-  fi
-
-  if [[ "$s" =~ ^pnpm([[:space:]]|$) ]]; then
-    classify_pnpm "$s"
-    return
-  fi
-
-  echo allow
-}
-
-worst=allow
-while IFS= read -r seg; do
-  [[ -z "$seg" ]] && continue
-  verdict=$(classify_one "$seg")
-  if [[ "$verdict" == deny ]]; then
-    worst=deny
-    break
-  fi
-  if [[ "$verdict" == ask && "$worst" == allow ]]; then
-    worst=ask
-  fi
-done < <("$JQ" -nr --arg cmd "$cmd" '
-  $cmd
+def split_segments:
+  gsub("\r\n"; "\n")
   | gsub("\\s*&&\\s*"; "\u0001")
   | gsub("\\s*\\|\\|\\s*"; "\u0001")
   | gsub("\\s*;\\s*"; "\u0001")
-  | split("\u0001")[]
-  | gsub("^\\s+"; "")
-  | gsub("\\s+$"; "")
-  | select(length > 0)
-')
+  | gsub("\\s*\\|\\s*"; "\u0001")
+  | gsub("\\s*&\\s*"; "\u0001")
+  | gsub("\n"; "\u0001")
+  | split("\u0001")
+  | map(trim)
+  | map(select(length > 0));
 
-"$JQ" -nc --arg p "$worst" '{permission: $p}'
+# classify($raw; $depth): $raw をセグメント分割し、いずれかが deny なら true。
+# 自己再帰のみを用いる（相互再帰を避けるため、per-segment 判定もこの中に inline する）。
+def classify($raw; $depth):
+  ($raw | split_segments) as $segs
+  | any($segs[];
+      . as $s0
+      | ($s0 | trim) as $s0t
+      | if $s0t == "" then false
+        else
+          (
+            if $depth < MAXDEPTH then
+              ($s0t | extract_subs) as $subs
+              | any($subs[]; classify(.; $depth + 1))
+            else false
+            end
+          ) as $sub_deny
+          | if $sub_deny then true
+            else
+              ($s0t | stabilize) as $s
+              | ($s | firstword_rest) as $m0
+              | ($m0.w | sub(".*/"; "")) as $wn0
+              | (
+                  if ($depth < MAXDEPTH) and ($wn0 == "bash" or $wn0 == "sh" or $wn0 == "zsh" or $wn0 == "dash") then
+                    ( { rest: ($m0.rest | ltrim), has_c: false }
+                      | until(
+                          (.rest | test("^-")) | not;
+                          ( . as $st
+                            | ($st.rest | firstword_rest) as $om
+                            | { rest: ($om.rest | ltrim),
+                                has_c: ($st.has_c or ($om.w | test("c"))) }
+                          )
+                        )
+                    ) as $optres
+                    | if $optres.has_c then
+                        { kind: "inner", inner: ($optres.rest | strip_quotes) }
+                      else
+                        { kind: "none" }
+                      end
+                  elif ($depth < MAXDEPTH) and ($wn0 == "eval") then
+                    { kind: "inner", inner: ($m0.rest | ltrim | strip_quotes) }
+                  else
+                    { kind: "none" }
+                  end
+                ) as $wrap
+              | if $wrap.kind == "inner" then
+                  classify($wrap.inner; $depth + 1)
+                else
+                  ($s | final_judgement)
+                end
+            end
+        end
+    );
 
+if (classify($cmd; 0)) then "deny" else "allow" end
+JQEOF
+
+worst=$("$JQ" -nr --arg cmd "$cmd" "$JQ_PROGRAM" 2>/dev/null)
+
+if [[ "$worst" != "allow" && "$worst" != "deny" ]]; then
+  # jq プログラムの実行エラーは fail-closed。
+  "$JQ" -nc '{permission:"deny", user_message:"guard-shell: 判定処理に失敗しました。"}'
+  exit 0
+fi
+
+if [[ "$worst" == deny ]]; then
+  "$JQ" -nc '{
+    permission: "deny",
+    user_message: "guard-shell: 破壊的コマンド（git push / rm -rf / 破壊的な gh）を拒否しました。",
+    agent_message: "このコマンドはエージェントから実行できません。ユーザーに実行を依頼してください。"
+  }'
+else
+  "$JQ" -nc '{permission: "allow"}'
+fi
 exit 0

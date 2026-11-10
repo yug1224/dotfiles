@@ -1,1 +1,0 @@
-../../shared/ai/hooks/guard-shell.test.sh

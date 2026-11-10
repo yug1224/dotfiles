@@ -1,7 +1,0 @@
----
-description: ブランチ名規約
-globs: []
-alwaysApply: false
----
-
-@~/.config/shared/ai/rules/conventions/branch-name-rule.md

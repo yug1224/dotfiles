@@ -30,6 +30,8 @@
 	difftool = false
 [init]
 	defaultBranch = main
+[alias]
+	cc = commit --trailer \"Co-authored-by: Claude <claude@anthropic.com>\" --trailer \"Co-authored-by: Cursor <cursoragent@cursor.com>\"
 [filter "dotfiles-path"]
 	smudge = DOTFILES=$(git rev-parse --show-toplevel) && sed \"s|__DOTFILES__|$DOTFILES|g\"
 	clean = DOTFILES=$(git rev-parse --show-toplevel) && sed \"s|$DOTFILES|__DOTFILES__|g\"

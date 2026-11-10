@@ -1,7 +1,0 @@
----
-description: コードレビュー観点チェックリスト。PR / コード変更のレビュー時に確認すべき観点。正確性, 設計, セキュリティ, パフォーマンス, 可読性, テスト。
-globs: []
-alwaysApply: false
----
-
-@~/.config/shared/ai/rules/checklists/code-review-checklist.md

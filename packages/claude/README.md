@@ -1,93 +1,33 @@
-# ~/.claude
+# `packages/claude/`（~/.claude）
 
-Claude Code の設定ファイル群。`make mise`（ルート `mise.toml` の `[dotfiles]`）で `~/.claude/` にデプロイされる。
-
-## 方針
-
-- 共有素材（agents 本文、rules、hooks など）は `packages/shared/ai/` に置き、`make mise` で `~/.config/shared/ai/` に展開される。ラッパーからは `@~/.config/shared/ai/...` 絶対パスで取り込む（例: `@~/.config/shared/ai/rules/...`）。
-- Claude Code 固有の設定（`settings.json` の hooks / permissions、`CLAUDE.md`）はこのパッケージに直接記述する
-
-## ディレクトリ構成（順次拡充）
+Claude Code のホスト固有設定。`make mise` で `~/.claude/` 配下に symlink を張る。Skill と規約の本文は Cursor と共有で、`make mise` が yug1224/skills の clone から `~/.claude/skills/` にコピーする（[shared README](../shared/ai/README.md)）。
 
 ```
 packages/claude/
-├── AGENTS.md → ../shared/ai/AGENTS.md   # メンテ・運用メモ（symlink・常時コンテキスト外）
-├── agents/                       # Claude frontmatter ラッパー（Advisor / Worker / MAGI）
-├── commands/                     # スラッシュコマンドラッパー（本文は shared）
-├── rules/                        # ルールラッパー（blog/, writing/, conventions/, visual/ 等）
-├── hooks/                        # Claude 用 adapter（共有 guard は ~/.config/shared/ai/hooks/）
-├── settings.json                 # hooks / permissions / model
-├── CLAUDE.md                     # Tier A（token-opt + INDEX）
-├── RTK.md                        # RTK 利用ガイド（shared 正本のラッパー・オンデマンド）
-└── README.md
+├── CLAUDE.md            # 常時カーネル
+├── settings.json        # 権限とフック
+├── settings.local.json  # 端末ごとの上書き（Git 外。mise 管理外）
+└── hooks/               # 薄いアダプタ。本体は shared/ai/hooks/guard-shell.sh
 ```
 
-コマンド・ルールの一覧とカテゴリは [`packages/cursor/README.md`](../cursor/README.md) の commands / rules 節を参照（Cursor と Claude でラッパーは対応する）。コマンド basename の旧→新対応は [`packages/shared/ai/docs/LOCAL-SETUP.md`](../shared/ai/docs/LOCAL-SETUP.md) を参照。
+skills の入れ方と自動発火の切り替えは [shared README](../shared/ai/README.md)「Cursor / Claude Code からの見え方」と [CONVENTIONS.md](../shared/ai/CONVENTIONS.md)「Skill の自動発火」。
 
-### writing/（日本語文章規範）
+## カーネル
 
-`packages/claude/rules/writing/` に次を置く（`make scaffold-wrappers` で生成）:
+`CLAUDE.md` は `kernel.mdc` と同期する（[ai-config-rule.md](../shared/ai/rules/meta/ai-config-rule.md)「カーネル」）。`codegraph install` が書き足すブロックの扱いは [setup-codegraph.md](../shared/ai/docs/setup-codegraph.md)。
 
-| ラッパー                           | 共有本文                                                              |
-| ---------------------------------- | --------------------------------------------------------------------- |
-| `japanese-tech-writing-rule.md`    | `@~/.config/shared/ai/rules/writing/japanese-tech-writing-rule.md`    |
-| `cognitive-rhythm-writing-rule.md` | `@~/.config/shared/ai/rules/writing/cognitive-rhythm-writing-rule.md` |
-| `x-post-rule.md`                   | `@~/.config/shared/ai/rules/writing/x-post-rule.md`                   |
+## 権限・フック（settings.json）
 
-- **Tier**: B（コマンド経由 / agent-requestable）。CLAUDE.md Tier A には載せない
-- **Cursor との非対称**: Cursor は `japanese-tech-writing-rule.mdc` の docs/README 系 `globs` で自動適用（既定 `tech-doc-lite`）。Claude に glob 相当はないため、同等の自動適用はせずコマンド／明示 `@` に任せる
-- **明示適用**: `/apply-japanese-tech-writing`（引数でスライス指定可。既定 `tech-doc-lite`）。Cursor / Claude 共通
-- **X投稿**: `/suggest-x-post` が `x-post-rule` を参照（コマンド経由。`globs` 自動適用なし）
-- **用途**: 日本語出力の基底。Git 管理コマンドからの必須 Read は `plan-blog` / `suggest-development-log` / `suggest-pr-description`（`review-blog` は writing-style 経由）。採用メッセージ系（`.local`）は必須 Read する場合も適用は `tech-doc-lite`
-- **優先**: blog では `writing-style-rule` の Override が優先（JTW は `blog-base`）。開発ログ／PR 説明／採用メッセージは `tech-doc-lite`。CRW は体験記・読み物時のみ opt-in
-- **出典**: [`packages/shared/ai/README.md`](../shared/ai/README.md)「出典・蒸留」（JTW: Unlicense / CRW: 原典に表記なし）
+- **allow**: `Bash(*)` と `mcp__codegraph__*`
+- **deny**: `git push` / 破壊的な `gh` / `rm -rf` の前方一致。正は `guard-shell.sh`。`settings.json` 側は保険で、`env git push` などラッパー経由は拾えない
+- ガードはサンドボックスではなく事故防止。`gh api -X DELETE` や git alias 経由は対象外
+- **PreToolUse**（matcher `Bash`）: `hooks/guard-shell.sh`。deny のときだけ出力し、allow 時は無出力で通常の権限判定に戻す
+- **UserPromptSubmit**: `codegraph prompt-hook`（codegraph 未インストール時は何もしない）
 
-Claude Code の Agent Skills（`~/.claude/skills/` に `<name>/SKILL.md` を置く形式）は本 dotfiles の `packages/claude` には**現状同梱していない**。利用する場合はローカルで `~/.claude/skills/` に追加するか、必要なら `packages/claude/skills/` を新設して `make mise` で配布する。
+env・model・plugins など端末ごとの設定は `settings.local.json` に書く。mise は張らないので、端末ごとに手動で symlink する。
 
-## `@`-import の基準（`make mise` 後）
-
-| ラッパー（リポジトリ）                | 共有本文への import 例                    |
-| ------------------------------------- | ----------------------------------------- |
-| `packages/claude/commands/*.md`       | `@~/.config/shared/ai/commands/...`       |
-| `packages/claude/agents/*.md`         | `@~/.config/shared/ai/agents/...`         |
-| `packages/claude/rules/<subdir>/*.md` | `@~/.config/shared/ai/rules/<subdir>/...` |
-| `packages/claude/CLAUDE.md`           | Tier A: token-opt + `INDEX`（発見索引）   |
-
-**Meta LOOP（agents）**: Advisor は `sonnet`（読み取り tools。Cursor は Grok 4.5、Claude Code は Grok 非対応のため）。専門 Worker（`design-worker` / `build-worker` / `general-worker`）、調査 `explore-worker`、MAGI は `sonnet`（Composer 非対応のため）。書込 Worker は `Write, Edit` を含む（scaffold 既定の読み取りのみにしない）。`explore-worker` は読み取り + Bash（`codegraph explore` 用。`Write`/`Edit` なし）。`quality-worker` は無し。Advisor は原則明示時のみ起動（未委譲の主戦場は Worker）。委譲ゲート・Task `model` 必須の正本は `agent-delegation-rule`（Tier B。`packages/claude/rules/conventions/agent-delegation-rule.md`）。**例外**: `/review-diff` `/review-pr` `/review-diff-linus` `/review-pr-linus` はコマンド定義により `explore-worker` + `quality-advisor` を常時並列起動。詳細は [`LOCAL-SETUP.md`](../shared/ai/docs/LOCAL-SETUP.md)「Meta LOOP」。エージェント一覧の説明は [`packages/cursor/README.md`](../cursor/README.md) の agents 節を参照。
-
-詳細とフックの委譲先は [`packages/shared/ai/README.md`](../shared/ai/README.md) を参照。命名・`.local.md` 上書きは [CONVENTIONS.md](../shared/ai/CONVENTIONS.md)。運用メモは `shared/ai/README.local.md`（gitignore）。
-
-## ローカル拡張（`*.local.*`）
-
-[`packages/cursor`](../cursor/README.md) と同様、Git に載せたくない端末専用の定義は **`*.local.md` / `*.local.*`** とする（本パッケージの [`.gitignore`](.gitignore) で除外済み）。
-
-```
-~/.claude/
-├── commands/
-│   ├── magi.md                 ← mise [dotfiles]（Git 管理）
-│   └── my-team.local.md        ← ローカル専用コマンド
-├── rules/
-│   └── conventions/
-│       └── my-policy.local.md  ← ローカル専用ルール（Claude は .md ラッパーでも可）
-~/.config/shared/ai/rules/.../
-    └── *.local.md              ← 共有ルール本文から参照する補助（mise [dotfiles] で全ツールから見える）
+```bash
+ln -s ~/.dotfiles/packages/claude/settings.local.json ~/.claude/settings.local.json
 ```
 
-- **共有ルールから参照する補助ファイル**（例: `pr-review-rule.local.md`）は **`~/.config/shared/ai/rules/<subdir>/`**（リポジトリでは `packages/shared/ai/rules/<subdir>/`）に置く。`make mise` で `~/.config/shared/ai/` に展開され、Cursor / Claude のどちらからでも同じパスで参照できる。
-- **`~/.claude/commands/` 直下の `*.local.md`** は Claude 専用のスラッシュコマンドとして追加できる。Git 管理のコマンドと**同名**にしない（挙動が不定になりうる）。
-- Cursor 専用の `.mdc` やフックの詳細は [`packages/cursor/README.md`](../cursor/README.md) の「ローカル拡張」を参照。
-
-## settings.json の hooks（PreToolUse）
-
-`make mise` で `~/.claude/settings.json` にデプロイされる。Bash 実行前に **2 段**の `PreToolUse` が順に走る（guard → RTK）。
-
-| 順序 | コマンド                             | matcher |
-| ---- | ------------------------------------ | ------- |
-| 1    | `$HOME/.claude/hooks/guard-shell.sh` | `Bash`  |
-| 2    | `$HOME/.claude/hooks/rtk-hook.sh`    | `Bash`  |
-
-RTK 前提・セットアップ・競合対処・guard 判定表: [`packages/shared/ai/docs/RTK.md`](../shared/ai/docs/RTK.md)。[`RTK.md`](RTK.md) はオンデマンド（`CLAUDE.md` Tier A には載せない）。
-
-## CodeGraph
-
-セマンティックコードインテリジェンス。セットアップ・MCP 手動マージ・プロジェクト `init`: [`packages/shared/ai/docs/CODEGRAPH.md`](../shared/ai/docs/CODEGRAPH.md)。`codegraph-rule` はコマンド／明示 Read（`CLAUDE.md` Tier A には載せない）。`~/.claude.json` への MCP マージは手動（dotfiles 未管理）。
+セットアップ・運用フローの索引は [shared/ai/docs/README.md](../shared/ai/docs/README.md)。

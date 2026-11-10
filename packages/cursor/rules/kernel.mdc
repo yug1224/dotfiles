@@ -1,0 +1,8 @@
+---
+description: 作業種別ごとの詳細ルールの自動 Read
+alwaysApply: true
+---
+
+コードを実装・修正する前に `~/.claude/skills/local-rules/references/conventions/coding-rule.local.md` を 1 回 Read する（無ければそのまま続行）。
+
+日本語の技術文書・記事を書く・推敲する前に `~/.claude/skills/apply-japanese-tech-writing/SKILL.md` を 1 回 Read する。

@@ -35,6 +35,7 @@ dotfiles.default_mode = "symlink"
 "brew:mise" = "latest"
 "brew:switchaudio-osx" = "latest"
 "brew:tig" = "latest"
+"brew:tgrep" = "latest"
 "brew:tree" = "latest"
 "brew:zsh-autosuggestions" = "latest"
 "brew:zsh-completions" = "latest"
@@ -47,10 +48,12 @@ dotfiles.default_mode = "symlink"
 "brew-cask:google-chrome" = "latest"
 "brew-cask:microsoft-edge" = "latest"
 
-# gcloud-cli / google-japanese-ime（pkg 状態を mise が追えない）/ onyx（Caskroom の .metadata を版と誤認）/ raycast 等 / rtmpdump
+# claude（自己更新で版が乖離）/ gcloud-cli / google-japanese-ime（pkg 状態を mise が追えない）/ onyx（Caskroom の .metadata を版と誤認）/ raycast 等 / rtmpdump
 # visual-studio-code は意図的に外す（メインエディタは Cursor）。code CLI がある場合のみ拡張を入れる
+# claude-cli:// の URL ハンドラは CLI 実体への symlink がバージョン固定なので latest へ貼り直す
+# Agent Skills は yug1224/skills を ~/Workspaces/yug1224/skills に clone し、gh skill でコピーして入れる
 [tasks.bootstrap]
-description = "Install brew-escaped casks, rtmpdump, and optional VS Code extensions (idempotent)"
+description = "Install brew-escaped casks, rtmpdump, Claude Code URL handler symlink, agent skills, and optional VS Code extensions (idempotent)"
 run = """
 #!/usr/bin/env bash
 set -euo pipefail
@@ -74,6 +77,7 @@ fi
 echo "bootstrap: ensure casks via brew"
 installed_casks="$(brew list --cask 2>/dev/null || true)"
 casks=(
+  claude
   gcloud-cli
   google-japanese-ime
   onyx
@@ -86,8 +90,40 @@ for cask in "${casks[@]}"; do
     continue
   fi
   echo "bootstrap: install cask $cask"
-  brew install --cask "$cask"
+  brew install --cask --adopt "$cask"
 done
+
+echo "bootstrap: ensure Claude Code URL handler symlink"
+handler_bin="$HOME/Applications/Claude Code URL Handler.app/Contents/MacOS/claude"
+if [[ -e "$handler_bin" || -L "$handler_bin" ]]; then
+  claude_bin="$(mise which claude 2>/dev/null || true)"
+  if [[ -z "$claude_bin" ]]; then
+    echo "bootstrap: mise which claude failed; skip URL handler"
+  elif [[ "$(readlink "$handler_bin" 2>/dev/null || true)" != "$claude_bin" ]]; then
+    ln -sfn "$claude_bin" "$handler_bin"
+    echo "bootstrap: repointed URL handler -> $claude_bin"
+  fi
+else
+  echo "bootstrap: Claude Code URL handler not installed; skip"
+fi
+
+echo "bootstrap: ensure agent skills"
+skills_repo="$HOME/Workspaces/yug1224/skills"
+if ! command -v gh >/dev/null 2>&1; then
+  # 旧 symlink を外す前に止める。外してから入れられないと Skill が全部見えなくなる
+  echo "bootstrap: gh not found; skip agent skills (rerun: make mise)" >&2
+elif [[ ! -d "$skills_repo" ]] && ! git clone https://github.com/yug1224/skills.git "$skills_repo"; then
+  echo "bootstrap: clone yug1224/skills failed; skip agent skills (fix and rerun: make mise)" >&2
+else
+  # 旧構成の symlink（→ packages/shared/ai/skills）があると、その先にコピーされてしまうので外す
+  if [[ -L "$HOME/.claude/skills" ]]; then
+    rm "$HOME/.claude/skills"
+  fi
+  # 失敗しても後続（VS Code 拡張）は続ける。原因を直したら make mise で入れ直す
+  if ! mise run skills:update; then
+    echo "bootstrap: agent skills install failed; continue (fix and rerun: make mise)" >&2
+  fi
+fi
 
 if ! command -v code >/dev/null 2>&1; then
   echo "bootstrap: code CLI not found; skip VS Code extensions"
@@ -139,11 +175,15 @@ done
 echo "bootstrap: done"
 """
 
+# 手元の clone の作業ツリーをそのまま入れる（pull はしない）。Git 外の mise.local.toml で同名タスクを上書きすると、追加のリポジトリも入れられる
+[tasks."skills:update"]
+description = "Install agent skills from the local clone of yug1224/skills"
+run = "gh skill install ~/Workspaces/yug1224/skills --from-local --all --agent claude-code --scope user --force"
+
 [dotfiles]
 # 安定パス入口（初回は config 相対 source なので ~/.dotfiles 不要）
 "~/.dotfiles" = { source = ".", mode = "symlink" }
 "~/.tigrc" = { source = "packages/tig/.tigrc", mode = "symlink" }
-"~/.config/rtk" = { source = "packages/rtk", mode = "symlink" }
 "~/Library/Preferences/pnpm/rc" = { source = "packages/pnpm/rc", mode = "symlink" }
 # packages/git — 必要ファイルのみ（.gitignore / config.local は非管理）
 "~/.config/git/config" = { source = "packages/git/config", mode = "symlink" }
@@ -165,22 +205,12 @@ echo "bootstrap: done"
 # packages/cursor — トップレベル個別 + サブツリーはディレクトリ symlink
 "~/.cursor/hooks.json" = { source = "packages/cursor/hooks.json", mode = "symlink" }
 "~/.cursor/permissions.json" = { source = "packages/cursor/permissions.json", mode = "symlink" }
-"~/.cursor/.cursorignore" = { source = "packages/cursor/.cursorignore", mode = "symlink" }
-"~/.cursor/AGENTS.md" = { source = "packages/cursor/AGENTS.md", mode = "symlink" }
 "~/.cursor/rules" = { source = "packages/cursor/rules", mode = "symlink" }
-"~/.cursor/agents" = { source = "packages/cursor/agents", mode = "symlink" }
-"~/.cursor/commands" = { source = "packages/cursor/commands", mode = "symlink" }
 "~/.cursor/hooks" = { source = "packages/cursor/hooks", mode = "symlink" }
 
 # packages/claude — 同上（settings.local.json は非管理）
 "~/.claude/settings.json" = { source = "packages/claude/settings.json", mode = "symlink" }
 "~/.claude/CLAUDE.md" = { source = "packages/claude/CLAUDE.md", mode = "symlink" }
-"~/.claude/RTK.md" = { source = "packages/claude/RTK.md", mode = "symlink" }
-"~/.claude/.cursorignore" = { source = "packages/claude/.cursorignore", mode = "symlink" }
-"~/.claude/AGENTS.md" = { source = "packages/claude/AGENTS.md", mode = "symlink" }
-"~/.claude/rules" = { source = "packages/claude/rules", mode = "symlink" }
-"~/.claude/agents" = { source = "packages/claude/agents", mode = "symlink" }
-"~/.claude/commands" = { source = "packages/claude/commands", mode = "symlink" }
 "~/.claude/hooks" = { source = "packages/claude/hooks", mode = "symlink" }
 
 # packages/ssh — .ssh 全体は紐付けない（鍵・known_hosts は非管理）

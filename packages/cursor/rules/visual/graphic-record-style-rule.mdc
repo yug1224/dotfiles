@@ -1,7 +1,0 @@
----
-description: グラフィックレコード画像のカラフルGRスタイル（白背景・4列・小物禁止・16:9）
-globs: []
-alwaysApply: false
----
-
-@~/.config/shared/ai/rules/visual/graphic-record-style-rule.md

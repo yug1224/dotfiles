@@ -367,3 +367,7 @@ _.code-workspace
 # CodeGraph local index
 
 .codegraph/
+
+# Serena local directory
+
+.serena/project.yml

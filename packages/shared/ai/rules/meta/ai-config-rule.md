@@ -1,46 +1,31 @@
-応答の冒頭に「✅️: ai-config-rule」と出力する。
-
 # AI 設定変更ルール（dotfiles）
 
-`packages/shared/ai/` および Cursor / Claude ラッパーを変更するときの手順。`alwaysApply: false` — dotfiles リポジトリで AI 設定を触るときのみ Read。
+dotfiles の `packages/shared/ai/` やカーネル、または Skill のリポジトリ（yug1224/skills と private リポジトリ）を変更するときだけ Read する。命名・配置・書かないものは [CONVENTIONS.md](../../CONVENTIONS.md)。
 
-## 3 ラッパー原則
+## 手順
 
-1. **正本**: `packages/shared/ai/` に frontmatter なし `.md`
-2. **Cursor**: `packages/cursor/rules/<subdir>/<name>.mdc` — frontmatter + `@~/.config/shared/ai/rules/<subdir>/<name>.md`
-3. **Claude**: `packages/claude/rules/<subdir>/<name>.md` — 1 行 `@import`
+1. 本文を追加・修正する。Skill と規約は入手元のリポジトリで直し、`~/.claude/skills/` は直接直さない。ルールのパスは Skill の Step に書いて 1 回 Read させ、`@` でインライン展開しない（Claude Code は `@path` を起動時に展開するので二重に載る）
+2. 外部ソースを蒸留した場合は yug1224/skills の README「出典・蒸留」に追記する
+3. 下の漏洩チェックを確認する
+4. dotfiles は `make check-sync` → `make mise`。Skill の反映は `mise -C ~/.dotfiles run skills:update`（作業ツリーがそのまま入るので、入れる前にブランチを確かめる）。公開側は push して GitHub と揃える
 
-コマンド・エージェントも同型（shared 正本 → 各 `packages/<tool>/` ラッパー）。
+## 漏洩チェック（PR 前）
 
-## 追加・変更手順
+- [ ] tracked ファイルに会社名 / 製品名 / 非公開 URL がない
+- [ ] Skill の `description`・使用例・README に製品名が残っていない（プロバイダ固有は `.local` へ）
+- [ ] チケット例に会社プレフィックスがない（`PROJ-1234` を使う）
+- [ ] 公開 Skill が only-local ファイルを必須 Read していない
+- [ ] rename 後の旧 basename 参照が残っていない
+- [ ] recruiting ドメインは private リポジトリの `local-rules/references/<domain>/*.local.md` だけに置き、公開側からは参照しない
+- [ ] 公開側（dotfiles・yug1224/skills）に private リポジトリの名前やパスがない
 
-1. shared 本文を追加・修正（1 行目に `応答の冒頭に「✅️: <rule-id>」と出力する。` を shared のみ記載）
-2. **外部ソースを蒸留した場合**: 正本フッターに出典を書く。`README.md` の「出典・蒸留」一覧を更新する（詳細: [CONVENTIONS.md](../../CONVENTIONS.md)「外部ソースの蒸留」）
-3. `make scaffold-wrappers` で Cursor / Claude 薄ラッパーを生成（既存は上書きしない）。手書きしてもよい
-4. `wrapper-parity-checklist.md` と `leakage-checklist.md` を上から確認
-5. `make check-sync` で allowlist / wrapper / deny-guard / always-on / context-bloat を検証
-6. `make mise` で shared 本文と Cursor / Claude ラッパーを反映
+## カーネル
 
-## 例外
-
-| ファイル                      | ラッパー    | 理由                                                  |
-| ----------------------------- | ----------- | ----------------------------------------------------- |
-| `output-verification-rule.md` | なし        | コマンドから直接 `@` 参照                             |
-| `INDEX`（Claude only）        | Claude のみ | 発見索引。shared SoT なし（`wrapper-exceptions.txt`） |
-
-## CLAUDE.md Tier 判定
-
-| Tier          | 内容                             | 例                                                                         |
-| ------------- | -------------------------------- | -------------------------------------------------------------------------- |
-| A（常時）     | `CLAUDE.md` から `@./rules/...`  | `token-optimization-rule` + `INDEX`（発見索引）                            |
-| B（参照）     | agent-requestable / コマンド経由 | commit/review、meta、`agent-delegation-rule`、`pr-feedback-registry.local` |
-| C（ローカル） | `.local.md` のみ                 | coding-rule.local, pr-review-rule.local                                    |
-
-新規 convention は Tier B をデフォルトとし、`alwaysApply: true` は token-optimization のみ。委譲ゲート・Task model 必須の詳細は `agent-delegation-rule`（Tier B）に分離し、token-opt は always-on 要約のみ載せる。Claude Tier A は token-opt + INDEX（本文は載せない）。`make check-sync` は `check-context-bloat.sh`（肥大警告）も含む。
+`packages/claude/CLAUDE.md` と `packages/cursor/rules/kernel.mdc` は同じ指示を保つ。許す差分は Cursor の frontmatter と `CLAUDE.md` の見出しだけで、`make check-sync`（`scripts/check-kernel-sync.sh`）がずれを FAIL にする。
 
 ## 禁止
 
-- shared 本文に frontmatter を書く
-- ラッパーに `✅️:` を書く（正本のみ）
+- `~/.cursor/skills` に Skill を入れる（`~/.claude/skills` と二重表示になる。`gh skill` は `--agent claude-code` だけで入れる）
+- カーネル以外の常時ロードを増やす（詳細ルールの `alwaysApply: true`、`CLAUDE.md` への `@import`、`packages/cursor/rules` への kernel 以外の `.mdc`、`~/.claude/rules/` へのファイル追加）
 - Git 管理ファイルに会社名・非公開 URL を書く
-- 1 ファイルだけ更新してラッパーを放置（FB-005）
+- `.local.md` に `.md` の全文をコピーする

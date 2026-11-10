@@ -1,195 +1,55 @@
 # AI 素材の命名・配置規約
 
-正本は `packages/shared/ai/`。各ツールは `packages/cursor/` / `packages/claude/` から `@~/.config/shared/ai/...` で取り込む。
+Skill と規約の正本は [yug1224/skills](https://github.com/yug1224/skills)（公開）と、Git 外の private リポジトリ。`gh skill` が `~/.claude/skills/` にコピーし、Cursor / Claude Code はそこを直接参照する（ラッパーなし）。docs・hooks・`rules/meta/` はこの `packages/shared/ai/` に残し、`~/.config/shared/ai/` として見える。常時カーネルは `packages/cursor/rules/kernel.mdc` と `packages/claude/CLAUDE.md`。
 
-## 共通
+## 命名
 
-| 項目                   | 規則                                                 |
-| ---------------------- | ---------------------------------------------------- |
-| 文字                   | kebab-case（小文字・ハイフン）                       |
-| shared 本文            | `.md` のみ（frontmatter なし）                       |
-| ローカル上書き         | `<basename>.local.md`（同一ディレクトリ、gitignore） |
-| 本文・Steps の参照     | `@~/.config/shared/ai/<type>/<subdir>/<file>.md`     |
-| Git 本文に書かないもの | 会社名・製品名・自社固有ワークスペースパス           |
+| 種別           | パターン                                  | 配置                                                    |
+| -------------- | ----------------------------------------- | ------------------------------------------------------- |
+| ルール         | `<topic>-rule.md`                         | `skills/shared-rules/references/<domain>/`              |
+| ローカル Skill | `local-<verb>-<object>/SKILL.md`          | private リポジトリの `skills/`                          |
+| Skill          | `<verb>-<object>/SKILL.md`                | `skills/`（条件付きで読む大きい素材だけ `references/`） |
+| ローカル上書き | `<basename>.local.md` / `<skill>.md`      | `skills/local-rules/references/<domain>/` / `overlays/` |
+| ドキュメント   | `setup-<tool>.md` / `<topic>-playbook.md` | dotfiles の `docs/`（索引は `docs/README.md`）          |
 
-## 種別ごとの basename
+ファイル名は kebab-case。Skill は `<verb>-<object>`（ローカル Skill は先頭に `local-`）で、動詞は `suggest` / `review` / `plan` / `analyze` / `apply` から選ぶ（勝手に増やさない）。例外は規約の置き場だけの参照専用 Skill（`shared-rules` / `local-rules`）で、`disable-model-invocation: true` を付ける。
 
-| 種別           | パターン                        | 配置                                                                                                                                           |
-| -------------- | ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| ルール         | `<topic>-rule.md`               | `rules/<domain>/`（`meta/` は dotfiles 変更メタ。`writing/` は媒体非依存の文章規範）                                                           |
-| チェックリスト | `<topic>-checklist.md`          | 原則 `rules/checklists/`。例外: `publish-checklist.md` は `rules/blog/` 可。`rules/meta/*-checklist.md`（`leakage` / `wrapper-parity` 等）も可 |
-| **Meta**       | `<topic>-rule.md` 等            | `rules/meta/` — dotfiles AI 設定変更手順（`alwaysApply: false`）                                                                               |
-| **Registry**   | `pr-feedback-registry.local.md` | `rules/conventions/` — 再発防止（**Git 管理外**）                                                                                              |
-| コマンド       | 下記「コマンド命名」参照        | `commands/`                                                                                                                                    |
-| エージェント   | `<name>.md`                     | `agents/`                                                                                                                                      |
+Skill は frontmatter（`name` / `description`）を本文先頭に持つ。`name` はディレクトリ名と一致させ、`description` に「何をするか」と「いつ使うか」を書く（Cursor はこれで自動適用を判断する）。ルールに frontmatter は書かない。
 
-### コマンド命名
+dotfiles の Skill は動詞先頭。業務リポジトリ側の Skills は **名詞先頭** `<domain>-<pattern>`（dotfiles の動詞先頭と名前空間を分ける）。Cursor も `.claude/skills/` を読むため、置き場は `.claude/skills/` に一本化する。詳細は [docs/project-skills.md](./docs/project-skills.md)。
 
-新規・既存とも **`<verb>-<object>.md`**（スラッシュコマンド名＝basename）。例: `suggest-plan.md`, `analyze-issue.md`, `review-pr.md`。
+## Skill の自動発火
 
-選定基準: 日本語会話・業務でカタカナ／基礎語として通じやすいこと。難しめのビジネス英語は避ける。新コマンドは下表の許可動詞から選ぶ（勝手に系列を増やさない）。
+ワークフローはすべて `skills/` に置き、コマンド（`commands/`）は使わない。両ツールとも `/<name>` で呼べる。自動発火の有無は frontmatter の `disable-model-invocation` で切り替える。
 
-| 動詞           | 意味（JP）                                     | 心象               | 避ける語                                   |
-| -------------- | ---------------------------------------------- | ------------------ | ------------------------------------------ |
-| `suggest`      | 提案する                                       | サジェスト         | —                                          |
-| `review`       | レビューする                                   | レビュー           | —                                          |
-| `plan`         | 計画する                                       | プラン             | —                                          |
-| `write`        | 文章・プロンプト案を書く（未適用）             | 書く               | `draft`（馴染み薄い）                      |
-| `capture`      | フィードバック等を記録・取り込む（log 追記案） | 記録する／取り込む | `lesson` を object にしない                |
-| `analyze`      | 調査・分析し方針を出す（自動修正しない）       | 分析する           | `diagnose` / `fix`（馴染み薄い・修復暗示） |
-| `apply`        | ルールを読み込み適用する                       | 適用する           | —                                          |
-| `verify`       | 出力を検証する                                 | ベリファイ／検証   | —                                          |
-| （例外）`magi` | ブランド合議の起動                             | —                  | `run-magi` は冗長                          |
+| frontmatter                      | 向くもの                                                                                       | 例                                                   |
+| -------------------------------- | ---------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| `disable-model-invocation` なし  | 自然文の依頼（「コミットメッセージ考えて」）でも発火させたい、読み取りと提案だけのワークフロー | `suggest-commit-message`, `plan-blog`, `review-blog` |
+| `disable-model-invocation: true` | 明示したときだけ動かすもの。自動発火させたくないワークフロー・再適用系・ローカル Skill         | `apply-review-feedback`                              |
 
-`write` / `capture` / `suggest` の使い分け: 単一の本文・プロンプト案を起こすなら `write`、フィードバック等を log に取り込むなら `capture`、規約に沿った候補を並べるなら `suggest`。
-
-リネームは許可する。`packages/shared` + Cursor + Claude の **3 ラッパーと参照を同一変更で同期**する（`✅️: /新名` と frontmatter `name:` も一致させる）。
-
-#### 旧 → 新対応表
-
-| 旧                        | 新                        | 変更                                                             |
-| ------------------------- | ------------------------- | ---------------------------------------------------------------- |
-| `suggest-branch-name`     | `suggest-branch-name`     | 維持                                                             |
-| `suggest-commit-message`  | `suggest-commit-message`  | 維持                                                             |
-| `suggest-pr-description`  | `suggest-pr-description`  | 維持                                                             |
-| `suggest-plan`            | `suggest-plan`            | 維持                                                             |
-| `suggest-development-log` | `suggest-development-log` | 維持                                                             |
-| `apply-coding-rule`       | `apply-coding-rule`       | 維持                                                             |
-| `verify-output`           | `verify-output`           | 維持                                                             |
-| `magi`                    | `magi`                    | 維持（唯一の名詞例外）                                           |
-| （新規）                  | `verify-adversarial`      | 敵対的検証の明示入口                                             |
-| （新規）                  | `analyze-ai-config`       | AI 資産棚卸し（傘。`skills`/`rules`/`commands`/`agents` 引数可） |
-| （新規）                  | `analyze-ai-skills`       | → `analyze-ai-config skills` のエイリアス                        |
-| （新規）                  | `analyze-ai-rules`        | → `analyze-ai-config rules` のエイリアス                         |
-| （新規）                  | `analyze-ai-commands`     | → `analyze-ai-config commands` のエイリアス                      |
-| （新規）                  | `analyze-ai-agents`       | → `analyze-ai-config agents` のエイリアス                        |
-| `pr-review`               | `review-pr`               | リネーム                                                         |
-| `diff-review`             | `review-diff`             | リネーム                                                         |
-| `blog-review`             | `review-blog`             | リネーム                                                         |
-| `magi-pr-review`          | `review-pr-magi`          | リネーム（MAGI は suffix）                                       |
-| `blog-plan`               | `plan-blog`               | リネーム                                                         |
-| `capture-pr-lesson`       | `capture-pr-feedback`     | リネーム（`lesson` → `feedback`）                                |
-| `fix-issue`               | `analyze-issue`           | リネーム                                                         |
-| `graphic-record-prompt`   | `write-graphic-prompt`    | リネーム                                                         |
-
-手元の `*.local.md` 追従は [docs/LOCAL-SETUP.md](./docs/LOCAL-SETUP.md) を参照。
-
-### スキル命名
-
-業務リポジトリ側の Skills は **名詞先頭** `<domain>-<pattern>`（コマンドの動詞先頭と名前空間分離）。コマンド動詞プレフィックス（`suggest-` / `review-` / `plan-` / `write-` / `capture-` / `analyze-` / `apply-` / `verify-` / `magi`）は先頭に付けない。`name:` は dirname と一致。詳細は [docs/templates/skills/README.md](./docs/templates/skills/README.md)。
-
-### 自己申告（`✅️:`）の rule-id
-
-- **ルール / チェックリスト**: 共有本文 1 行目に `応答の冒頭に「✅️: <rule-id>」と出力する。` を記載。`<rule-id>` はファイル名から拡張子（`.md`）を除いた文字列。**`-rule` を二重に付けない**。`alwaysApply: true` のルール（例: `token-optimization-rule`）は **コマンド／明示適用時のみ** 冒頭自己申告すればよい（毎応答冒頭は不要。観測コスト削減）。
-- **コマンド経由でルールを Read する場合**: **コマンドの ✅️ のみ**（ルール id は出さない）。ルールを `@` / 明示 Read のみしたときだけルールの ✅️ を出す。
-- **`.local.md` の rule-id**: basename そのまま（例: `coding-rule.local.md` → `✅️: coding-rule.local`、`pr-review-rule.local.md` → `✅️: pr-review-rule.local`）。ラッパーには書かない。
-- **コマンド**: Step 0 に `応答の冒頭に \`✅️: /command-name\` と出力する。`（スラッシュ付き）。frontmatter の `name:`および`/command-name` と basename を一致させる。**`description` は日本語の要約\*\*（basename フォールバックのまま残さない）。
-- **対比**: ルールは `✅️: rule-id`（スラッシュなし）、コマンドは `✅️: /command-name`（スラッシュあり）。いずれも **応答の冒頭** に出す。
-- **ラッパー**（`.mdc` / Claude の `rules/**/*.md`）: `✅️:` は **共有本文**にのみ書く。ラッパーは frontmatter + `@~/.config/shared/ai/...` の import のみ（blog / conventions と同型）。
-
-### レガシー例外（リネームしない）
-
-| ファイル                                   | 理由                                                                    |
-| ------------------------------------------ | ----------------------------------------------------------------------- |
-| `rules/checklists/test-strategy-matrix.md` | 追加前からの basename。チェックリストだが `-checklist` サフィックスなし |
+- その Skill だけが使う手順・規約は SKILL.md 本文に書く（Skill 本文は呼ばれたときだけ読まれるので、分けても Read が 1 回増えるだけ）。`skills/<name>/references/` に分けるのは、条件付きでしか読まないものと、そのまま出力する長い固定文だけ。他の Skill・ルールからも参照されるルールは `shared-rules/references/` に置く（例: `commit-message-rule.md` は `suggest-pr-description` と `branch-name-rule.md` からも参照される）。規約同士が相互に参照するので、ディレクトリ構成を保ったまま 1 か所にまとめる
+- Git 外のワークフローは private リポジトリの `skills/local-<name>/` に置く。Skill の `name` はディレクトリ名と一致させる必要があり、`.local` を含む名前を Skill 名にできないため、接頭辞 `local-` で区別する。既存 Skill への上書きは `local-rules/references/overlays/<skill>.md` に置き、単独のワークフローには使わない
 
 ## `.md` と `.local.md`
 
-| パターン                 | 説明                                                                                                            |
-| ------------------------ | --------------------------------------------------------------------------------------------------------------- |
-| ペア                     | 汎用 `.md`（Git）+ 差分 `.local.md`（gitignore）                                                                |
-| only-local（ルール）     | 汎用 `.md` なし。`<topic>-rule.local.md` 推奨（例: `coding-rule.local.md`）                                     |
-| only-local（参照データ） | ルールではないプロファイル等。`<topic>.local.md` 可（例: `company-profile.local.md`, `role-profiles.local.md`） |
-| Git のみ                 | 上書き不要                                                                                                      |
+`.local.md` は差分・追記のみ。矛盾時は `.local.md` 優先。`shared-rules/references/<domain>/<name>.md` を Read したら、`~/.claude/skills/local-rules/references/<domain>/<name>.local.md` が存在するときだけ Read する（`gh skill` はリポジトリごとに別ディレクトリへコピーするので、同じディレクトリには置けない）。Skill への上書きは `local-rules/references/overlays/<skill>.md` に置き、その Skill の本文に Read の Step を書いたときだけ効く（Skill 本文はハーネスが注入するので自動では読まれない。現状は `analyze-ai-config` / `suggest-pr-description` / `suggest-x-post`）。
 
-`.local.md` は差分・追記のみ（汎用 `.md` の全文コピー禁止）。ドメイン固有・自社固有は **Git に載せず** `rules/<domain>/*.local.md` と `commands/*.local.md` のみで維持する。
+**Git に載せないもの**: 会社名・製品名・非公開 URL・自社固有ワークスペースパス。ドメイン固有／自社固有は private リポジトリの `local-rules/references/` と `local-*/` で維持する。公開側（dotfiles・yug1224/skills）には private リポジトリの名前やパスも書かない。初期化は [docs/setup-local-files.md](./docs/setup-local-files.md)。
 
-### 実装系 vs レビュー系（意図的分離）
+`.local.md` を shared（Git）へ昇格させてよいのは、識別子フリーかつリポジトリ横断で再利用可能なものだけ。
 
-| フェーズ     | 主なファイル                                                                                                            | サブエージェント                                                          |
-| ------------ | ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| **実装**     | `coding-rule.local.md`                                                                                                  | ローカル定義（例: 積極利用）                                              |
-| **レビュー** | `review-common-rule.md` + `pr-review-rule.md`（必須）+ 任意 `pr-review-rule.local.md` + `pr-feedback-registry.local.md` | **常時**（`explore-worker` + `quality-advisor` 並列。review-common 準拠） |
+## 実装系 vs レビュー系（意図的分離）
 
-両方の方針を 1 ファイルに混在させない。
+| フェーズ         | 主なファイル                                                            |
+| ---------------- | ----------------------------------------------------------------------- |
+| **実装**         | `coding-rule.local.md`                                                  |
+| **レビュー**     | `skills/review-pr/SKILL.md`・`code-review-rule.md` + 任意の `.local.md` |
+| **レビュー対応** | `review-feedback-rule.md`・`code-review-rule.md` + 任意の `*.local.md`  |
 
-### フィードバック蒸留
+実装とレビューの方針を 1 ファイルに混在させない。重要度・比較先・指摘の絞り方は `code-review-rule.md` に一本化し、指摘する側と直す側で同じ基準を使う。反証の手順と出力の型は `review-report-rule.md` にまとめ、`/review-blog` も同じ形式で返す。コードレビューは `/review-pr`（固定テンプレートのレポート。Cursor でも同じ名前で使う）で行い、Claude Code 組み込みの `/code-review` は形式を問わないときに使う。
 
-log / index / registry は **常に local**（`*.local.*` gitignore）。
+## 書かないもの
 
-| 系列                      | log / index / registry                                       | 詳細の蒸留先                                     |
-| ------------------------- | ------------------------------------------------------------ | ------------------------------------------------ |
-| FB-00x / プロジェクト固有 | `docs/feedback-*.local.md` + `pr-feedback-registry.local.md` | shared rule / cmd（汎用化時）または `*.local.md` |
+モデルが指示なしでも守ることは書かない。例: 汎用のレビュー観点、Conventional Commits の type の説明、`gh` / `git` の基本的な使い方、出力前の自己点検、読んだルールの自己申告（ツール呼び出しは UI に表示される）、ハーネスや MCP がすでに注入している内容。ルールに残すのは、この環境だけの決まりと、モデルの既定の癖を矯正する指示だけにする。
 
-dotfiles 変更時 → `rules/meta/`
-
-詳細: [docs/PR-FEEDBACK-PLAYBOOK.md](./docs/PR-FEEDBACK-PLAYBOOK.md)、初期化: [docs/LOCAL-SETUP.md](./docs/LOCAL-SETUP.md)
-
-### オプション Read テンプレ（コマンド・ルールに埋め込む）
-
-```markdown
-## ルールの読み込み
-
-1. `@~/.config/shared/ai/rules/<subdir>/<name>.md` を Read（必須）
-2. 同ディレクトリの `<name>.local.md` を Glob で確認。存在する場合のみ Read。無ければスキップ
-3. 矛盾時は `.local.md` を優先
-```
-
-## ツール別ラッパー
-
-| ツール | ルール                            | コマンド                        |
-| ------ | --------------------------------- | ------------------------------- |
-| Cursor | `<name>.mdc` / `<name>.local.mdc` | `<name>.md` / `<name>.local.md` |
-| Claude | `<name>.md` / `<name>.local.md`   | 同左                            |
-
-コマンド frontmatter の `name:` は basename と一致（拡張子除く）。
-
-## 新規追加手順
-
-1. 本文を `packages/shared/ai/` に追加
-2. `make scaffold-wrappers` で Cursor / Claude 薄ラッパーを生成（手動追加でも可）
-3. `make check-sync` で allowlist / wrapper parity / deny-guard / always-on / context-bloat を検証
-4. `make mise` で shared 本文と Cursor / Claude ラッパーを反映
-
-## 外部ソースの蒸留
-
-外部の記事・gist・リポジトリ等を **蒸留して** shared に載せるときは、毎回次を満たす（フィードバック蒸留とは別系統。出典を残す点は共通）。
-
-| 記載場所                                          | 必須内容                                                                                 |
-| ------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| **正本フッター**                                  | 出典 URL、原著者（分かる場合）、ライセンス（未明示ならその旨）、「蒸留・再構成」である旨 |
-| **`README.md`**                                   | 「出典・蒸留」節（または taxonomy 付近）に蒸留済みファイルの一覧                         |
-| **本節（CONVENTIONS）**                           | 本手順に従うこと（恒久規約）                                                             |
-| **`ai-config-rule` / `wrapper-parity-checklist`** | 追加時チェック                                                                           |
-
-**フッターテンプレ**:
-
-```markdown
-## 出典
-
-- 原典: <URL>（必要なら元記事 URL も）
-- 原著者: <分かる場合>
-- ライセンス: <明示されていれば記載。未明示なら「原典にライセンス表記なし」>
-- 扱い: 全文転載ではなく、用途に合わせて蒸留・再構成した規範である
-```
-
-独自抽出（自ブログ過去記事の要約など）は外部蒸留ではないため、本節の帰属は不要。
-
-**Meta ルール**（`rules/meta/`）は dotfiles AI 設定 PR 時のみ Read。`alwaysApply: false`。
-
-**Registry**（`pr-feedback-registry.local.md`）はレビュー cmd / `review-common-rule` からオプション Read（存在時のみ）。Git にコミットしない。
-
-詳細は [README.md](./README.md)。端末固有の運用・一覧は gitignore の `README.local.md`（各自作成）。
-
-## RTK（Rust Token Killer）
-
-AI 設定は **RTK インストール済み・hook 有効** を前提とする。詳細は [docs/RTK.md](./docs/RTK.md) を参照。
-
-| 項目                | 正本                                                             |
-| ------------------- | ---------------------------------------------------------------- |
-| RTK 利用ガイド      | `packages/shared/ai/docs/RTK.md`                                 |
-| hook 設定（Claude） | `packages/claude/settings.json`                                  |
-| hook 設定（Cursor） | `packages/cursor/hooks.json`                                     |
-| RTK 設定            | `packages/rtk/config.toml` → `~/.config/rtk/`（`make mise`）     |
-| エージェント運用    | `rules/conventions/token-optimization-rule.md`（always-on 要約） |
-| エージェント委譲    | `rules/conventions/agent-delegation-rule.md`（Tier B 正本）      |
+追加・変更の手順と漏洩チェックは [rules/meta/ai-config-rule.md](./rules/meta/ai-config-rule.md)。

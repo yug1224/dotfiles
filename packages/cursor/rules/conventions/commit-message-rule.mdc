@@ -1,7 +1,0 @@
----
-description: コミットメッセージ規約
-globs: []
-alwaysApply: false
----
-
-@~/.config/shared/ai/rules/conventions/commit-message-rule.md
