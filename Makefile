@@ -32,6 +32,7 @@ mise-tools: mise-dotfiles
 .PHONY: node
 node:
 	pnpm install
+	lefthook install
 
 .PHONY: check-fmt
 check-fmt:

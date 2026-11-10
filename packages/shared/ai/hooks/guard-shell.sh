@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 # Shared guard: Cursor beforeShellExecution JSON on stdin → { "permission": "allow"|"deny" }.
+# 文字列での判定なので、変数展開・alias・python などの別インタプリタ経由は見抜けない。
+# 誤操作を止める柵として使い、push / merge の最終防御は GitHub のブランチ保護に置く。
 set -uo pipefail
 
 if [[ -z "${JQ:-}" ]]; then
@@ -132,7 +134,8 @@ def timeout_strip:
 # 先頭ラッパー語 $w に応じて残り文字列 $rest を剥がす。マッチしなければ null。
 def wrapper_strip($w; $rest):
   if $w == "env" then ($rest | strip_env_prefix)
-  elif ($w == "command" or $w == "builtin" or $w == "exec" or $w == "time" or $w == "nohup") then ($rest | ltrim)
+  elif ($w == "command" or $w == "builtin" or $w == "time" or $w == "nohup") then ($rest | ltrim | strip_leading_opts([]))
+  elif $w == "exec" then ($rest | ltrim | strip_leading_opts(["-a"]))
   elif $w == "sudo" then
     ($rest | ltrim | strip_leading_opts(
       ["-u", "-g", "-p", "-r", "-C", "-D", "-R", "-T", "-U",
@@ -184,10 +187,10 @@ def stabilize:
     end;
   go(20);
 
-# 文字列内の全ての ' " を削除する（分割で片側だけ残った引用符 / 引用符で囲まれた
-# コマンド名対策）。
+# 文字列内の全ての ' " \ を削除する（分割で片側だけ残った引用符 / 引用符で囲まれた
+# コマンド名 / p\ush のようなエスケープ対策）。
 def deleted_quotes:
-  gsub("'"; "") | gsub("\""; "");
+  gsub("'"; "") | gsub("\""; "") | gsub("\\\\"; "");
 
 def normalize_gh_once:
   . as $s
@@ -195,8 +198,8 @@ def normalize_gh_once:
       "gh " + ($s | capture("^gh\\s+-R\\s+\\S+\\s+(?<r>.+)$")).r
     elif ($s | test("^gh\\s+--repo\\s+\\S+\\s+.+$")) then
       "gh " + ($s | capture("^gh\\s+--repo\\s+\\S+\\s+(?<r>.+)$")).r
-    elif ($s | test("^gh\\s+--repo=\\S*\\s+.+$")) then
-      "gh " + ($s | capture("^gh\\s+--repo=\\S*\\s+(?<r>.+)$")).r
+    elif ($s | test("^gh\\s+(--repo|-R)=\\S*\\s+.+$")) then
+      "gh " + ($s | capture("^gh\\s+(--repo|-R)=\\S*\\s+(?<r>.+)$")).r
     else $s
     end;
 
@@ -215,8 +218,12 @@ def normalize_git_once:
       "git " + ($s | capture("^git\\s+-C\\s+'[^']*'\\s+(?<r>.+)$")).r
     elif ($s | test("^git\\s+-C\\s+\\S+\\s+.+$")) then
       "git " + ($s | capture("^git\\s+-C\\s+\\S+\\s+(?<r>.+)$")).r
-    elif ($s | test("^git\\s+-c\\s+\\S+=\\S*\\s+.+$")) then
-      "git " + ($s | capture("^git\\s+-c\\s+\\S+=\\S*\\s+(?<r>.+)$")).r
+    elif ($s | test("^git\\s+-c\\s+\\S+\\s+.+$")) then
+      "git " + ($s | capture("^git\\s+-c\\s+\\S+\\s+(?<r>.+)$")).r
+    elif ($s | test("^git\\s+--(exec-path|config-env)=\\S*\\s+.+$")) then
+      "git " + ($s | capture("^git\\s+--(exec-path|config-env)=\\S*\\s+(?<r>.+)$")).r
+    elif ($s | test("^git\\s+--config-env\\s+\\S+\\s+.+$")) then
+      "git " + ($s | capture("^git\\s+--config-env\\s+\\S+\\s+(?<r>.+)$")).r
     elif ($s | test("^git\\s+--no-pager\\s+.+$")) then
       "git " + ($s | capture("^git\\s+--no-pager\\s+(?<r>.+)$")).r
     elif ($s | test("^git\\s+--git-dir=\\S*\\s+.+$")) then
@@ -269,7 +276,7 @@ def is_denied_git:
     else
       ($s | normalize_git) as $s2
       | ($s2 | sub("^git\\s*"; "")) as $tail
-      | ($tail | test("^push(\\s|$)"))
+      | ($tail | test("^(subtree\\s+)?push(\\s|$)"))
     end;
 
 # 最終判定: 引用符を残したまま一度、全削除して一度、どちらかで deny なら deny。
@@ -294,6 +301,8 @@ def split_segments:
   | gsub("\\s*;\\s*"; "\u0001")
   | gsub("\\s*\\|\\s*"; "\u0001")
   | gsub("\\s*&\\s*"; "\u0001")
+  # find -exec / -ok の後ろは別コマンドとして判定する
+  | gsub("\\s+-(exec|execdir|ok|okdir)\\s+"; "\u0001")
   | gsub("\n"; "\u0001")
   | split("\u0001")
   | map(trim)

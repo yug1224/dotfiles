@@ -1,3 +1,12 @@
+# AI エージェントのシェルでは対話用の設定（prezto の rm -i、bat などの alias）を読まない。
+# Claude Code はこの .zshrc の関数と alias を取り込むので、壊れた diff 関数などが混ざる。
+# cd ごとの mise フックも発火しないため、shims で版を解決する。
+if [[ -n "${CLAUDECODE:-}" || -n "${CURSOR_AGENT:-}" ]]; then
+  export PATH="$HOME/.local/share/mise/shims:$PATH"
+  [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
+  return
+fi
+
 # Source Prezto.
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
@@ -69,29 +78,8 @@ function claude-app() {
 source ~/.zsh_plugins/gibo-completion.zsh
 source ~/.zsh_plugins/lefthook-completion.zsh
 
-# LeftHook
-function chpwd_lefthook_install() {
-  # .git/info/lefthook.checksum が存在するかチェック
-  if [[ -e ".git/info/lefthook.checksum" ]]; then
-    lefthook uninstall >/dev/null
-  fi
-
-  # lefthook.yml が存在するかチェック
-  if [[ -e "lefthook.yml" ]]; then
-    lefthook install >/dev/null
-  fi
-}
-add-zsh-hook chpwd chpwd_lefthook_install
-
 # MISE
 eval "$(mise activate zsh)"
 eval "$(mise hook-env 2>/dev/null)"
-
-# Cursor agent: working_directory指定時にzshフック(precmd/chpwd/preexec)が
-# 発火しないため、miseのフックベースのバージョン切替が機能しない。
-# shimsをPATH先頭に追加して、コマンドごとに正しいバージョンを解決する。
-if [[ -n "$CURSOR_AGENT" ]]; then
-  export PATH="$HOME/.local/share/mise/shims:$PATH"
-fi
 
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
