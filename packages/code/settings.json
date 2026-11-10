@@ -12,10 +12,16 @@
     "editor.defaultFormatter": "jkillian.custom-local-formatters"
   },
   "[javascript]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.codeActionsOnSave": {
+      "source.format.oxc": "never"
+    },
+    "editor.defaultFormatter": "jkillian.custom-local-formatters"
   },
   "[javascriptreact]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.codeActionsOnSave": {
+      "source.format.oxc": "never"
+    },
+    "editor.defaultFormatter": "jkillian.custom-local-formatters"
   },
   "[json]": {
     "editor.codeActionsOnSave": {
@@ -50,10 +56,16 @@
     "editor.formatOnSave": true
   },
   "[typescript]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.codeActionsOnSave": {
+      "source.format.oxc": "never"
+    },
+    "editor.defaultFormatter": "jkillian.custom-local-formatters"
   },
   "[typescriptreact]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.codeActionsOnSave": {
+      "source.format.oxc": "never"
+    },
+    "editor.defaultFormatter": "jkillian.custom-local-formatters"
   },
   "[vue]": {
     "editor.codeActionsOnSave": {
@@ -183,12 +195,28 @@
       "languages": ["html"]
     },
     {
+      "command": "$HOME/.dotfiles/packages/code/bin/oxfmt-stdin.sh f.js",
+      "languages": ["javascript"]
+    },
+    {
+      "command": "$HOME/.dotfiles/packages/code/bin/oxfmt-stdin.sh f.jsx",
+      "languages": ["javascriptreact"]
+    },
+    {
       "command": "$HOME/.dotfiles/packages/code/bin/oxfmt-stdin.sh f.json",
       "languages": ["json", "jsonc"]
     },
     {
       "command": "$HOME/.dotfiles/packages/code/bin/oxfmt-stdin.sh f.md",
       "languages": ["markdown"]
+    },
+    {
+      "command": "$HOME/.dotfiles/packages/code/bin/oxfmt-stdin.sh f.ts",
+      "languages": ["typescript"]
+    },
+    {
+      "command": "$HOME/.dotfiles/packages/code/bin/oxfmt-stdin.sh f.tsx",
+      "languages": ["typescriptreact"]
     },
     {
       "command": "$HOME/.dotfiles/packages/code/bin/oxfmt-stdin.sh f.vue",
@@ -270,5 +298,9 @@
   "workbench.startupEditor": "none",
   "workbench.colorTheme": "Default Dark Modern",
   "claudeCode.preferredLocation": "sidebar",
-  "window.autoDetectColorScheme": false
+  "window.autoDetectColorScheme": false,
+  "cursor.composer.queueMessageDefaultBehavior": "steer",
+  "js/ts.experimental.useTsgo": true,
+  "cursor.worktreeMaxCount": 10,
+  "cursor.worktreesGlobalMaxSizeGb": 100
 }

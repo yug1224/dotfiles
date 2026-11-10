@@ -45,30 +45,15 @@ check-lint:
 check-typecheck:
 	pnpm run type:check
 
-.PHONY: scaffold-wrappers
-scaffold-wrappers:
-	./scripts/scaffold-wrappers.sh
-
-.PHONY: check-wrappers
-check-wrappers:
-	./scripts/scaffold-wrappers.sh --check
-
-.PHONY: check-context-bloat
-check-context-bloat:
-	./scripts/check-context-bloat.sh
-
 .PHONY: check-sync
 check-sync:
-	REQUIRE_JQ=1 ./scripts/check-allowlist-sync.sh
-	./scripts/check-wrapper-parity.sh
-	REQUIRE_JQ=1 ./scripts/check-deny-guard-sync.sh
-	REQUIRE_JQ=1 ./scripts/check-always-on-sync.sh
-	./scripts/check-context-bloat.sh
-	./scripts/check-work-task-model-pin.sh
+	./scripts/check-context-bloat.sh --fail
+	./scripts/check-kernel-sync.sh
+	./scripts/check-local-tracked.sh
 
 .PHONY: test-scripts
 test-scripts:
-	./scripts/check-allowlist-sync.test.sh
+	./packages/shared/ai/hooks/guard-shell.test.sh
 
 .PHONY: check-bootstrap
 check-bootstrap:

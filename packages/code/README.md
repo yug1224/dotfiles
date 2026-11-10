@@ -29,19 +29,19 @@ make mise
 
 Oxc の LSP は `${workspaceFolder}` も展開しない（相対パスはワークスペースルート基準）。
 
-## 保存時フォーマット（Oxc）
+## 保存時フォーマット
 
-[oxc-vscode](https://github.com/oxc-project/oxc-vscode) の Oxfmt は **ファイル全体** のフォーマットのみ対応する。次をユーザー設定で有効にしている。
+保存時は次をユーザー設定で有効にしている。
 
-| キー                       | 値                            | 役割                                         |
-| -------------------------- | ----------------------------- | -------------------------------------------- |
-| `editor.formatOnSave`      | `true`                        | 保存時にフォーマット                         |
-| `editor.formatOnSaveMode`  | `file`                        | 変更行だけではなくファイル全体を対象（必須） |
-| `editor.codeActionsOnSave` | `source.format.oxc`: `always` | Oxc の Code Action 経由でもフォーマット      |
+| キー                       | 値                            | 役割                                                                        |
+| -------------------------- | ----------------------------- | --------------------------------------------------------------------------- |
+| `editor.formatOnSave`      | `true`                        | 保存時にフォーマット                                                        |
+| `editor.formatOnSaveMode`  | `file`                        | 変更行だけではなくファイル全体を対象                                        |
+| `editor.codeActionsOnSave` | `source.format.oxc`: `always` | グローバル既定。CLI 経路の言語は言語別設定で `never` にして、二重実行しない |
 
-非 JS 言語では `source.format.oxc` を `never` にし、下記 CLI ラッパーと二重実行しない。
+デフォルトの JS / TS / CSS 等は `custom-local-formatters` + `oxfmt` CLI（stdin）。保存時にフォーマットされないときは [`bin/oxfmt-stdin.sh`](bin/oxfmt-stdin.sh) と mise の `oxfmt` を確認する。
 
-問題時: コマンドパレットの `Oxc: Show Output Channel (Formatter)` / `Restart oxfmt Server`。拡張は Marketplace の **Oxc**（`oxc.oxc-vscode`）を最新に保つ。
+Oxc LSP をフォーマッタにする場合（他リポジトリの `.vscode/settings.json` など）は、コマンドパレットの `Oxc: Show Output Channel (Formatter)` / `Restart oxfmt Server`。拡張は Marketplace の **Oxc**（`oxc.oxc-vscode`）を最新に保つ。
 
 **「拡張機能 'Oxc' はフォーマッタとして構成されていますが、'TypeScript'-ファイルをフォーマットできません」** は、ほぼ常に **oxfmt の LSP が起動していない**（フォーマッタ未登録）状態。次を確認する。
 
@@ -53,13 +53,12 @@ Oxc の LSP は `${workspaceFolder}` も展開しない（相対パスはワー�
 | 他リポジトリで dotfiles の `oxfmt.config.ts` を使いたい             | そのリポジトリの `.vscode/settings.json` に `"oxc.fmt.configPath": "oxfmt.config.ts"` とルートの設定ファイル。無いパスを指すと LSP が落ちる             |
 | 設定変更後も直らない                                                | `Oxc: Restart oxfmt Server` → **Developer: Reload Window**                                                                                              |
 
-## フォーマッタ（ハイブリッド）
+## フォーマッタ
 
-| 言語                                       | `editor.defaultFormatter`          | 経路                                                            |
-| ------------------------------------------ | ---------------------------------- | --------------------------------------------------------------- |
-| JavaScript / TypeScript / JSX / TSX        | `oxc.oxc-vscode`                   | LSP + `source.format.oxc`                                       |
-| CSS / HTML / JSON / JSONC / Markdown / Vue | `jkillian.custom-local-formatters` | `oxfmt` CLI（stdin）                                            |
-| Terraform                                  | `hashicorp.terraform`              | `source.formatAll.terraform`（`[terraform-vars]` は保存時 off） |
+| 言語                                                                             | `editor.defaultFormatter`          | 経路                                                            |
+| -------------------------------------------------------------------------------- | ---------------------------------- | --------------------------------------------------------------- |
+| JavaScript / TypeScript / JSX / TSX / CSS / HTML / JSON / JSONC / Markdown / Vue | `jkillian.custom-local-formatters` | `oxfmt` CLI（stdin）                                            |
+| Terraform                                                                        | `hashicorp.terraform`              | `source.formatAll.terraform`（`[terraform-vars]` は保存時 off） |
 
 `customLocalFormatters.formatters` は [`bin/oxfmt-stdin.sh`](bin/oxfmt-stdin.sh) 経由で mise グローバルの `oxfmt` を呼ぶ（`$HOME/.local/share/mise/shims/oxfmt`、未インストール時は `node_modules/.bin/oxfmt` にフォールバック）。
 
@@ -73,11 +72,11 @@ Oxc の LSP は `${workspaceFolder}` も展開しない（相対パスはワー�
 
 ルート [`mise.toml`](../../mise.toml) の `[tasks.bootstrap]` で `code --install-extension` により冪等インストール。`vscode:` package plugin（`mise-plugins/mise-vscode-extensions`）は公式例のみで repo 未公開のため、公開後に宣言化予定。
 
-- フォーマット: **`oxc.oxc-vscode`**、**`jkillian.custom-local-formatters`**（非 JS）
+- フォーマット: **`jkillian.custom-local-formatters`**（`oxfmt` CLI / stdin）。**`oxc.oxc-vscode`** は lint 用（`source.format.oxc` は CLI 言語では `never` で抑止）
 - Terraform: HashiCorp 拡張は手動インストール想定
 
 ## AI ルール・エージェントとの関係
 
 `settings.json` はエディタのフォーマッタ・拡張機能・UI などの設定であり、**Cursor の `rules` / `commands` / `agents` や `packages/shared/ai` の共有ルールとは別レイヤー**である。AI 用の dotfiles は [`packages/cursor`](../cursor/README.md)、[`packages/claude`](../claude/README.md)、[`packages/shared/ai`](../shared/ai/README.md) を参照する。
 
-**Claude Code** は VS Code / Cursor の `settings.json` を読み込まない（CLI / 別プロセス）。エディタ設定の共有は本 `packages/code` パッケージ、**ターミナル・MCP の allowlist やエージェント規約**の共有は `packages/shared/ai`（および `make mise` 先の `~/.config/shared/ai`）で行う、という切り分けになる。
+**Claude Code** は VS Code / Cursor の `settings.json` を読み込まない（CLI / 別プロセス）。エディタ設定の共有は本 `packages/code` パッケージ。**権限**は [`packages/cursor/permissions.json`](../cursor/permissions.json)（MCP `*:*`、`git push` と破壊的 gh/`rm -rf` は `guard-shell`）と [`packages/claude/settings.json`](../claude/settings.json)（`Bash(*)` / `mcp__*`、`git push` は `deny` + `guard-shell`、破壊的 gh/`rm -rf` も同様）。**エージェント規約の本文**は [`packages/shared/ai`](../shared/ai/README.md)（および `make mise` 先の `~/.config/shared/ai`）で共有する、という切り分けになる。

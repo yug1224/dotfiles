@@ -12,260 +12,187 @@ if [[ ! -x "$JQ" ]]; then
 fi
 export JQ
 
-# --- deny: jq 未インストール (fail-closed) ---
-
-out="$(printf '{}' | JQ=/nonexistent "$GUARD")"
-if ! echo "$out" | grep -q '"permission":"deny"'; then
-  echo "FAIL: 期待=deny (jq 未インストール)" >&2
-  echo "  output: $out" >&2
-  exit 1
-fi
-echo "ok: deny <- jq 未インストール (fail-closed)"
-
-# --- deny: 不正入力 (fail-closed) ---
-
-out="$(printf '' | "$GUARD")"
-if ! echo "$out" | grep -q '"permission":"deny"'; then
-  echo "FAIL: 期待=deny (空の stdin)" >&2
-  echo "  output: $out" >&2
-  exit 1
-fi
-echo "ok: deny <- 空の stdin (fail-closed)"
-
-out="$(printf 'not-json' | "$GUARD")"
-if ! echo "$out" | grep -q '"permission":"deny"'; then
-  echo "FAIL: 期待=deny (不正な JSON)" >&2
-  echo "  output: $out" >&2
-  exit 1
-fi
-echo "ok: deny <- 不正な JSON (fail-closed)"
-
 run_case() {
   local expected="$1" json="$2" label="${3:-$json}"
   local perm
-  perm="$(printf '%s' "$json" | "$GUARD" | jq -r '.permission // empty')"
+  perm="$(printf '%s' "$json" | "$GUARD" | "$JQ" -r '.permission // empty')"
   if [[ "$perm" != "$expected" ]]; then
     echo "FAIL: 期待=$expected 実際=$perm ($label)" >&2
-    echo "  output: $(printf '%s' "$json" | "$GUARD")" >&2
     exit 1
   fi
   echo "ok: $expected <- $label"
 }
 
-# --- deny: 不正入力 — command キーなし / 空 (fail-closed) ---
+# fail-closed
+out="$(printf '{}' | JQ=/nonexistent "$GUARD")"
+echo "$out" | grep -q '"permission":"deny"' || { echo "FAIL: jq 未インストール時 deny" >&2; exit 1; }
+echo "ok: deny <- jq 未インストール (fail-closed)"
 
-run_case deny '{"cwd":"/tmp"}' 'command キーなし (fail-closed)'
-run_case deny '{"command":""}' '空の command (fail-closed)'
-
-# --- deny: 破壊的コマンド ---
-
-run_case deny '{"command":"git reset --hard HEAD"}' 'git reset --hard'
-run_case deny '{"command":"git reset --hard"}' 'git reset --hard (引数なし)'
-
-run_case deny '{"command":"git clean -f"}' 'git clean -f'
-run_case deny '{"command":"git clean -fd"}' 'git clean -fd'
-run_case deny '{"command":"git clean -xfd"}' 'git clean -xfd'
-run_case deny '{"command":"git clean --force"}' 'git clean --force'
-
-run_case deny '{"command":"git branch -D topic"}' 'git branch -D'
-run_case deny '{"command":"git branch --delete --force topic"}' 'git branch --delete --force'
-run_case deny '{"command":"git branch --force --delete topic"}' 'git branch --force --delete'
-
-run_case deny '{"command":"git stash drop"}' 'git stash drop'
-run_case deny '{"command":"git stash drop stash@{0}"}' 'git stash drop stash@{0}'
-run_case deny '{"command":"git stash clear"}' 'git stash clear'
-
-run_case deny '{"command":"git reflog delete HEAD@{0}"}' 'git reflog delete'
-run_case deny '{"command":"git reflog expire --all"}' 'git reflog expire'
-
-# --- deny: エージェント制限コマンド ---
-
-run_case deny '{"command":"git commit"}' 'git commit'
-run_case deny '{"command":"git commit -m \"test\""}' 'git commit -m'
-run_case deny '{"command":"git commit --amend"}' 'git commit --amend'
-
+# deny: git push / 破壊的 rm・gh
 run_case deny '{"command":"git push"}' 'git push'
 run_case deny '{"command":"git push origin main"}' 'git push origin main'
 run_case deny '{"command":"git push --force"}' 'git push --force'
-run_case deny '{"command":"git push -f"}' 'git push -f'
-
-run_case deny '{"command":"git checkout main"}' 'git checkout'
-run_case deny '{"command":"git checkout -b new-branch"}' 'git checkout -b'
-
-run_case deny '{"command":"git switch main"}' 'git switch'
-run_case deny '{"command":"git switch -c new-branch"}' 'git switch -c'
-
-run_case deny '{"command":"git fetch"}' 'git fetch'
-run_case deny '{"command":"git fetch origin"}' 'git fetch origin'
-
-run_case deny '{"command":"git pull"}' 'git pull'
-run_case deny '{"command":"git pull --rebase"}' 'git pull --rebase'
-
-run_case deny '{"command":"git clone https://github.com/user/repo"}' 'git clone'
-
-run_case deny '{"command":"git config user.name \"test\""}' 'git config'
-run_case deny '{"command":"git config --global user.email \"test@example.com\""}' 'git config --global'
-run_case deny '{"command":"git status && git config user.name \"test\""}' 'compound: && で git config'
-
-# --- deny: グローバルオプション付き ---
-
-run_case deny '{"command":"git -C /tmp reset --hard"}' 'git -C <path> reset --hard'
-run_case deny '{"command":"git -c user.name=foo commit -m \"x\""}' 'git -c <key>=<val> commit'
-run_case deny '{"command":"git --no-pager push"}' 'git --no-pager push'
-
-# --- deny/allow: RTK プレフィックス付き（rtk git push 等を正しく分類） ---
-
-run_case deny '{"command":"rtk git push"}' 'rtk git push'
-run_case deny '{"command":"rtk git push origin main"}' 'rtk git push origin main'
-run_case allow '{"command":"rtk git status"}' 'rtk git status'
-run_case deny '{"command":"rtk gh pr merge 123"}' 'rtk gh pr merge'
-run_case allow '{"command":"rtk gh pr list"}' 'rtk gh pr list'
-
-# --- allow: フックを通過（Allowlist / Cursor が制御） ---
-
-run_case allow '{"command":"git status"}' 'git status'
-run_case allow '{"command":"git diff --staged"}' 'git diff'
-run_case allow '{"command":"git log --oneline -10"}' 'git log'
-run_case allow '{"command":"git show HEAD"}' 'git show'
-run_case allow '{"command":"git add ."}' 'git add'
-run_case allow '{"command":"git blame file.txt"}' 'git blame'
-run_case allow '{"command":"git stash"}' 'git stash (= push)'
-run_case allow '{"command":"git stash pop"}' 'git stash pop (Cursor が ask)'
-run_case allow '{"command":"git reflog"}' 'git reflog (参照)'
-run_case allow '{"command":"git branch"}' 'git branch (一覧)'
-run_case allow '{"command":"git branch -a"}' 'git branch -a'
-run_case allow '{"command":"git branch -d merged"}' 'git branch -d (Cursor が ask)'
-run_case allow '{"command":"git branch feature/foo"}' 'git branch 作成 (Cursor が ask)'
-run_case deny '{"command":"git restore file.txt"}' 'git restore'
-run_case ask '{"command":"git rebase main"}' 'git rebase'
-run_case ask '{"command":"git rebase --interactive main"}' 'git rebase --interactive'
-run_case allow '{"command":"git tag v1.0.0"}' 'git tag (Cursor が ask)'
-run_case allow '{"command":"git -C /tmp status"}' 'git -C <path> status'
-run_case allow '{"command":"git --no-pager diff"}' 'git --no-pager diff'
-
-# --- deny: 複合コマンド（&& / ; / || でつながれた破壊的操作） ---
-
-run_case deny '{"command":"git status && git reset --hard"}' 'compound: && で破壊的コマンド'
-run_case deny '{"command":"git add . && git commit -m \"test\""}' 'compound: && でコミット'
-run_case deny '{"command":"git status; git push"}' 'compound: ; でプッシュ'
-run_case deny '{"command":"git diff && git push --force"}' 'compound: && で force push'
-run_case deny '{"command":"false || git reset --hard"}' 'compound: || で破壊的コマンド'
-run_case deny '{"command":"git status || git push"}' 'compound: || でプッシュ'
-
-# --- deny: gh 破壊的コマンド ---
-
+run_case deny '{"command":"git push --force-with-lease"}' 'git push --force-with-lease'
+run_case deny '{"command":"git status && git push origin main"}' 'compound: && で git push'
+run_case deny '{"command":"rm -rf /tmp/foo"}' 'rm -rf'
+run_case deny '{"command":"rm -r -f dir"}' 'rm -r -f'
 run_case deny '{"command":"gh pr merge 123"}' 'gh pr merge'
-run_case deny '{"command":"gh pr merge --auto 123"}' 'gh pr merge --auto'
 run_case deny '{"command":"gh repo delete owner/repo"}' 'gh repo delete'
-run_case deny '{"command":"gh release delete v1.0.0"}' 'gh release delete'
-run_case deny '{"command":"gh issue delete 123"}' 'gh issue delete'
-run_case deny '{"command":"gh gist delete abc123"}' 'gh gist delete'
-run_case deny '{"command":"gh run delete 12345"}' 'gh run delete'
-run_case deny '{"command":"gh repo archive owner/repo"}' 'gh repo archive'
 
-# --- ask: gh 書き込みコマンド ---
-
-run_case ask '{"command":"gh pr create"}' 'gh pr create'
-run_case ask '{"command":"gh pr comment 123"}' 'gh pr comment'
-run_case ask '{"command":"gh pr edit 123"}' 'gh pr edit'
-run_case ask '{"command":"gh pr close 123"}' 'gh pr close'
-run_case ask '{"command":"gh pr reopen 123"}' 'gh pr reopen'
-run_case ask '{"command":"gh pr review 123"}' 'gh pr review'
-run_case ask '{"command":"gh pr ready 123"}' 'gh pr ready'
-run_case ask '{"command":"gh pr lock 123"}' 'gh pr lock'
-run_case ask '{"command":"gh pr unlock 123"}' 'gh pr unlock'
-
-run_case ask '{"command":"gh issue create"}' 'gh issue create'
-run_case ask '{"command":"gh issue comment 123"}' 'gh issue comment'
-run_case ask '{"command":"gh issue edit 123"}' 'gh issue edit'
-run_case ask '{"command":"gh issue close 123"}' 'gh issue close'
-run_case ask '{"command":"gh issue reopen 123"}' 'gh issue reopen'
-run_case ask '{"command":"gh issue transfer 123 owner/repo"}' 'gh issue transfer'
-run_case ask '{"command":"gh issue pin 123"}' 'gh issue pin'
-run_case ask '{"command":"gh issue unpin 123"}' 'gh issue unpin'
-run_case ask '{"command":"gh issue lock 123"}' 'gh issue lock'
-run_case ask '{"command":"gh issue unlock 123"}' 'gh issue unlock'
-
-run_case ask '{"command":"gh release create v1.0.0"}' 'gh release create'
-run_case ask '{"command":"gh release edit v1.0.0"}' 'gh release edit'
-run_case ask '{"command":"gh release upload v1.0.0 file.tar.gz"}' 'gh release upload'
-
-run_case ask '{"command":"gh repo create my-repo"}' 'gh repo create'
-run_case ask '{"command":"gh repo edit owner/repo"}' 'gh repo edit'
-run_case ask '{"command":"gh repo fork owner/repo"}' 'gh repo fork'
-run_case ask '{"command":"gh repo rename new-name"}' 'gh repo rename'
-
-run_case ask '{"command":"gh gist create file.txt"}' 'gh gist create'
-run_case ask '{"command":"gh gist edit abc123"}' 'gh gist edit'
-
-run_case ask '{"command":"gh label create bug"}' 'gh label create'
-run_case ask '{"command":"gh label edit bug"}' 'gh label edit'
-run_case ask '{"command":"gh label delete bug"}' 'gh label delete'
-
-run_case ask '{"command":"gh secret set MY_SECRET"}' 'gh secret set'
-run_case ask '{"command":"gh secret delete MY_SECRET"}' 'gh secret delete'
-run_case ask '{"command":"gh secret remove MY_SECRET"}' 'gh secret remove'
-
-run_case ask '{"command":"gh variable set MY_VAR"}' 'gh variable set'
-run_case ask '{"command":"gh variable delete MY_VAR"}' 'gh variable delete'
-
-run_case ask '{"command":"gh workflow run deploy.yml"}' 'gh workflow run'
-run_case ask '{"command":"gh workflow enable deploy.yml"}' 'gh workflow enable'
-run_case ask '{"command":"gh workflow disable deploy.yml"}' 'gh workflow disable'
-
-run_case ask '{"command":"gh run cancel 12345"}' 'gh run cancel'
-run_case ask '{"command":"gh run rerun 12345"}' 'gh run rerun'
-
-run_case ask '{"command":"gh api repos/user/repo/issues -X POST"}' 'gh api -X POST'
-run_case ask '{"command":"gh api repos/user/repo -X DELETE"}' 'gh api -X DELETE'
-run_case ask '{"command":"gh api repos/user/repo --method PUT"}' 'gh api --method PUT'
-run_case ask '{"command":"gh api repos/user/repo -X PATCH"}' 'gh api -X PATCH'
-run_case ask '{"command":"gh api repos/user/repo -f title=test"}' 'gh api -f (implicit POST)'
-run_case ask '{"command":"gh api repos/user/repo -F body=@file.txt"}' 'gh api -F (implicit POST)'
-run_case ask '{"command":"gh api repos/user/repo --field title=test"}' 'gh api --field (implicit POST)'
-run_case ask '{"command":"gh api repos/user/repo --raw-field body=test"}' 'gh api --raw-field (implicit POST)'
-
-# --- allow: gh 読み取りコマンド（Allowlist / Cursor が制御） ---
-
-run_case allow '{"command":"gh pr list"}' 'gh pr list'
+# allow: push 以外の git / 非破壊的
+run_case allow '{"command":"git status"}' 'git status'
+run_case allow '{"command":"git reset --hard HEAD"}' 'git reset --hard'
+run_case allow '{"command":"git clean -fd"}' 'git clean -fd'
+run_case allow '{"command":"git branch -D topic"}' 'git branch -D'
+run_case allow '{"command":"git stash drop"}' 'git stash drop'
+run_case allow '{"command":"git clean -n"}' 'git clean -n (dry-run)'
 run_case allow '{"command":"gh pr view 123"}' 'gh pr view'
-run_case allow '{"command":"gh pr diff 123"}' 'gh pr diff'
-run_case allow '{"command":"gh pr checks 123"}' 'gh pr checks'
-run_case allow '{"command":"gh pr status"}' 'gh pr status'
-run_case allow '{"command":"gh issue list"}' 'gh issue list'
-run_case allow '{"command":"gh issue view 123"}' 'gh issue view'
-run_case allow '{"command":"gh issue status"}' 'gh issue status'
-run_case allow '{"command":"gh run list"}' 'gh run list'
-run_case allow '{"command":"gh run view 12345"}' 'gh run view'
-run_case allow '{"command":"gh repo view owner/repo"}' 'gh repo view'
-run_case allow '{"command":"gh release list"}' 'gh release list'
-run_case allow '{"command":"gh release view v1.0.0"}' 'gh release view'
-run_case allow '{"command":"gh search repos query"}' 'gh search repos'
-run_case allow '{"command":"gh api repos/user/repo"}' 'gh api (GET, no write flags)'
+run_case allow '{"command":"rm file.txt"}' 'rm file.txt'
 
-# --- deny: pnpm typecheck / test / sql-test ---
+# deny: 先頭の環境変数代入
+run_case deny '{"command":"FOO=1 git push"}' 'FOO=1 git push'
+run_case deny '{"command":"A=1 B=2 rm -rf x"}' 'A=1 B=2 rm -rf x'
 
-run_case deny '{"command":"pnpm typecheck"}' 'pnpm typecheck'
-run_case deny '{"command":"pnpm run typecheck"}' 'pnpm run typecheck'
-run_case deny '{"command":"pnpm test"}' 'pnpm test'
-run_case deny '{"command":"pnpm run test"}' 'pnpm run test'
-run_case deny '{"command":"pnpm test -- --run"}' 'pnpm test (with args)'
-run_case deny '{"command":"pnpm sql-test"}' 'pnpm sql-test'
-run_case deny '{"command":"pnpm run sql-test"}' 'pnpm run sql-test'
-run_case deny '{"command":"pnpm install && pnpm test"}' 'compound: && で pnpm test'
+# deny: ラッパー経由（env / command / builtin / exec / sudo / time / nohup / nice / timeout / xargs）
+run_case deny '{"command":"env git push"}' 'env git push'
+run_case deny '{"command":"env -i git push"}' 'env -i git push'
+run_case deny '{"command":"env -u HOME git push"}' 'env -u HOME git push（値を取るオプション）'
+run_case deny '{"command":"env --unset=HOME git push"}' 'env --unset=HOME git push'
+run_case deny '{"command":"env -C /tmp git push"}' 'env -C /tmp git push'
+run_case deny '{"command":"env -S '\''git push'\''"}' 'env -S git push（split-string 再帰）'
+run_case allow '{"command":"env -u HOME ls"}' 'env -u HOME ls'
+run_case allow '{"command":"env"}' 'env（引数なし）'
+run_case allow '{"command":"env FOO=1 ls"}' 'env FOO=1 ls'
+run_case deny '{"command":"command git push"}' 'command git push'
+run_case deny '{"command":"builtin git push"}' 'builtin git push'
+run_case deny '{"command":"exec git push"}' 'exec git push'
+run_case deny '{"command":"sudo git push"}' 'sudo git push'
+run_case deny '{"command":"sudo -u root git push"}' 'sudo -u root git push'
+run_case deny '{"command":"time git push"}' 'time git push'
+run_case deny '{"command":"nohup git push"}' 'nohup git push'
+run_case deny '{"command":"nice git push"}' 'nice git push'
+run_case deny '{"command":"nice -n 10 git push"}' 'nice -n 10 git push'
+run_case deny '{"command":"timeout 5 git push"}' 'timeout 5 git push'
+run_case deny '{"command":"timeout -k 5 10 git push"}' 'timeout -k 5 10 git push'
+run_case deny '{"command":"xargs -n1 git push"}' 'xargs -n1 git push'
+run_case deny '{"command":"sudo env FOO=1 git push"}' 'sudo env FOO=1 git push（連鎖）'
 
-run_case deny '{"command":"pnpm exec vitest"}' 'pnpm exec vitest'
-run_case deny '{"command":"pnpm exec vitest run src/foo.test.ts"}' 'pnpm exec vitest (subcommand + args)'
-run_case deny '{"command":"pnpm run vitest"}' 'pnpm run vitest'
-run_case deny '{"command":"pnpm dlx vitest"}' 'pnpm dlx vitest'
+# deny: 先頭の記号 / パス
+run_case deny '{"command":"(git push)"}' '(git push)'
+run_case deny '{"command":"{ git push; }"}' '{ git push; }'
+run_case deny '{"command":"! git push"}' '! git push'
+run_case deny '{"command":"\\git push"}' '\\git push'
+run_case deny '{"command":"/usr/bin/git push"}' '/usr/bin/git push'
+run_case deny '{"command":"/bin/rm -rf x"}' '/bin/rm -rf x'
+run_case deny '{"command":"./gh pr merge 1"}' './gh pr merge 1'
 
-# --- allow: pnpm exec oxlint ---
+# deny: 区切り文字（単独 | / & / 改行）
+run_case deny '{"command":"echo hi | git push"}' 'echo hi | git push'
+run_case deny '{"command":"git push &"}' 'git push &'
+run_case deny "{\"command\":\"echo hi\\ngit push\"}" '改行区切り git push'
 
-run_case allow '{"command":"pnpm exec oxlint"}' 'pnpm exec oxlint'
+# deny: bash/sh -c, eval, コマンド置換
+run_case deny '{"command":"bash -c \"git push\""}' 'bash -c "git push"'
+run_case deny '{"command":"sh -lc \"git push\""}' 'sh -lc "git push"'
+run_case deny '{"command":"eval \"git push\""}' 'eval "git push"'
+run_case deny '{"command":"eval git push"}' 'eval git push（無引用）'
+run_case deny '{"command":"echo $(git push)"}' 'echo $(git push)'
+run_case deny '{"command":"echo `git push`"}' 'echo `git push`'
+run_case deny '{"command":"sudo env FOO=1 bash -c \"git push\""}' 'ラッパー多重＋bash -c'
 
-# --- ask: pnpm exec (other binaries) / dlx ---
+# deny: git グローバルオプションの拡張
+run_case deny '{"command":"git -C \"a b\" push"}' 'git -C "a b" push'
+run_case deny '{"command":"git --git-dir=.git push"}' 'git --git-dir=.git push'
+run_case deny '{"command":"git --work-tree . push"}' 'git --work-tree . push'
+run_case deny '{"command":"git -P push"}' 'git -P push'
+run_case deny '{"command":"git --bare push"}' 'git --bare push'
 
-run_case ask '{"command":"pnpm exec eslint"}' 'pnpm exec (other binary)'
-run_case ask '{"command":"pnpm dlx create-vite"}' 'pnpm dlx'
+# deny: gh のグローバル寄り -R/--repo がサブコマンド前にある形
+run_case deny '{"command":"gh -R owner/repo pr merge"}' 'gh -R owner/repo pr merge'
+
+# allow: 誤 deny を増やさないことの確認
+run_case allow '{"command":"gh -R owner/repo pr view 1"}' 'gh -R owner/repo pr view'
+run_case allow '{"command":"git log --grep push"}' 'git log --grep push'
+run_case allow '{"command":"git commit -m \"push fix\""}' 'git commit -m "push fix"'
+run_case allow '{"command":"env"}' 'env 単体'
+run_case allow '{"command":"timeout 5 ls"}' 'timeout 5 ls'
+run_case allow '{"command":"bash -c \"echo hi\""}' 'bash -c "echo hi"'
+run_case allow '{"command":"ls $(pwd)"}' 'ls $(pwd)'
+run_case allow '{"command":"gh api -X DELETE repos/o/r"}' 'gh api -X DELETE（対象外）'
+
+# 新規追加ケース（jq 単一プログラム移行の受け入れ条件）
+# deny: 分割で片側だけ引用符が残るケース／引用符で囲まれたコマンド名
+run_case deny '{"command":"bash -c '"'"'echo a; git push'"'"'"}' 'bash -c '"'"'echo a; git push'"'"'（; 分割で引用符が残る）'
+run_case deny '{"command":"bash -c \"git status && git push\""}' 'bash -c "git status && git push"（&& 分割で引用符が残る）'
+run_case deny '{"command":"\"git\" push"}' '"git" push（引用符付きコマンド名）'
+run_case deny "{\"command\":\"'rm' -rf x\"}" "'rm' -rf x（引用符付きコマンド名）"
+run_case deny '{"command":"xargs -n 1 git push"}' 'xargs -n 1 git push'
+run_case deny '{"command":"timeout -s KILL 5 git push"}' 'timeout -s KILL 5 git push'
+run_case deny '{"command":"git -c user.name=x push"}' 'git -c user.name=x push'
+run_case deny '{"command":"git push &"}' 'git push &'
+run_case deny '{"command":"gh --repo=owner/repo repo delete owner/repo"}' 'gh --repo=owner/repo repo delete'
+run_case deny '{"command":"rm --recursive --force d"}' 'rm --recursive --force d'
+run_case deny '{"command":"sudo rm -rf /"}' 'sudo rm -rf /'
+
+# allow
+run_case allow '{"command":"ls"}' 'ls'
+run_case allow '{"command":"git commit -m \"a; b\""}' 'git commit -m "a; b"（; を含む引用符内は分割対象外の想定）'
+run_case allow '{"command":"echo git push"}' 'echo git push'
+run_case allow '{"command":"echo \"git push\""}' 'echo "git push"'
+run_case allow '{"command":"rm -r dir"}' 'rm -r dir（force なし）'
+run_case allow '{"command":"bash script.sh"}' 'bash script.sh（-c なし）'
+run_case allow '{"command":"command -v git"}' 'command -v git'
+
+# 性能: 大きい入力でも allow が返ること（実行時間の assert はしない）
+BIG_CMD=""
+for i in $(seq 1 300); do
+  BIG_CMD="${BIG_CMD}line ${i} padding text used only for performance measurement
+"
+done
+BIG_JSON="$("$JQ" -nc --arg c "$BIG_CMD" '{command:$c}')"
+perm="$(printf '%s' "$BIG_JSON" | "$GUARD" | "$JQ" -r '.permission // empty')"
+[[ "$perm" == allow ]] || { echo "FAIL: 大きい入力(約${#BIG_CMD}バイト)で allow が返ること" >&2; exit 1; }
+echo "ok: allow <- 大きい入力（約${#BIG_CMD}バイト、300行）"
+
+# adapters: ~/.config/shared を一時 HOME に張って Claude / Cursor の入口を通す
+ROOT="$(cd "${SCRIPT_DIR}/../../../.." && pwd)"
+TMP_HOME="$(mktemp -d)"
+trap 'rm -r "$TMP_HOME"' EXIT
+mkdir -p "$TMP_HOME/.config"
+ln -s "$ROOT/packages/shared" "$TMP_HOME/.config/shared"
+# mise shim は HOME を差し替えると trust を失うので実体を渡す
+JQ="$(mise which jq 2>/dev/null || command -v jq)"
+export JQ
+
+CLAUDE_ADAPTER="$ROOT/packages/claude/hooks/guard-shell.sh"
+claude_case() {
+  local expected="$1" json="$2" label="$3" out decision
+  out="$(printf '%s' "$json" | HOME="$TMP_HOME" "$CLAUDE_ADAPTER")"
+  decision="$(printf '%s' "$out" | "$JQ" -r '.hookSpecificOutput.permissionDecision // "silent"' 2>/dev/null || echo invalid)"
+  [[ -z "$out" ]] && decision=silent
+  if [[ "$decision" != "$expected" ]]; then
+    echo "FAIL: claude 期待=$expected 実際=$decision ($label)" >&2
+    exit 1
+  fi
+  echo "ok: claude $expected <- $label"
+}
+claude_case deny '{"tool_name":"Bash","tool_input":{"command":"git push"}}' 'git push'
+claude_case deny '{"tool_name":"Bash","tool_input":{"command":"git -C repo push"}}' 'git -C repo push'
+claude_case silent '{"tool_name":"Bash","tool_input":{"command":"git status"}}' 'git status（allow は無出力で通常の権限判定へ）'
+claude_case deny '{"tool_name":"Shell","tool_input":{"command":"git push"},"cwd":"/tmp"}' 'Cursor 経由（tool_name=Shell）の git push'
+claude_case silent '{"tool_name":"Shell","tool_input":{"command":"git status"}}' 'Cursor 経由（tool_name=Shell）の git status'
+claude_case silent '{"tool_name":"Read","tool_input":{"file_path":"/tmp/x"}}' 'Bash / Shell 以外は素通し'
+out="$(printf '{"tool_name":"Bash","tool_input":{"command":"ls"}}' | HOME="$TMP_HOME" JQ=/usr/bin/false "$CLAUDE_ADAPTER")"
+[[ "$(printf '%s' "$out" | "$JQ" -r '.hookSpecificOutput.permissionDecision')" == deny ]] \
+  || { echo "FAIL: claude adapter は jq 故障時に deny すること" >&2; exit 1; }
+echo "ok: claude deny <- jq 故障 (fail-closed)"
+
+CURSOR_ADAPTER="$ROOT/packages/cursor/hooks/guard-shell.sh"
+perm="$(printf '{"command":"rm -rf /tmp/foo"}' | HOME="$TMP_HOME" "$CURSOR_ADAPTER" | "$JQ" -r '.permission')"
+[[ "$perm" == deny ]] || { echo "FAIL: cursor adapter rm -rf" >&2; exit 1; }
+echo "ok: cursor deny <- rm -rf"
+perm="$(printf '{"command":"ls"}' | HOME=/nonexistent "$CURSOR_ADAPTER" | "$JQ" -r '.permission')"
+[[ "$perm" == deny ]] || { echo "FAIL: cursor adapter missing shared" >&2; exit 1; }
+echo "ok: cursor deny <- shared 未展開 (fail-closed)"
 
 echo "all tests passed ($GUARD)"

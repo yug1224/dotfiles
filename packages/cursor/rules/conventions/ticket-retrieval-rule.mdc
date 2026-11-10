@@ -1,7 +1,0 @@
----
-description: チケット情報の取得手順（GitHub / その他 URL / ID。プロバイダ固有は `.local`）。suggest-* コマンド等から参照される。
-globs: []
-alwaysApply: false
----
-
-@~/.config/shared/ai/rules/conventions/ticket-retrieval-rule.md

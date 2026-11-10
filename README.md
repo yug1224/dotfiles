@@ -10,7 +10,7 @@ cd dotfiles
 make install        # Homebrew インストール・Prezto clone（install.sh）
 make mise           # mise bootstrap（packages / dotfiles / tools / bootstrap task）
 make node           # pnpm install（lefthook の pre-commit で oxfmt / secretlint に必要。TypeScript はエディタの言語サービス用）
-make check          # oxfmt check + lint + typecheck + AI sync 検証（allowlist / wrapper / deny-guard / always-on）+ script 最小テスト + check-bootstrap（macOS）
+make check          # oxfmt check + lint + typecheck + AI 設定検証（context-bloat / local-tracked）+ script 最小テスト + check-bootstrap（macOS）
 ```
 
 - `make install`（`install.sh`）は初回 seed として Homebrew・Prezto・mise 導入に加え、`mise.toml` がある場合は **`mise bootstrap --yes` まで**実行する（重い・GUI reconcile の可能性あり）。日常の再適用は **`make mise`**。
@@ -18,8 +18,8 @@ make check          # oxfmt check + lint + typecheck + AI sync 検証（allowlis
 - lefthook pre-commit は oxfmt + secretlint のみ。AI sync は **`make check` / CI** で担保する。
 - bootstrap には **mise ≥ 2026.7.7** が必要（ルート `mise.toml` の `min_version`。不足時は `make mise` の gate が `brew upgrade mise`）。
 - `install.sh` は `/usr/bin/curl` で Homebrew を入れます。Intel Mac では `/opt/homebrew` ではなく `/usr/local` 側になる場合があります。
-- AI 設定（Cursor / Claude Code）は **RTK 前提**。`make mise` の後、`rtk --version && rtk gain` で smoke test すること。詳細は [`packages/shared/ai/docs/RTK.md`](packages/shared/ai/docs/RTK.md)。
-- Cursor / AI 用のルールは [`packages/cursor/README.md`](packages/cursor/README.md) を参照。
+- AI 設定（Cursor / Claude Code）の共有素材は [`packages/shared/ai/README.md`](packages/shared/ai/README.md)、セットアップ・運用フローの索引は [`packages/shared/ai/docs/README.md`](packages/shared/ai/docs/README.md)。
+- ホスト固有の設定（カーネル・権限・フック）は [`packages/cursor/README.md`](packages/cursor/README.md) と [`packages/claude/README.md`](packages/claude/README.md) を参照。
 - Raycast 拡張は [`packages/raycast/README.md`](packages/raycast/README.md) を参照。
 - oxfmt の構成は [`packages/oxfmt/README.md`](packages/oxfmt/README.md) を参照。
 - 依存の所有権（oxfmt の二重管理・Node 正本は [`.node-version`](.node-version)）は [`packages/oxfmt/README.md`](packages/oxfmt/README.md) を参照。
@@ -30,11 +30,11 @@ make check          # oxfmt check + lint + typecheck + AI sync 検証（allowlis
 
 ### 設定レイヤ
 
-| 層                   | 正本                                                     | 対象                                                                                                                                       |
-| -------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| mise `[dotfiles]`    | ルート [`mise.toml`](mise.toml)                          | zsh / shared / rtk / git（config・ignore）/ pnpm / tig / code（双ターゲット）/ cursor / claude / ssh（config のみ）/ mise（`config.toml`） |
-| mise `[tools]`       | [`packages/mise/config.toml`](packages/mise/config.toml) | runtimes（node / pnpm / …）+ CLI（`gh` `jq` `bat` `delta` `difftastic` `fd` `lefthook` `peco` `ripgrep`（バイナリ `rg`）`rtk` `tlrc` 等）  |
-| mise `[bootstrap.*]` | ルート [`mise.toml`](mise.toml)                          | formulae + 一部 cask（`brew:` / `brew-cask:`）。pkg/特殊配布 cask・VS Code 拡張・rtmpdump は `[tasks.bootstrap]`                           |
+| 層                   | 正本                                                     | 対象                                                                                                                                                                          |
+| -------------------- | -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| mise `[dotfiles]`    | ルート [`mise.toml`](mise.toml)                          | zsh / shared / git（config・ignore）/ pnpm / tig / code（双ターゲット）/ cursor / claude / ssh（config のみ）/ mise（`config.toml`）                                          |
+| mise `[tools]`       | [`packages/mise/config.toml`](packages/mise/config.toml) | runtimes（node / pnpm / …）+ CLI（`gh` `jq` `bat` `delta` `difftastic` `fd` `lefthook` `peco` `ripgrep`（バイナリ `rg`）`tlrc` 等）                                           |
+| mise `[bootstrap.*]` | ルート [`mise.toml`](mise.toml)                          | formulae + 一部 cask（`brew:` / `brew-cask:`）。pkg/特殊配布・自己更新 cask（`claude` 等）・VS Code 拡張・rtmpdump・Claude Code URL ハンドラの symlink は `[tasks.bootstrap]` |
 
 **所有権ルール**
 

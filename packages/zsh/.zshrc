@@ -53,6 +53,19 @@ alias gsw='(){
   git fetch origin $1 && git switch -fC $1 origin/$1
 }'
 
+# Claude Code デスクトップアプリを指定ディレクトリ（既定はカレント）で開く
+function claude-app() {
+  local dir="${1:-$PWD}"
+  if [[ ! -d "$dir" ]]; then
+    echo "claude-app: no such directory: $dir" >&2
+    return 1
+  fi
+
+  local enc
+  enc="$(V="${dir:A}" osascript -l JavaScript -e 'ObjC.import("stdlib"); encodeURIComponent($.getenv("V"))')" || return 1
+  open "claude://code/new?folder=${enc}"
+}
+
 source ~/.zsh_plugins/gibo-completion.zsh
 source ~/.zsh_plugins/lefthook-completion.zsh
 

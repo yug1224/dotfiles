@@ -1,103 +1,9 @@
 {
   "permissions": {
-    "allow": [
-      "Bash(awk:*)",
-      "Bash(cat:*)",
-      "Bash(cd:*)",
-      "Bash(comm:*)",
-      "Bash(cp:*)",
-      "Bash(cut:*)",
-      "Bash(diff:*)",
-      "Bash(echo:*)",
-      "Bash(env:*)",
-      "Bash(find:*)",
-      "Bash(gh api:*)",
-      "Bash(gh issue list:*)",
-      "Bash(gh issue status:*)",
-      "Bash(gh issue view:*)",
-      "Bash(gh pr checks:*)",
-      "Bash(gh pr diff:*)",
-      "Bash(gh pr list:*)",
-      "Bash(gh pr status:*)",
-      "Bash(gh pr view:*)",
-      "Bash(gh release list:*)",
-      "Bash(gh release view:*)",
-      "Bash(gh repo view:*)",
-      "Bash(gh run list:*)",
-      "Bash(gh run view:*)",
-      "Bash(gh search:*)",
-      "Bash(git --no-pager diff:*)",
-      "Bash(git --no-pager log:*)",
-      "Bash(git --no-pager show:*)",
-      "Bash(git diff:*)",
-      "Bash(git diff-tree:*)",
-      "Bash(git log:*)",
-      "Bash(git rev-parse:*)",
-      "Bash(git show:*)",
-      "Bash(git status:*)",
-      "Bash(grep:*)",
-      "Bash(head:*)",
-      "Bash(kill:*)",
-      "Bash(ls:*)",
-      "Bash(mkdir:*)",
-      "Bash(codegraph:*)",
-      "Bash(node:*)",
-      "Bash(openspec:*)",
-      "Bash(paste:*)",
-      "Bash(pnpm add:*)",
-      "Bash(pnpm audit:*)",
-      "Bash(pnpm exec oxlint:*)",
-      "Bash(pnpm install:*)",
-      "Bash(pnpm list:*)",
-      "Bash(pnpm ls:*)",
-      "Bash(pnpm outdated:*)",
-      "Bash(pnpm remove:*)",
-      "Bash(pnpm run:*)",
-      "Bash(pnpm store:*)",
-      "Bash(pnpm test:*)",
-      "Bash(pnpm why:*)",
-      "Bash(read:*)",
-      "Bash(rg:*)",
-      "Bash(sed:*)",
-      "Bash(sort:*)",
-      "Bash(tail:*)",
-      "Bash(timeout:*)",
-      "Bash(uniq:*)",
-      "Bash(wc:*)",
-      "mcp__chrome_devtools__list_*",
-      "mcp__codegraph__*",
-      "mcp__context7__get-library-docs",
-      "mcp__context7__query-docs",
-      "mcp__context7__resolve-library-id",
-      "mcp__figma__get_design_context",
-      "mcp__figma__get_figjam",
-      "mcp__figma__get_metadata",
-      "mcp__figma__get_screenshot",
-      "mcp__github__get_*",
-      "mcp__github__list_*",
-      "mcp__github__search_*",
-      "mcp__github__actions_get",
-      "mcp__github__actions_list",
-      "mcp__notion__notion-fetch",
-      "mcp__notion__notion-get-comments",
-      "mcp__notion__notion-search",
-      "mcp__storybook__get_story_urls",
-      "mcp__github__*_read",
-      "mcp__user-codegraph__*",
-      "mcp__user-github__get_*",
-      "mcp__user-github__list_*",
-      "mcp__user-github__search_*",
-      "mcp__user-github__actions_get",
-      "mcp__user-github__actions_list",
-      "mcp__user-github__*_read"
-    ],
+    "allow": ["Bash(*)", "mcp__codegraph__*"],
     "deny": [
-      "Bash(git reset --hard:*)",
-      "Bash(git clean -f:*)",
-      "Bash(git clean --force:*)",
-      "Bash(git branch -D:*)",
-      "Bash(git stash drop:*)",
-      "Bash(git stash clear:*)",
+      "Bash(git push:*)",
+      "Bash(rm -rf:*)",
       "Bash(gh pr merge:*)",
       "Bash(gh repo delete:*)",
       "Bash(gh release delete:*)",
@@ -118,17 +24,44 @@
             "timeout": 10
           }
         ]
-      },
+      }
+    ],
+    "UserPromptSubmit": [
       {
-        "matcher": "Bash",
         "hooks": [
           {
             "type": "command",
-            "command": "$HOME/.claude/hooks/rtk-hook.sh"
+            "command": "command -v codegraph >/dev/null 2>&1 || exit 0; codegraph prompt-hook"
           }
         ]
       }
     ]
   },
-  "effortLevel": "high"
+  "enabledPlugins": {
+    "pstack@cursor-plugins": true,
+    "ponytail@ponytail": true,
+    "yomiyasu@yomiyasu": true
+  },
+  "extraKnownMarketplaces": {
+    "ponytail": {
+      "source": {
+        "source": "git",
+        "url": "https://github.com/DietrichGebert/ponytail.git"
+      }
+    },
+    "cursor-plugins": {
+      "source": {
+        "source": "git",
+        "url": "https://github.com/cursor/plugins.git"
+      }
+    },
+    "yomiyasu": {
+      "source": {
+        "source": "git",
+        "url": "https://github.com/nanaism/yomiyasu.git"
+      }
+    }
+  },
+  "effortLevel": "xhigh",
+  "switchModelsOnFlag": true
 }
