@@ -1,6 +1,9 @@
 {
   "permissions": {
-    "allow": ["Bash(*)", "mcp__codegraph__*"],
+    "allow": [
+      "Bash(*)",
+      "mcp__codegraph__*"
+    ],
     "deny": [
       "Bash(git push:*)",
       "Bash(rm -rf:*)",
@@ -39,8 +42,7 @@
   },
   "enabledPlugins": {
     "pstack@cursor-plugins": true,
-    "ponytail@ponytail": true,
-    "yomiyasu@yomiyasu": true
+    "ponytail@ponytail": true
   },
   "extraKnownMarketplaces": {
     "ponytail": {
@@ -53,12 +55,6 @@
       "source": {
         "source": "git",
         "url": "https://github.com/cursor/plugins.git"
-      }
-    },
-    "yomiyasu": {
-      "source": {
-        "source": "git",
-        "url": "https://github.com/nanaism/yomiyasu.git"
       }
     }
   },

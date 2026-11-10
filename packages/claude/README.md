@@ -24,6 +24,12 @@ skills の入れ方と自動発火の切り替えは [shared README](../shared/a
 - **PreToolUse**（matcher `Bash`）: `hooks/guard-shell.sh`。deny のときだけ出力し、allow 時は無出力で通常の権限判定に戻す
 - **UserPromptSubmit**: `codegraph prompt-hook`（codegraph 未インストール時は何もしない）
 
+## プラグイン
+
+全端末で使うプラグインは `settings.json` の `enabledPlugins` と `extraKnownMarketplaces` に書く。`make mise` の bootstrap が `mise run plugins:update` を呼び、marketplace と有効なプラグインを最新にする。手で更新するときは `mise -C ~/.dotfiles run plugins:update` を実行し、Claude Code を再起動する。hook を持たず Skill だけのもの（yomiyasu）はプラグインにせず、`skills:update` で `gh skill install` する。
+
+## 端末ごとの設定
+
 env・model・plugins など端末ごとの設定は `settings.local.json` に書く。mise は張らないので、端末ごとに手動で symlink する。
 
 ```bash

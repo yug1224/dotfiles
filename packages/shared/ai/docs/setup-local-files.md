@@ -37,17 +37,18 @@ Skill 固有の上書きは `local-rules/references/overlays/<skill>.md` に置�
 
 ## インストール
 
-公開側の `skills:update` タスクは、yug1224/skills の clone（`~/Workspaces/yug1224/skills`）を `gh skill install --from-local` で入れる。private リポジトリも入れるときは、dotfiles 直下に `mise.local.toml`（Git 外。ルートの `.gitignore` が除外する）を置き、このタスクを同じ名前で上書きする。mise は `mise.local.toml` を `mise.toml` より優先し、同名タスクは丸ごと置き換える。
+公開側の `skills:update` タスクは、yug1224/skills の clone（`~/Workspaces/yug1224/skills`）を `gh skill install --from-local` で入れ、外部の Skill（nanaism/yomiyasu）を GitHub の最新リリースから入れる。private リポジトリも入れるときは、dotfiles 直下に `mise.local.toml`（Git 外。ルートの `.gitignore` が除外する）を置き、このタスクを同じ名前で上書きする。mise は `mise.local.toml` を `mise.toml` より優先し、同名タスクは丸ごと置き換えるので、公開側の行も書き写す。
 
 ```toml
 [tasks."skills:update"]
 run = """
 gh skill install ~/Workspaces/yug1224/skills --from-local --all --agent claude-code --scope user --force
 gh skill install <private リポジトリのパス> --from-local --all --agent claude-code --scope user --force
+gh skill install nanaism/yomiyasu yomiyasu --agent claude-code --scope user --force
 """
 ```
 
-`make mise` の bootstrap は、clone が無ければ作ってから `mise run skills:update` を呼ぶ。`mise.local.toml` が無い端末では公開側の Skill だけが入る。どちらも作業ツリーをそのまま入れ、`git pull` はしない（別のブランチや commit 前の変更も入る）。
+`make mise` の bootstrap は、clone が無ければ作ってから `mise run skills:update` を呼ぶ。`mise.local.toml` が無い端末では公開側の Skill だけが入る。clone から入れるものは作業ツリーをそのまま入れ、`git pull` はしない（別のブランチや commit 前の変更も入る）。
 
 `~/.claude/skills/` はコピーなので直接直さない。private リポジトリで編集し（履歴を残すなら commit する）、`mise -C ~/.dotfiles run skills:update` で反映する。`--force` は元から消したファイルを消さないので、ファイルを消したり名前を変えたりしたときはインストール先の該当ディレクトリを消してから反映する。
 
