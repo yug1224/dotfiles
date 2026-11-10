@@ -5,9 +5,14 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 GUARD="${SCRIPT_DIR}/guard-shell.sh"
 
-: "${JQ:=$HOME/.local/share/mise/shims/jq}"
+if [[ -z "${JQ:-}" ]]; then
+  JQ="$HOME/.local/share/mise/shims/jq"
+  [[ -x "$JQ" ]] || JQ="$(command -v jq || true)"
+fi
 if [[ ! -x "$JQ" ]]; then
   echo "SKIP: executable jq required at JQ=$JQ (make mise / packages/mise/config.toml の jq)" >&2
+  # CI で SKIP すると未検証のまま成功に見えるので落とす
+  [[ -n "${CI:-}" ]] && exit 1
   exit 0
 fi
 export JQ
@@ -142,6 +147,20 @@ run_case allow '{"command":"echo \"git push\""}' 'echo "git push"'
 run_case allow '{"command":"rm -r dir"}' 'rm -r dir（force なし）'
 run_case allow '{"command":"bash script.sh"}' 'bash script.sh（-c なし）'
 run_case allow '{"command":"command -v git"}' 'command -v git'
+
+# deny: 以前すり抜けていた形
+run_case deny '{"command":"command -p git push"}' 'command -p git push'
+run_case deny '{"command":"exec -a x git push"}' 'exec -a x git push'
+run_case deny '{"command":"gh -R=owner/repo pr merge 1"}' 'gh -R=owner/repo pr merge'
+run_case deny '{"command":"git --exec-path=/x push"}' 'git --exec-path=/x push'
+run_case deny '{"command":"git --config-env x=Y push"}' 'git --config-env x=Y push'
+run_case deny '{"command":"git -c core.bare push"}' 'git -c core.bare push（= なし）'
+run_case deny '{"command":"git p\\ush"}' 'git p\ush（エスケープ）'
+run_case deny '{"command":"find /tmp/x -exec rm -rf {} +"}' 'find -exec rm -rf'
+run_case deny '{"command":"find . -execdir rm -fr {} \\;"}' 'find -execdir rm -fr'
+run_case deny '{"command":"git subtree push --prefix=d origin main"}' 'git subtree push'
+run_case allow '{"command":"find . -exec ls {} +"}' 'find -exec ls'
+run_case allow '{"command":"git -c color.ui=never status"}' 'git -c color.ui=never status'
 
 # 性能: 大きい入力でも allow が返ること（実行時間の assert はしない）
 BIG_CMD=""

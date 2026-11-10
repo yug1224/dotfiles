@@ -9,7 +9,7 @@ git clone https://github.com/yug1224/dotfiles.git
 cd dotfiles
 make install        # Homebrew インストール・Prezto clone（install.sh）
 make mise           # mise bootstrap（packages / dotfiles / tools / bootstrap task）
-make node           # pnpm install（lefthook の pre-commit で oxfmt / secretlint に必要。TypeScript はエディタの言語サービス用）
+make node           # pnpm install + lefthook install（pre-commit の oxfmt / secretlint に必要。TypeScript はエディタの言語サービス用）
 make check          # oxfmt check + lint + typecheck + AI 設定検証（context-bloat / local-tracked）+ script 最小テスト + check-bootstrap（macOS）
 ```
 

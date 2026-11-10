@@ -184,10 +184,19 @@ echo "bootstrap: done"
 """
 
 # yug1224/skills は手元の clone の作業ツリーをそのまま入れる（pull はしない）。yomiyasu は GitHub の最新リリースを入れる。Git 外の mise.local.toml で同名タスクを上書きすると、追加のリポジトリも入れられる
+# --force は消したファイルを残すので、リポジトリにある Skill のディレクトリを先に消してから入れる
 [tasks."skills:update"]
 description = "Install agent skills from the local clone of yug1224/skills and nanaism/yomiyasu"
 run = """
-gh skill install ~/Workspaces/yug1224/skills --from-local --all --agent claude-code --scope user --force
+#!/usr/bin/env bash
+set -euo pipefail
+shopt -s nullglob
+for repo in ~/Workspaces/yug1224/skills; do
+  for d in "$repo"/skills/*/; do
+    rm -rf "$HOME/.claude/skills/$(basename "$d")"
+  done
+  gh skill install "$repo" --from-local --all --agent claude-code --scope user --force
+done
 gh skill install nanaism/yomiyasu yomiyasu --agent claude-code --scope user --force
 """
 
