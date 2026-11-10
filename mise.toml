@@ -52,8 +52,9 @@ dotfiles.default_mode = "symlink"
 # visual-studio-code は意図的に外す（メインエディタは Cursor）。code CLI がある場合のみ拡張を入れる
 # claude-cli:// の URL ハンドラは CLI 実体への symlink がバージョン固定なので latest へ貼り直す
 # Agent Skills は yug1224/skills を ~/Workspaces/yug1224/skills に clone し、gh skill でコピーして入れる
+# Claude Code のプラグインは settings.json の enabledPlugins を plugins:update で更新する
 [tasks.bootstrap]
-description = "Install brew-escaped casks, rtmpdump, Claude Code URL handler symlink, agent skills, and optional VS Code extensions (idempotent)"
+description = "Install brew-escaped casks, rtmpdump, Claude Code URL handler symlink, agent skills, Claude Code plugins, and optional VS Code extensions (idempotent)"
 run = """
 #!/usr/bin/env bash
 set -euo pipefail
@@ -125,6 +126,13 @@ else
   fi
 fi
 
+echo "bootstrap: ensure Claude Code plugins"
+if ! command -v claude >/dev/null 2>&1; then
+  echo "bootstrap: claude not found; skip plugins (rerun: make mise)" >&2
+elif ! mise run plugins:update; then
+  echo "bootstrap: plugins update failed; continue (fix and rerun: make mise)" >&2
+fi
+
 if ! command -v code >/dev/null 2>&1; then
   echo "bootstrap: code CLI not found; skip VS Code extensions"
   exit 0
@@ -175,10 +183,25 @@ done
 echo "bootstrap: done"
 """
 
-# 手元の clone の作業ツリーをそのまま入れる（pull はしない）。Git 外の mise.local.toml で同名タスクを上書きすると、追加のリポジトリも入れられる
+# yug1224/skills は手元の clone の作業ツリーをそのまま入れる（pull はしない）。yomiyasu は GitHub の最新リリースを入れる。Git 外の mise.local.toml で同名タスクを上書きすると、追加のリポジトリも入れられる
 [tasks."skills:update"]
-description = "Install agent skills from the local clone of yug1224/skills"
-run = "gh skill install ~/Workspaces/yug1224/skills --from-local --all --agent claude-code --scope user --force"
+description = "Install agent skills from the local clone of yug1224/skills and nanaism/yomiyasu"
+run = """
+gh skill install ~/Workspaces/yug1224/skills --from-local --all --agent claude-code --scope user --force
+gh skill install nanaism/yomiyasu yomiyasu --agent claude-code --scope user --force
+"""
+
+# 対象は packages/claude/settings.json の enabledPlugins。反映には Claude Code の再起動が要る
+[tasks."plugins:update"]
+description = "Update Claude Code marketplaces and enabled plugins"
+run = """
+#!/usr/bin/env bash
+set -euo pipefail
+claude plugin marketplace update
+for p in $(jq -r '.enabledPlugins | to_entries[] | select(.value) | .key' packages/claude/settings.json); do
+  claude plugin update "$p" || claude plugin install "$p"
+done
+"""
 
 [dotfiles]
 # 安定パス入口（初回は config 相対 source なので ~/.dotfiles 不要）
