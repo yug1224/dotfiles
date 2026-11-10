@@ -1,6 +1,9 @@
 {
   "permissions": {
-    "allow": ["Bash(*)", "mcp__codegraph__*"],
+    "allow": [
+      "Bash(*)",
+      "mcp__codegraph__*"
+    ],
     "deny": [
       "Bash(git push:*)",
       "Bash(rm -rf:*)",
