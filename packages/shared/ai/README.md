@@ -2,7 +2,7 @@
 
 Cursor と Claude Code が同じ本文を読むための原本。`make mise` が `~/.config/shared` → `packages/shared` の symlink を張るので、`~/.config/shared/ai/` 配下の編集はそのままリポジトリの編集になる。
 
-Skill と、Skill が Read する規約（`shared-rules`）は [yug1224/skills](https://github.com/yug1224/skills) にある。`make mise` が yug1224/skills を `~/Workspaces/yug1224/skills` に clone し、`gh skill` で `~/.claude/skills/` にコピーする。Git 外の Skill と規約の足し方は [docs/setup-local-files.md](./docs/setup-local-files.md)。
+Skill と、Skill が Read する規約（`shared-rules`）は [yug1224/skills](https://github.com/yug1224/skills) にある。`make mise` が `[bootstrap.repos]` で yug1224/skills を `~/Workspaces/yug1224/skills` に clone し、`skills:update` が `gh skill` で `~/.claude/skills/` を作り直す。Git 外の Skill と規約の足し方は [docs/setup-local-files.md](./docs/setup-local-files.md)。
 
 ```
 packages/shared/ai/
@@ -23,7 +23,7 @@ packages/shared/ai/
 | 権限                   | `permissions.json`                                               | `settings.json`（端末ごとの上書きは `settings.local.json`） |
 
 - ツール別のラッパーは持たない。Skill を 1 本足せば両ツールに同じ名前（`/<name>`）で出る
-- `~/.claude/skills/` はコピーなので直接直さない。入手元のリポジトリを直して `mise -C ~/.dotfiles run skills:update` で反映する
+- `~/.claude/skills/` はコピーで、`skills:update` のたびに作り直すので直接直さない（手で置いたものも消える）。入手元のリポジトリを直して `mise -C ~/.dotfiles run skills:update` で反映する
 - カーネル同期・常時ロードの禁止は [ai-config-rule.md](./rules/meta/ai-config-rule.md)、Skill の自動発火の切り替えは [CONVENTIONS.md](./CONVENTIONS.md)
 - シェルガードの挙動などホスト固有の設定は [packages/cursor/README.md](../../cursor/README.md) / [packages/claude/README.md](../../claude/README.md)
 

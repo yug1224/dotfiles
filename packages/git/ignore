@@ -371,3 +371,5 @@ _.code-workspace
 # Serena local directory
 
 .serena/project.yml
+
+**/.claude/settings.local.json

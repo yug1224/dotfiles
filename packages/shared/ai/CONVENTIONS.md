@@ -1,6 +1,6 @@
 # AI 素材の命名・配置規約
 
-Skill と規約の正本は [yug1224/skills](https://github.com/yug1224/skills)（公開）と、Git 外の private リポジトリ。`gh skill` が `~/.claude/skills/` にコピーし、Cursor / Claude Code はそこを直接参照する（ラッパーなし）。docs・hooks・`rules/meta/` はこの `packages/shared/ai/` に残し、`~/.config/shared/ai/` として見える。常時カーネルは `packages/cursor/rules/kernel.mdc` と `packages/claude/CLAUDE.md`。
+Skill と規約の正本は [yug1224/skills](https://github.com/yug1224/skills)（公開）と、Git 外の private リポジトリ。`skills:update` が `gh skill` で `~/.claude/skills/` を作り直し（コピー）、Cursor / Claude Code はそこを直接参照する（ラッパーなし）。docs・hooks・`rules/meta/` はこの `packages/shared/ai/` に残し、`~/.config/shared/ai/` として見える。常時カーネルは `packages/cursor/rules/kernel.mdc` と `packages/claude/CLAUDE.md`。
 
 ## 命名
 

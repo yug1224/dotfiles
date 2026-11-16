@@ -18,7 +18,7 @@ mise-gate:
 
 .PHONY: mise
 mise: mise-gate
-	mise -C "$(CURDIR)" bootstrap --yes
+	mise -C "$(CURDIR)" bootstrap --yes --skip-dirty
 
 # 互換・部分再適用
 .PHONY: mise-dotfiles

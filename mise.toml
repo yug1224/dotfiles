@@ -48,10 +48,14 @@ dotfiles.default_mode = "symlink"
 "brew-cask:google-chrome" = "latest"
 "brew-cask:microsoft-edge" = "latest"
 
+# ref を書かないので、clone 済みなら今の commit のまま触らない（pull しない）
+[bootstrap.repos]
+"~/Workspaces/yug1224/skills" = { url = "https://github.com/yug1224/skills.git" }
+
 # claude（自己更新で版が乖離）/ gcloud-cli / google-japanese-ime（pkg 状態を mise が追えない）/ onyx（Caskroom の .metadata を版と誤認）/ raycast 等 / rtmpdump
 # visual-studio-code は意図的に外す（メインエディタは Cursor）。code CLI がある場合のみ拡張を入れる
 # claude-cli:// の URL ハンドラは CLI 実体への symlink がバージョン固定なので latest へ貼り直す
-# Agent Skills は yug1224/skills を ~/Workspaces/yug1224/skills に clone し、gh skill でコピーして入れる
+# Agent Skills は [bootstrap.repos] の clone から skills:update で ~/.claude/skills を作り直す
 # Claude Code のプラグインは settings.json の enabledPlugins を plugins:update で更新する
 [tasks.bootstrap]
 description = "Install brew-escaped casks, rtmpdump, Claude Code URL handler symlink, agent skills, Claude Code plugins, and optional VS Code extensions (idempotent)"
@@ -109,21 +113,11 @@ else
 fi
 
 echo "bootstrap: ensure agent skills"
-skills_repo="$HOME/Workspaces/yug1224/skills"
 if ! command -v gh >/dev/null 2>&1; then
-  # 旧 symlink を外す前に止める。外してから入れられないと Skill が全部見えなくなる
   echo "bootstrap: gh not found; skip agent skills (rerun: make mise)" >&2
-elif [[ ! -d "$skills_repo" ]] && ! git clone https://github.com/yug1224/skills.git "$skills_repo"; then
-  echo "bootstrap: clone yug1224/skills failed; skip agent skills (fix and rerun: make mise)" >&2
-else
-  # 旧構成の symlink（→ packages/shared/ai/skills）があると、その先にコピーされてしまうので外す
-  if [[ -L "$HOME/.claude/skills" ]]; then
-    rm "$HOME/.claude/skills"
-  fi
-  # 失敗しても後続（VS Code 拡張）は続ける。原因を直したら make mise で入れ直す
-  if ! mise run skills:update; then
-    echo "bootstrap: agent skills install failed; continue (fix and rerun: make mise)" >&2
-  fi
+# 失敗しても後続（VS Code 拡張）は続ける。skills:update は入れ替えの前に落ちるので今の Skill は残る
+elif ! mise run skills:update; then
+  echo "bootstrap: agent skills install failed; continue (fix and rerun: make mise)" >&2
 fi
 
 echo "bootstrap: ensure Claude Code plugins"
@@ -183,21 +177,32 @@ done
 echo "bootstrap: done"
 """
 
-# yug1224/skills は手元の clone の作業ツリーをそのまま入れる（pull はしない）。yomiyasu は GitHub の最新リリースを入れる。Git 外の mise.local.toml で同名タスクを上書きすると、追加のリポジトリも入れられる
-# --force は消したファイルを残すので、リポジトリにある Skill のディレクトリを先に消してから入れる
+# ~/.claude/skills を宣言した Skill だけで毎回作り直す。手で置いたものは消える
+# gh skill install --force は元で消したファイルや Skill を残すので、別の場所に全部入れてから入れ替える
+# yug1224/skills は手元の clone の作業ツリーをそのまま入れる（pull はしない）。外部の Skill は GitHub の最新リリースを入れる
+# 端末固有の Skill は Git 外の mise.local.toml に skills:update:local として書く。$SKILLS_DIR に入れると一緒に入れ替わる
 [tasks."skills:update"]
-description = "Install agent skills from the local clone of yug1224/skills and nanaism/yomiyasu"
+description = "Rebuild ~/.claude/skills from the local clone of yug1224/skills and external skills"
 run = """
 #!/usr/bin/env bash
 set -euo pipefail
-shopt -s nullglob
-for repo in ~/Workspaces/yug1224/skills; do
-  for d in "$repo"/skills/*/; do
-    rm -rf "$HOME/.claude/skills/$(basename "$d")"
-  done
-  gh skill install "$repo" --from-local --all --agent claude-code --scope user --force
-done
-gh skill install nanaism/yomiyasu yomiyasu --agent claude-code --scope user --force
+dest="$HOME/.claude/skills"
+mkdir -p "$HOME/.claude"
+# mv で入れ替えるので同じファイルシステムに作る
+staging="$(mktemp -d "$HOME/.claude/skills.staging.XXXXXX")"
+trap 'rm -rf "$staging"' EXIT
+gh skill install ~/Workspaces/yug1224/skills --from-local --all --dir "$staging" --force
+gh skill install nanaism/yomiyasu yomiyasu --dir "$staging" --force
+gh skill install GoogleChrome/modern-web-guidance modern-web-guidance --dir "$staging" --force
+if mise tasks info skills:update:local >/dev/null 2>&1; then
+  SKILLS_DIR="$staging" mise run skills:update:local
+fi
+old="$dest.old.$$"
+if [[ -e "$dest" || -L "$dest" ]]; then
+  mv "$dest" "$old"
+fi
+mv "$staging" "$dest"
+rm -rf "$old"
 """
 
 # 対象は packages/claude/settings.json の enabledPlugins。反映には Claude Code の再起動が要る

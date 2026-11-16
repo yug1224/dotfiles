@@ -2,7 +2,7 @@
 
 `*.local.*` は個人・自社固有の差分で、Git に載せない（各パッケージの `.gitignore` が `*.local.*` を除外し、`make check-sync` の `check-local-tracked.sh` が追跡漏れを検出する）。dotfiles の作業ツリーに残る `*.local.*` と `mise.local.toml` も Git 外なので、clone し直す前に退避する。
 
-Skill と規約の Git 外の差分は、dotfiles ではなく **GitHub に push しない private リポジトリ** に置き、`gh skill install --from-local` で `~/.claude/skills/` にコピーする。dotfiles には、そのリポジトリの名前もパスも書かない。
+Skill と規約の Git 外の差分は、dotfiles ではなく **GitHub に push しない private リポジトリ** に置き、`skills:update` が `~/.claude/skills/` を作り直すときに `gh skill install --from-local` で一緒に入れる。dotfiles には、そのリポジトリの名前もパスも書かない。
 
 ## private リポジトリの構成
 
@@ -37,27 +37,30 @@ Skill 固有の上書きは `local-rules/references/overlays/<skill>.md` に置�
 
 ## インストール
 
-公開側の `skills:update` タスクは、yug1224/skills の clone（`~/Workspaces/yug1224/skills`）を `gh skill install --from-local` で入れ、外部の Skill（nanaism/yomiyasu）を GitHub の最新リリースから入れる。private リポジトリも入れるときは、dotfiles 直下に `mise.local.toml`（Git 外。ルートの `.gitignore` が除外する）を置き、このタスクを同じ名前で上書きする。mise は `mise.local.toml` を `mise.toml` より優先し、同名タスクは丸ごと置き換えるので、公開側の行も書き写す。
+公開側の `skills:update` タスクは、`~/.claude/skills/` を毎回作り直す。作業用のディレクトリ（`~/.claude/skills.staging.*`）に、yug1224/skills の clone（`~/Workspaces/yug1224/skills`）を `gh skill install --from-local --dir` で入れ、外部の Skill（nanaism/yomiyasu、GoogleChrome/modern-web-guidance）を GitHub の最新リリースから入れる。全部入れ終わってから `~/.claude/skills/` と入れ替えるので、途中で失敗したときは今の Skill が残る。
+
+private リポジトリなど端末固有の Skill も入れるときは、dotfiles 直下に `mise.local.toml`（Git 外。ルートの `.gitignore` が除外する）を置き、`skills:update:local` タスクを書く。`skills:update` は入れ替える前に、作業用のディレクトリを `SKILLS_DIR` に渡してこのタスクを呼ぶ。入れ替えの外で `~/.claude/skills/` を直接いじらないよう、単体では実行しない。
 
 ```toml
-[tasks."skills:update"]
+[tasks."skills:update:local"]
 run = """
-gh skill install ~/Workspaces/yug1224/skills --from-local --all --agent claude-code --scope user --force
-gh skill install <private リポジトリのパス> --from-local --all --agent claude-code --scope user --force
-gh skill install nanaism/yomiyasu yomiyasu --agent claude-code --scope user --force
+#!/usr/bin/env bash
+set -euo pipefail
+dir="${SKILLS_DIR:?run via: mise run skills:update}"
+gh skill install <private リポジトリのパス> --from-local --all --dir "$dir" --force
 """
 ```
 
-`make mise` の bootstrap は、clone が無ければ作ってから `mise run skills:update` を呼ぶ。`mise.local.toml` が無い端末では公開側の Skill だけが入る。clone から入れるものは作業ツリーをそのまま入れ、`git pull` はしない（別のブランチや commit 前の変更も入る）。
+yug1224/skills の clone は、`make mise` の bootstrap が `[bootstrap.repos]` で作る。clone 済みなら今の commit のまま触らず、commit 前の変更があっても `--skip-dirty` で飛ばして先へ進む。`mise.local.toml` が無い端末では公開側の Skill だけが入る。clone から入れるものは作業ツリーをそのまま入れ、`git pull` はしない（別のブランチや commit 前の変更も入る）。
 
-`~/.claude/skills/` はコピーなので直接直さない。private リポジトリで編集し（履歴を残すなら commit する）、`mise -C ~/.dotfiles run skills:update` で反映する。`--force` は元から消したファイルを消さないので、ファイルを消したり名前を変えたりしたときはインストール先の該当ディレクトリを消してから反映する。
+`~/.claude/skills/` はコピーで、`skills:update` のたびに作り直すので、直接直したものや手で置いたものは消える。Skill のリポジトリで編集し（履歴を残すなら commit する）、`mise -C ~/.dotfiles run skills:update` で反映する。ファイルや Skill を消したり名前を変えたりしても、作り直すときにそのまま反映される。
 
 ## ホスト設定の差分
 
 | ファイル                              | 用途                                                                                                                       |
 | ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
 | `packages/claude/settings.local.json` | 端末ごとの env・model・plugins。`~/.claude/` への symlink は手動（[packages/claude/README.md](../../../claude/README.md)） |
-| `mise.local.toml`                     | private リポジトリの Skill を入れる `skills:update` の上書き（上記「インストール」）                                       |
+| `mise.local.toml`                     | 端末固有の Skill を入れる `skills:update:local`（上記「インストール」）                                                    |
 
 Cursor の `permissions.json` / `hooks.json` にはローカル上書きの仕組みがない。端末差分が要るときは Cursor の UI 側で設定する。
 
