@@ -1,6 +1,6 @@
 # `packages/claude/`（~/.claude）
 
-Claude Code のホスト固有設定。`make mise` で `~/.claude/` 配下に symlink を張る。Skill と規約の本文は Cursor と共有で、`make mise` が yug1224/skills の clone から `~/.claude/skills/` にコピーする（[shared README](../shared/ai/README.md)）。
+Claude Code のホスト固有設定。`make mise` で `~/.claude/` 配下に symlink を張る。Skill と規約の本文は Cursor と共有で、`make mise` が yug1224/skills の clone などから `~/.claude/skills/` を作り直す（[shared README](../shared/ai/README.md)）。
 
 ```
 packages/claude/
@@ -26,7 +26,7 @@ skills の入れ方と自動発火の切り替えは [shared README](../shared/a
 
 ## プラグイン
 
-全端末で使うプラグインは `settings.json` の `enabledPlugins` と `extraKnownMarketplaces` に書く。`make mise` の bootstrap が `mise run plugins:update` を呼び、marketplace と有効なプラグインを最新にする。手で更新するときは `mise -C ~/.dotfiles run plugins:update` を実行し、Claude Code を再起動する。hook を持たず Skill だけのもの（yomiyasu）はプラグインにせず、`skills:update` で `gh skill install` する。
+全端末で使うプラグインは `settings.json` の `enabledPlugins` と `extraKnownMarketplaces` に書く。`make mise` の bootstrap が `mise run plugins:update` を呼び、marketplace と有効なプラグインを最新にする。手で更新するときは `mise -C ~/.dotfiles run plugins:update` を実行し、Claude Code を再起動する。hook を持たず Skill だけのもの（yomiyasu など）はプラグインにせず、`skills:update` で `gh skill install` する。
 
 ## 端末ごとの設定
 

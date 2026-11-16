@@ -30,11 +30,11 @@ make check          # oxfmt check + lint + typecheck + AI 設定検証（context
 
 ### 設定レイヤ
 
-| 層                   | 正本                                                     | 対象                                                                                                                                                                          |
-| -------------------- | -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| mise `[dotfiles]`    | ルート [`mise.toml`](mise.toml)                          | zsh / shared / git（config・ignore）/ pnpm / tig / code（双ターゲット）/ cursor / claude / ssh（config のみ）/ mise（`config.toml`）                                          |
-| mise `[tools]`       | [`packages/mise/config.toml`](packages/mise/config.toml) | runtimes（node / pnpm / …）+ CLI（`gh` `jq` `bat` `delta` `difftastic` `fd` `lefthook` `peco` `ripgrep`（バイナリ `rg`）`tlrc` 等）                                           |
-| mise `[bootstrap.*]` | ルート [`mise.toml`](mise.toml)                          | formulae + 一部 cask（`brew:` / `brew-cask:`）。pkg/特殊配布・自己更新 cask（`claude` 等）・VS Code 拡張・rtmpdump・Claude Code URL ハンドラの symlink は `[tasks.bootstrap]` |
+| 層                   | 正本                                                     | 対象                                                                                                                                                                                                                                                                       |
+| -------------------- | -------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| mise `[dotfiles]`    | ルート [`mise.toml`](mise.toml)                          | zsh / shared / git（config・ignore）/ pnpm / tig / code（双ターゲット）/ cursor / claude / ssh（config のみ）/ mise（`config.toml`）                                                                                                                                       |
+| mise `[tools]`       | [`packages/mise/config.toml`](packages/mise/config.toml) | runtimes（node / pnpm / …）+ CLI（`gh` `jq` `bat` `delta` `difftastic` `fd` `lefthook` `peco` `ripgrep`（バイナリ `rg`）`tlrc` 等）                                                                                                                                        |
+| mise `[bootstrap.*]` | ルート [`mise.toml`](mise.toml)                          | formulae + 一部 cask（`brew:` / `brew-cask:`）と、yug1224/skills の clone（`[bootstrap.repos]`）。pkg/特殊配布・自己更新 cask（`claude` 等）・VS Code 拡張・rtmpdump・Claude Code URL ハンドラの symlink・Agent Skills の作り直し（`skills:update`）は `[tasks.bootstrap]` |
 
 **所有権ルール**
 
