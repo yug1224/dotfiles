@@ -10,7 +10,7 @@ packages/claude/
 └── hooks/               # 薄いアダプタ。本体は shared/ai/hooks/guard-shell.sh
 ```
 
-skills の入れ方と自動発火の切り替えは [shared README](../shared/ai/README.md)「Cursor / Claude Code からの見え方」と [CONVENTIONS.md](../shared/ai/CONVENTIONS.md)「Skill の自動発火」。
+skills の入れ方と自動発火の切り替えは [shared README](../shared/ai/README.md)「各ツールからの見え方」と [CONVENTIONS.md](../shared/ai/CONVENTIONS.md)「Skill の自動発火」。
 
 ## カーネル
 

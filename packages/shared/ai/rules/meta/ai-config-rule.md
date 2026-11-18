@@ -25,7 +25,7 @@ dotfiles の `packages/shared/ai/` やカーネル、または Skill のリポ�
 
 ## 禁止
 
-- `~/.cursor/skills` に Skill を入れる（`~/.claude/skills` と二重表示になる。`gh skill` は `--agent claude-code` だけで入れる）
+- `~/.cursor/skills` に Skill を入れる（`~/.claude/skills` と二重表示になる。`gh skill` は `claude-code` と `antigravity2.0` だけに入れる）
 - カーネル以外の常時ロードを増やす（詳細ルールの `alwaysApply: true`、`CLAUDE.md` への `@import`、`packages/cursor/rules` への kernel 以外の `.mdc`、`~/.claude/rules/` へのファイル追加）
 - Git 管理ファイルに会社名・非公開 URL を書く
 - `.local.md` に `.md` の全文をコピーする

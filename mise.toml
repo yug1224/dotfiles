@@ -177,17 +177,16 @@ done
 echo "bootstrap: done"
 """
 
-# ~/.claude/skills を宣言した Skill だけで毎回作り直す。手で置いたものは消える
+# ~/.claude/skills と ~/.gemini/config/skills を宣言した Skill だけで毎回作り直す。手で置いたものは消える
 # gh skill install --force は元で消したファイルや Skill を残すので、別の場所に全部入れてから入れ替える
 # yug1224/skills は手元の clone の作業ツリーをそのまま入れる（pull はしない）。外部の Skill は GitHub の最新リリースを入れる
 # 端末固有の Skill は Git 外の mise.local.toml に skills:update:local として書く。$SKILLS_DIR に入れると一緒に入れ替わる
 [tasks."skills:update"]
-description = "Rebuild ~/.claude/skills from the local clone of yug1224/skills and external skills"
+description = "Rebuild ~/.claude/skills and ~/.gemini/config/skills from the local clone of yug1224/skills and external skills"
 run = """
 #!/usr/bin/env bash
 set -euo pipefail
-dest="$HOME/.claude/skills"
-mkdir -p "$HOME/.claude"
+mkdir -p "$HOME/.claude" "$HOME/.gemini/config"
 # mv で入れ替えるので同じファイルシステムに作る
 staging="$(mktemp -d "$HOME/.claude/skills.staging.XXXXXX")"
 trap 'rm -rf "$staging"' EXIT
@@ -197,20 +196,27 @@ gh skill install GoogleChrome/modern-web-guidance modern-web-guidance --dir "$st
 if mise tasks info skills:update:local >/dev/null 2>&1; then
   SKILLS_DIR="$staging" mise run skills:update:local
 fi
-old="$dest.old.$$"
-if [[ -e "$dest" || -L "$dest" ]]; then
-  mv "$dest" "$old"
-fi
-mv "$staging" "$dest"
-rm -rf "$old"
+for dest in "$HOME/.claude/skills" "$HOME/.gemini/config/skills"; do
+  target_staging="$dest.staging.$$"
+  cp -R "$staging" "$target_staging"
+  old="$dest.old.$$"
+  if [[ -e "$dest" || -L "$dest" ]]; then
+    mv "$dest" "$old"
+  fi
+  mv "$target_staging" "$dest"
+  rm -rf "$old"
+done
 """
 
-# 対象は packages/claude/settings.json の enabledPlugins。反映には Claude Code の再起動が要る
+# 対象は packages/claude/settings.json の extraKnownMarketplaces と enabledPlugins。反映には Claude Code の再起動が要る
 [tasks."plugins:update"]
 description = "Update Claude Code marketplaces and enabled plugins"
 run = """
 #!/usr/bin/env bash
 set -euo pipefail
+for m in $(jq -r '.extraKnownMarketplaces[].source.url' packages/claude/settings.json); do
+  claude plugin marketplace add "$m"
+done
 claude plugin marketplace update
 # install は入っていれば何もしない。未導入の端末でも update が失敗しないよう先に呼ぶ
 for p in $(jq -r '.enabledPlugins | to_entries[] | select(.value) | .key' packages/claude/settings.json); do
@@ -247,10 +253,11 @@ done
 "~/.cursor/rules" = { source = "packages/cursor/rules", mode = "symlink" }
 "~/.cursor/hooks" = { source = "packages/cursor/hooks", mode = "symlink" }
 
-# packages/claude — 同上（settings.local.json は非管理）
+# packages/claude — 同上（settings.local.json は非管理。GEMINI.md も CLAUDE.md を共有）
 "~/.claude/settings.json" = { source = "packages/claude/settings.json", mode = "symlink" }
 "~/.claude/CLAUDE.md" = { source = "packages/claude/CLAUDE.md", mode = "symlink" }
 "~/.claude/hooks" = { source = "packages/claude/hooks", mode = "symlink" }
+"~/.gemini/GEMINI.md" = { source = "packages/claude/CLAUDE.md", mode = "symlink" }
 
 # packages/ssh — .ssh 全体は紐付けない（鍵・known_hosts は非管理）
 "~/.ssh/config" = { source = "packages/ssh/config", mode = "symlink" }
