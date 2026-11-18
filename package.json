@@ -17,7 +17,7 @@
     "@secretlint/secretlint-rule-preset-recommend": "^13.1.0",
     "oxfmt": "^0.76.0",
     "oxlint": "^1.93.0",
-    "oxlint-tsgolint": "^7.0.2006",
+    "oxlint-tsgolint": "^7.0.2007",
     "secretlint": "^13.1.0",
     "typescript": "^7.0.2"
   },
