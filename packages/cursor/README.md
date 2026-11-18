@@ -10,7 +10,7 @@ packages/cursor/
 └── permissions.json  # mcpAllowlist / terminalAllowlist
 ```
 
-skills の参照先は [shared README](../shared/ai/README.md)「Cursor / Claude Code からの見え方」。
+skills の参照先は [shared README](../shared/ai/README.md)「各ツールからの見え方」。
 
 ## カーネル
 
