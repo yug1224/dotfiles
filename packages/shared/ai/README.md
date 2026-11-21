@@ -19,23 +19,23 @@ packages/shared/ai/
 | Skill                  | `~/.claude/skills/`（`gh skill` のコピー）を読む                 | 同左                                                        | `~/.gemini/config/skills/`（`gh skill` のコピー）を読む           |
 | 規約                   | `~/.claude/skills/shared-rules/references/...` を絶対パスで Read | 同左                                                        | 同左                                                              |
 | docs                   | `~/.config/shared/ai/docs/...` を絶対パスで Read                 | 同左                                                        | 同左                                                              |
-| シェルガード           | `hooks.json` の `beforeShellExecution`                           | `settings.json` の `PreToolUse`（matcher `Bash`）           | —                                                                 |
+| シェルガード           | Third-Party Imports で Claude Code のフックを実行                | `settings.json` の `PreToolUse`（matcher `Bash`）           | —                                                                 |
 | 権限                   | `permissions.json`                                               | `settings.json`（端末ごとの上書きは `settings.local.json`） | UI 側の設定                                                       |
 
 - ツール別のラッパーは持たない。Skill を 1 本足せば全ツールに同じ名前（`/<name>`）で出る
 - `~/.claude/skills/` と `~/.gemini/config/skills/` はコピーで、`skills:update` のたびに作り直すので直接直さない（手で置いたものも消える）。入手元のリポジトリを直して `mise -C ~/.dotfiles run skills:update` で反映する
-- カーネル同期・常時ロードの禁止は [ai-config-rule.md](./rules/meta/ai-config-rule.md)、Skill の自動発火の切り替えは [CONVENTIONS.md](./CONVENTIONS.md)
+- カーネル同期・常時ロードの禁止は [ai-config-rule.md](./rules/meta/ai-config-rule.md)、Skill の命名・配置・自動発火の切り替えは yug1224/skills の [CONVENTIONS.md](https://github.com/yug1224/skills/blob/main/CONVENTIONS.md)
 - シェルガードの挙動などホスト固有の設定は [packages/cursor/README.md](../../cursor/README.md) / [packages/claude/README.md](../../claude/README.md)
 
 ## ファイルを探す
 
-| 知りたいこと                   | 見る場所                                                         |
-| ------------------------------ | ---------------------------------------------------------------- |
-| 命名・配置・書かないもの       | [CONVENTIONS.md](./CONVENTIONS.md)                               |
-| 追加・変更の手順と漏洩チェック | [rules/meta/ai-config-rule.md](./rules/meta/ai-config-rule.md)   |
-| セットアップ・運用フロー       | [docs/README.md](./docs/README.md)                               |
-| `*.local.*` の置き場と初期化   | [docs/setup-local-files.md](./docs/setup-local-files.md)         |
-| 外部ソースを蒸留したものの出典 | [yug1224/skills の README](https://github.com/yug1224/skills)    |
-| 手元の AI 資産の棚卸し         | `/analyze-ai-config`（引数で `skills` / `rules` などに絞り込み） |
+| 知りたいこと                     | 見る場所                                                                                       |
+| -------------------------------- | ---------------------------------------------------------------------------------------------- |
+| Skill の命名・配置・漏洩チェック | yug1224/skills の [CONVENTIONS.md](https://github.com/yug1224/skills/blob/main/CONVENTIONS.md) |
+| dotfiles の AI 設定の変更手順    | [rules/meta/ai-config-rule.md](./rules/meta/ai-config-rule.md)                                 |
+| セットアップ・運用フロー         | [docs/README.md](./docs/README.md)                                                             |
+| `*.local.*` の置き場と初期化     | [docs/setup-local-files.md](./docs/setup-local-files.md)                                       |
+| 外部ソースを蒸留したものの出典   | [yug1224/skills の README](https://github.com/yug1224/skills)                                  |
+| 手元の AI 資産の棚卸し           | `/analyze-ai-config`（引数で `skills` / `rules` などに絞り込み）                               |
 
 `*.local.*` は Git 管理外の差分・追記。公開 clone では汎用 `.md` だけで動く。

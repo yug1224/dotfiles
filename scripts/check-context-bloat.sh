@@ -36,7 +36,6 @@ check_hard 40 "$ROOT/packages/cursor/rules/kernel.mdc"
 check 60 "$ROOT/packages/cursor/README.md"
 check 60 "$ROOT/packages/claude/README.md"
 check 80 "$ROOT/packages/shared/ai/README.md"
-check 80 "$ROOT/packages/shared/ai/CONVENTIONS.md"
 
 # Hard fail: only kernel.mdc is allowed under packages/cursor/rules/
 CURSOR_RULES_DIR="$ROOT/packages/cursor/rules"

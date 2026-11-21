@@ -206,12 +206,9 @@ out="$(printf '{"tool_name":"Bash","tool_input":{"command":"ls"}}' | HOME="$TMP_
   || { echo "FAIL: claude adapter は jq 故障時に deny すること" >&2; exit 1; }
 echo "ok: claude deny <- jq 故障 (fail-closed)"
 
-CURSOR_ADAPTER="$ROOT/packages/cursor/hooks/guard-shell.sh"
-perm="$(printf '{"command":"rm -rf /tmp/foo"}' | HOME="$TMP_HOME" "$CURSOR_ADAPTER" | "$JQ" -r '.permission')"
-[[ "$perm" == deny ]] || { echo "FAIL: cursor adapter rm -rf" >&2; exit 1; }
-echo "ok: cursor deny <- rm -rf"
-perm="$(printf '{"command":"ls"}' | HOME=/nonexistent "$CURSOR_ADAPTER" | "$JQ" -r '.permission')"
-[[ "$perm" == deny ]] || { echo "FAIL: cursor adapter missing shared" >&2; exit 1; }
-echo "ok: cursor deny <- shared 未展開 (fail-closed)"
+out="$(printf '{"tool_name":"Bash","tool_input":{"command":"ls"}}' | HOME=/nonexistent "$CLAUDE_ADAPTER")"
+[[ "$(printf '%s' "$out" | "$JQ" -r '.hookSpecificOutput.permissionDecision')" == deny ]] \
+  || { echo "FAIL: claude adapter は shared 未展開時に deny すること" >&2; exit 1; }
+echo "ok: claude deny <- shared 未展開 (fail-closed)"
 
 echo "all tests passed ($GUARD)"

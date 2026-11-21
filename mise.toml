@@ -180,9 +180,9 @@ echo "bootstrap: done"
 # ~/.claude/skills と ~/.gemini/config/skills を宣言した Skill だけで毎回作り直す。手で置いたものは消える
 # gh skill install --force は元で消したファイルや Skill を残すので、別の場所に全部入れてから入れ替える
 # yug1224/skills は手元の clone の作業ツリーをそのまま入れる（pull はしない）。外部の Skill は GitHub の最新リリースを入れる
-# 端末固有の Skill は Git 外の mise.local.toml に skills:update:local として書く。$SKILLS_DIR に入れると一緒に入れ替わる
+# 端末固有の Skill のリポジトリは、Git 外の mise.local.toml の [env] に SKILLS_LOCAL_SOURCES（: 区切りのパス）として書く
 [tasks."skills:update"]
-description = "Rebuild ~/.claude/skills and ~/.gemini/config/skills from the local clone of yug1224/skills and external skills"
+description = "Rebuild ~/.claude/skills and ~/.gemini/config/skills from the local clone of yug1224/skills, external skills, and $SKILLS_LOCAL_SOURCES"
 run = """
 #!/usr/bin/env bash
 set -euo pipefail
@@ -194,9 +194,12 @@ gh skill install ~/Workspaces/yug1224/skills --from-local --all --dir "$staging"
 gh skill install nanaism/yomiyasu yomiyasu --dir "$staging" --force
 gh skill install GoogleChrome/modern-web-guidance modern-web-guidance --dir "$staging" --force
 gh skill install tt-a1i/archify archify --dir "$staging" --force
-if mise tasks info skills:update:local >/dev/null 2>&1; then
-  SKILLS_DIR="$staging" mise run skills:update:local
-fi
+# mise は [env] の ~ を展開しないので、ここで先頭の ~ を $HOME にする（~user は扱わない）。macOS の bash 3.2 でも動くよう配列は使わない
+while IFS= read -r -d : src; do
+  if [[ -n "$src" ]]; then
+    gh skill install "${src/#\\~/$HOME}" --from-local --all --dir "$staging" --force
+  fi
+done <<< "${SKILLS_LOCAL_SOURCES:-}:"
 for dest in "$HOME/.claude/skills" "$HOME/.gemini/config/skills"; do
   target_staging="$dest.staging.$$"
   cp -R "$staging" "$target_staging"
@@ -249,10 +252,8 @@ done
 "~/Library/Application Support/Cursor/User/bin" = { source = "packages/code/bin", mode = "symlink" }
 
 # packages/cursor — トップレベル個別 + サブツリーはディレクトリ symlink
-"~/.cursor/hooks.json" = { source = "packages/cursor/hooks.json", mode = "symlink" }
 "~/.cursor/permissions.json" = { source = "packages/cursor/permissions.json", mode = "symlink" }
 "~/.cursor/rules" = { source = "packages/cursor/rules", mode = "symlink" }
-"~/.cursor/hooks" = { source = "packages/cursor/hooks", mode = "symlink" }
 
 # packages/claude — 同上（settings.local.json は非管理。GEMINI.md も CLAUDE.md を共有）
 "~/.claude/settings.json" = { source = "packages/claude/settings.json", mode = "symlink" }
