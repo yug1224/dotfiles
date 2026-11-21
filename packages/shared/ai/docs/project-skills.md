@@ -1,6 +1,6 @@
 # プロジェクト Skills 配置ガイド
 
-業務リポジトリ側の Skill を、Cursor / Claude Code の両方から同じ名前で引くための規約。dotfiles が入れる Skill（yug1224/skills。`gh skill` で `~/.claude/skills` にコピー）の使い分けは [CONVENTIONS.md](../CONVENTIONS.md)「Skill の自動発火」。
+業務リポジトリ側の Skill を、Cursor / Claude Code の両方から同じ名前で引くための規約。dotfiles が入れる Skill（yug1224/skills。`gh skill` で `~/.claude/skills` にコピー）の使い分けは yug1224/skills の [CONVENTIONS.md](https://github.com/yug1224/skills/blob/main/CONVENTIONS.md)「Skill の自動発火」。
 
 ## 置き場は `.claude/skills/` に一本化する
 
@@ -23,7 +23,7 @@ Cursor は `.cursor/skills/` に加えて `.claude/skills/` と `~/.claude/skill
 | 禁止先頭 | コマンド動詞プレフィックス: `suggest-` / `review-` / `plan-` / `analyze-` / `apply-` |
 | `name:`  | frontmatter の `name:` は **ディレクトリ名（skill-id）と一致**                       |
 
-dotfiles の Skill（動詞先頭 `/suggest-…`、ローカルは `/local-…`）と業務リポジトリの Skill（名詞先頭）は名前空間を分ける。どちらも同じ Skill 一覧に出るので、名前が衝突すると区別できなくなる。命名の正本は [CONVENTIONS.md](../CONVENTIONS.md)。
+dotfiles の Skill（動詞先頭 `/suggest-…`、ローカルは `/local-…`）と業務リポジトリの Skill（名詞先頭）は名前空間を分ける。どちらも同じ Skill 一覧に出るので、名前が衝突すると区別できなくなる。dotfiles 側の命名の正本は yug1224/skills の [CONVENTIONS.md](https://github.com/yug1224/skills/blob/main/CONVENTIONS.md)。
 
 ## Skill・ルールの使い分け
 
@@ -45,7 +45,7 @@ dotfiles の Skill（動詞先頭 `/suggest-…`、ローカルは `/local-…`�
 
 ## 社内 Skill（Git 管理外）
 
-機密を含みうる Skill は、GitHub に push しない private リポジトリの `skills/local-<id>/` に置き、`gh skill install --from-local` で入れる（[setup-local-files.md](./setup-local-files.md)「インストール」）。自動で発火させたくないときは frontmatter に `disable-model-invocation: true` を付ける。両ツールとも、明示的に `/<id>` で呼んだときだけ読み込む。
+機密を含みうる Skill は、GitHub に push しない private リポジトリの `skills/local-<id>/` に置き、`gh skill install --from-local` で入れる（[setup-local-files.md](./setup-local-files.md)「端末固有の Skill」）。自動で発火させたくないときは frontmatter に `disable-model-invocation: true` を付ける。両ツールとも、明示的に `/<id>` で呼んだときだけ読み込む。
 
 識別子・機密数値・非公開 URL は Skill 本文に書かず、`local-rules/references/<domain>/*.local.md` に分ける。
 
@@ -59,4 +59,4 @@ Cursor が `~/.claude/skills` を読むのは互換パス扱い。Cursor のチ�
 ## 関連
 
 - [setup-local-files.md](./setup-local-files.md) — `*.local.*` の置き場
-- [CONVENTIONS.md](../CONVENTIONS.md) — コマンド／Skill 命名
+- [CONVENTIONS.md](https://github.com/yug1224/skills/blob/main/CONVENTIONS.md) — Skill 命名（yug1224/skills）

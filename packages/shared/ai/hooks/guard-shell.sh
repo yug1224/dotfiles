@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Shared guard: Cursor beforeShellExecution JSON on stdin → { "permission": "allow"|"deny" }.
+# Shared guard: {"command","cwd"} の JSON を stdin で受け、{ "permission": "allow"|"deny" } を返す。
+# 呼び出し元は packages/claude/hooks/guard-shell.sh だけ（Cursor も Third-Party Imports 経由でそれを呼ぶ）。
 # 文字列での判定なので、変数展開・alias・python などの別インタプリタ経由は見抜けない。
 # 誤操作を止める柵として使い、push / merge の最終防御は GitHub のブランチ保護に置く。
 set -uo pipefail

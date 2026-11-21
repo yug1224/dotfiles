@@ -5,8 +5,6 @@ Cursor のホスト固有設定。`make mise` で `~/.cursor/` 配下に symlink
 ```
 packages/cursor/
 ├── rules/kernel.mdc  # 常時カーネル（alwaysApply: true）。rules/ に置ける .mdc はこれだけ
-├── hooks.json        # beforeShellExecution → hooks/guard-shell.sh（failClosed）
-├── hooks/            # 薄いアダプタ。本体は shared/ai/hooks/guard-shell.sh
 └── permissions.json  # mcpAllowlist / terminalAllowlist
 ```
 
@@ -23,6 +21,12 @@ Cursor 公式 docs が記載するグローバル指示は User Rules（Customiz
 - **MCP**: `*:*` を許可
 - **端末**: `terminalAllowlist` に日常的に使うコマンドを列挙して自動承認する
 - **拒否**: `git push` / 破壊的な `gh` / `rm -rf` は `guard-shell.sh` がハード拒否する（allowlist より優先）
+
+## シェルガード
+
+Cursor 用の `hooks.json` は置かない。Cursor は Third-Party Imports で `~/.claude/settings.json` のフックを読み、`preToolUse` として [Claude Code 用のアダプタ](../claude/hooks/guard-shell.sh) を実行する（Cursor の hooks ログに `Executing hook 1/1 from claude-user config` と出る）。Cursor 用にも置くと、1 コマンドでガードが 2 回動く。Third-Party Imports を切るとガードも外れるので、切るときは `hooks.json` を戻す。
+
+旧 `hooks.json` の `failClosed` は無い。アダプタが動けば失敗時も deny を返すが、`~/.claude/hooks` が無いなどでアダプタ自体が起動しないときは、コマンドは止まらない。以前の dotfiles を適用した端末には、行き先の無い `~/.cursor/hooks.json` と `~/.cursor/hooks` の symlink が残るので消す（mise は管理から外したリンクを消さない）。
 
 `permissions.json` が効くのは Run Mode が **Allowlist** / **Auto-review** のときだけ。Run Everything ではサンドボックスも承認もかからないので使わない。
 
