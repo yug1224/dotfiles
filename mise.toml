@@ -193,6 +193,7 @@ trap 'rm -rf "$staging"' EXIT
 gh skill install ~/Workspaces/yug1224/skills --from-local --all --dir "$staging" --force
 gh skill install nanaism/yomiyasu yomiyasu --dir "$staging" --force
 gh skill install GoogleChrome/modern-web-guidance modern-web-guidance --dir "$staging" --force
+gh skill install tt-a1i/archify archify --dir "$staging" --force
 if mise tasks info skills:update:local >/dev/null 2>&1; then
   SKILLS_DIR="$staging" mise run skills:update:local
 fi
