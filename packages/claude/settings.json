@@ -48,13 +48,15 @@
     "ponytail": {
       "source": {
         "source": "git",
-        "url": "https://github.com/DietrichGebert/ponytail.git"
+        "url": "https://github.com/DietrichGebert/ponytail.git",
+        "ref": "96608e078b2d5ea607c5c3b8b5a54d1c1fba6846"
       }
     },
     "cursor-plugins": {
       "source": {
         "source": "git",
-        "url": "https://github.com/cursor/plugins.git"
+        "url": "https://github.com/cursor/plugins.git",
+        "ref": "d42aff08aa58965d2735c4ead61a9af82b89d0d0"
       }
     }
   },

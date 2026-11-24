@@ -13,14 +13,14 @@ Cursor の `permissions.json` にはローカル上書きの仕組みがない�
 
 Skill と規約の Git 外の差分は、dotfiles ではなく **GitHub に push しない private リポジトリ** に置く。dotfiles には、そのリポジトリの名前もパスも書かない。Skill と規約の命名・配置と `.local.md` の決まりは yug1224/skills の [CONVENTIONS.md](https://github.com/yug1224/skills/blob/main/CONVENTIONS.md)。
 
-入れるときは、dotfiles 直下の `mise.local.toml` にリポジトリのパスを書く（複数なら `:` 区切り）。`skills:update` が公開側の Skill と一緒に入れて、`~/.claude/skills/` と `~/.gemini/config/skills/` を入れ替える。仕組みは `mise.toml` の `skills:update` のコメントを参照。
+入れるときは、dotfiles 直下の `mise.local.toml` にリポジトリのパスを書く（複数なら `:` 区切り）。`skills:update` が公開側の Skill と一緒に `~/.claude/skills/` に入れる。社内の情報を含みうるので `~/.gemini/config/skills/` には入れない。ただし Antigravity もカーネル（`GEMINI.md`）から `~/.claude/skills/local-rules/` の規約を絶対パスで Read する。仕組みは `mise.toml` の `skills:update` のコメントを参照。
 
 ```toml
 [env]
 SKILLS_LOCAL_SOURCES = "<private リポジトリのパス>"
 ```
 
-`mise.local.toml` が無い端末では公開側の Skill だけが入る。反映は `mise -C ~/.dotfiles run skills:update`。
+`mise.local.toml` が無い端末では公開側の Skill だけが入る。Skill とカーネルが Read する `~/.claude/skills/` のパスが欠けていると、`skills:update` は入れ替えずに失敗する（使うときに作る `overlays/` は確かめない）。反映は `mise -C ~/.dotfiles run skills:update`。
 
 ## 置いてはいけない場所
 

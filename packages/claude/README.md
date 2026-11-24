@@ -14,19 +14,19 @@ skills の入れ方と自動発火の切り替えは [shared README](../shared/a
 
 ## カーネル
 
-`CLAUDE.md` は `kernel.mdc` と同期する（[ai-config-rule.md](../shared/ai/rules/meta/ai-config-rule.md)「カーネル」）。`codegraph install` が書き足すブロックの扱いは [setup-codegraph.md](../shared/ai/docs/setup-codegraph.md)。
+`CLAUDE.md` がカーネルの正本で、`make kernel` が `kernel.mdc` を作る（[ai-config-rule.md](../shared/ai/rules/meta/ai-config-rule.md)「カーネル」）。`codegraph install` が書き足すブロックの扱いは [setup-codegraph.md](../shared/ai/docs/setup-codegraph.md)。
 
 ## 権限・フック（settings.json）
 
-- **allow**: `Bash(*)` と `mcp__codegraph__*`
+- **allow**: `Bash(*)` と `mcp__codegraph__*`。コードを探す MCP は codegraph だけにする（[ai-config-rule.md](../shared/ai/rules/meta/ai-config-rule.md)「禁止」）
 - **deny**: `git push` / 破壊的な `gh` / `rm -rf` の前方一致。正は `guard-shell.sh`。`settings.json` 側は保険で、`env git push` などラッパー経由は拾えない
 - ガードはサンドボックスではなく事故防止。`gh api -X DELETE` や git alias 経由は対象外
 - **PreToolUse**（matcher `Bash`）: `hooks/guard-shell.sh`。deny のときだけ出力し、allow 時は無出力で通常の権限判定に戻す
-- **UserPromptSubmit**: `codegraph prompt-hook`（codegraph 未インストール時は何もしない）
+- **UserPromptSubmit**: `codegraph prompt-hook`（codegraph 未インストール時は何もしない）。毎回 context に入るので、[ai-config-rule.md](../shared/ai/rules/meta/ai-config-rule.md)「常時ロードの例外」に載せている
 
 ## プラグイン
 
-全端末で使うプラグインは `settings.json` の `enabledPlugins` と `extraKnownMarketplaces` に書く。`make mise` の bootstrap が `mise run plugins:update` を呼び、marketplace と有効なプラグインを最新にする。手で更新するときは `mise -C ~/.dotfiles run plugins:update` を実行し、Claude Code を再起動する。hook を持たず Skill だけのもの（yomiyasu など）はプラグインにせず、`skills:update` で `gh skill install` する。
+全端末で使うプラグインは `settings.json` の `enabledPlugins` と `extraKnownMarketplaces` に書く。marketplace は `source.ref` に commit SHA を書いて固定する。`make mise` の bootstrap が `mise run plugins:update` を呼び、marketplace をその commit で登録し、有効なプラグインを入れる。上げるときは差分を読んでから `source.ref` を書き換え、`mise -C ~/.dotfiles run plugins:update` を実行して Claude Code を再起動する。hook を持たず Skill だけのもの（yomiyasu など）はプラグインにせず、`skills:update` で `gh skill install` する。
 
 ## 端末ごとの設定
 

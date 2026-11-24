@@ -3,9 +3,13 @@ description: 作業種別ごとの詳細ルールの自動 Read
 alwaysApply: true
 ---
 
+出力は常に日本語で書き、漢字は JIS 第一水準・第二水準の範囲に収める（コード・識別子・引用は除く）。
+
 コードを実装・修正する前に `~/.claude/skills/local-rules/references/conventions/coding-rule.local.md` を 1 回 Read する（無ければそのまま続行）。
 
 日本語の技術文書・記事を書く・推敲する前に `~/.claude/skills/apply-japanese-tech-writing/SKILL.md` を 1 回 Read する。
+
+dotfiles の AI 設定（`packages/shared/ai/`・`packages/claude/`・`packages/cursor/`）か Skill・規約を変える前に `~/.config/shared/ai/rules/meta/ai-config-rule.md` を 1 回 Read する。
 
 PR・ADR など図で補足する文書を書く前に `~/.claude/skills/shared-rules/references/conventions/diagram-rule.md` を 1 回 Read する。
 
