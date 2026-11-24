@@ -179,46 +179,102 @@ echo "bootstrap: done"
 
 # ~/.claude/skills と ~/.gemini/config/skills を宣言した Skill だけで毎回作り直す。手で置いたものは消える
 # gh skill install --force は元で消したファイルや Skill を残すので、別の場所に全部入れてから入れ替える
-# yug1224/skills は手元の clone の作業ツリーをそのまま入れる（pull はしない）。外部の Skill は GitHub の最新リリースを入れる
+# yug1224/skills は手元の clone の作業ツリーをそのまま入れる（pull はしない）
+# 外部の Skill は中身を読んだ commit に固定する。上げるときは差分を読んでから --pin の SHA を書き換える
 # 端末固有の Skill のリポジトリは、Git 外の mise.local.toml の [env] に SKILLS_LOCAL_SOURCES（: 区切りのパス）として書く
+# 端末固有の Skill は社内の情報を含みうるので ~/.claude/skills だけに入れ、~/.gemini/config/skills には入れない
+# 入れ替える前に、Skill とカーネルが Read する ~/.claude/skills/ のパスが揃っているかを確かめ、欠けていれば入れ替えない
 [tasks."skills:update"]
-description = "Rebuild ~/.claude/skills and ~/.gemini/config/skills from the local clone of yug1224/skills, external skills, and $SKILLS_LOCAL_SOURCES"
+description = "Rebuild ~/.claude/skills and ~/.gemini/config/skills from the local clone of yug1224/skills, pinned external skills, and $SKILLS_LOCAL_SOURCES (Claude only)"
 run = """
 #!/usr/bin/env bash
 set -euo pipefail
 mkdir -p "$HOME/.claude" "$HOME/.gemini/config"
-# mv で入れ替えるので同じファイルシステムに作る
+
+# $1 の Skill 一式で $2 を入れ替える
+replace() {
+  local target_staging="$2.staging.$$" old="$2.old.$$"
+  cp -R "$1" "$target_staging"
+  if [[ -e "$2" || -L "$2" ]]; then
+    mv "$2" "$old"
+  fi
+  mv "$target_staging" "$2"
+  rm -rf "$old"
+}
+
+# $1 の Skill 一式に、参照されている ~/.claude/skills/ のパスがあるか確かめる
+check_refs() {
+  local root="$1" missing=0 line file ref
+  # grep は「ファイル:参照」の形で出す
+  while IFS= read -r line; do
+    file="${line%%":~/"*}"
+    ref="~/${line#*":~/"}"
+    ref="${ref%.}"
+    case "$ref" in
+      # 書式の例と、使うときに作る上書き
+      *'<'* | *'>'* | *'...'* | */overlays/*) continue ;;
+    esac
+    # 端末固有の Skill を入れない端末では、local-rules は無くてよい
+    if [[ "$ref" == */local-rules/* && ! -d "$root/local-rules" ]]; then
+      continue
+    fi
+    # 公開側は .local.md を存在するときだけ Read する決まりなので、無くてよい
+    if [[ "$ref" == *.local.md && "$file" != "$root"/local-* ]]; then
+      continue
+    fi
+    if [[ ! -e "$root/${ref#"~/.claude/skills/"}" ]]; then
+      echo "skills:update: 参照先がありません: $ref（$file）" >&2
+      missing=1
+    fi
+  done < <(grep -roE '~/[.]claude/skills/[A-Za-z0-9._/<>-]+' "$root" packages/claude/CLAUDE.md | sort -u)
+  return "$missing"
+}
+
+# staging は Gemini 用、claude_staging は端末固有の Skill を足した Claude 用
 staging="$(mktemp -d "$HOME/.claude/skills.staging.XXXXXX")"
-trap 'rm -rf "$staging"' EXIT
+claude_staging="$(mktemp -d "$HOME/.claude/skills.staging.XXXXXX")"
+trap 'rm -rf "$staging" "$claude_staging"' EXIT
 gh skill install ~/Workspaces/yug1224/skills --from-local --all --dir "$staging" --force
-gh skill install nanaism/yomiyasu yomiyasu --dir "$staging" --force
-gh skill install GoogleChrome/modern-web-guidance modern-web-guidance --dir "$staging" --force
-gh skill install tt-a1i/archify archify --dir "$staging" --force
+# 固定した外部の Skill は大きなリポジトリから取ると 1 分を超えるので、repo・skill・pin ごとにキャッシュして写す
+install_pinned() {
+  local cache="${XDG_CACHE_HOME:-$HOME/.cache}/dotfiles-skills/${1//\\//_}-$2-$3"
+  if [[ ! -d "$cache/$2" ]]; then
+    gh skill install "$1" "$2" --pin "$3" --dir "$cache.tmp.$$" --force
+    mv "$cache.tmp.$$" "$cache"
+  fi
+  cp -R "$cache/$2" "$staging/"
+}
+install_pinned nanaism/yomiyasu yomiyasu fbd4e420fb71a6ba90f475898cf611ccb6a08cb2 # v3.4.0
+install_pinned GoogleChrome/modern-web-guidance modern-web-guidance 2b4aa13a72dd47cd135b06ce5abfccd92e19b24f # v1.0.2
+install_pinned tt-a1i/archify archify 894225cca657d181e03f332e716b63782ba6b4da # v3.3.1
+install_pinned mattpocock/skills grilling d1478fcb140db0b93c0c8df17bcfd311844749d0 # v1.3.2
+cp -R "$staging/." "$claude_staging"
 # mise は [env] の ~ を展開しないので、ここで先頭の ~ を $HOME にする（~user は扱わない）。macOS の bash 3.2 でも動くよう配列は使わない
 while IFS= read -r -d : src; do
   if [[ -n "$src" ]]; then
-    gh skill install "${src/#\\~/$HOME}" --from-local --all --dir "$staging" --force
+    gh skill install "${src/#\\~/$HOME}" --from-local --all --dir "$claude_staging" --force
   fi
 done <<< "${SKILLS_LOCAL_SOURCES:-}:"
-for dest in "$HOME/.claude/skills" "$HOME/.gemini/config/skills"; do
-  target_staging="$dest.staging.$$"
-  cp -R "$staging" "$target_staging"
-  old="$dest.old.$$"
-  if [[ -e "$dest" || -L "$dest" ]]; then
-    mv "$dest" "$old"
-  fi
-  mv "$target_staging" "$dest"
-  rm -rf "$old"
-done
+
+# どちらかで参照が欠けていれば、どちらも入れ替えない。欠けた参照は両方まとめて出す
+refs_missing=0
+check_refs "$staging" || refs_missing=1
+check_refs "$claude_staging" || refs_missing=1
+if [[ "$refs_missing" -ne 0 ]]; then
+  exit 1
+fi
+replace "$staging" "$HOME/.gemini/config/skills"
+replace "$claude_staging" "$HOME/.claude/skills"
 """
 
 # 対象は packages/claude/settings.json の extraKnownMarketplaces と enabledPlugins。反映には Claude Code の再起動が要る
+# marketplace は source.ref の commit に固定する。add にも #ref を付けないと、既定ブランチの最新で登録される
 [tasks."plugins:update"]
-description = "Update Claude Code marketplaces and enabled plugins"
+description = "Update Claude Code marketplaces (pinned by source.ref) and enabled plugins"
 run = """
 #!/usr/bin/env bash
 set -euo pipefail
-for m in $(jq -r '.extraKnownMarketplaces[].source.url' packages/claude/settings.json); do
+for m in $(jq -r '.extraKnownMarketplaces[].source | .url + (if .ref then "#" + .ref else "" end)' packages/claude/settings.json); do
   claude plugin marketplace add "$m"
 done
 claude plugin marketplace update

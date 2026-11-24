@@ -21,7 +21,6 @@ pnpm = "latest"
 "npm:greptile" = "latest"
 "npm:@colbymchenry/codegraph" = "latest"
 "npm:@playwright/mcp" = "latest"
-"pipx:serena-agent" = "latest"
 ripgrep = "latest"
 tlrc = "latest"
 

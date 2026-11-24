@@ -2,7 +2,7 @@
 
 Cursor・Claude Code・Antigravity が同じ本文を読むための原本。`make mise` が `~/.config/shared` → `packages/shared` の symlink を張るので、`~/.config/shared/ai/` 配下の編集はそのままリポジトリの編集になる。
 
-Skill と、Skill が Read する規約（`shared-rules`）は [yug1224/skills](https://github.com/yug1224/skills) にある。`make mise` が `[bootstrap.repos]` で yug1224/skills を `~/Workspaces/yug1224/skills` に clone し、`skills:update` が `gh skill` で `~/.claude/skills/` と `~/.gemini/config/skills/` を作り直す。Git 外の Skill と規約の足し方は [docs/setup-local-files.md](./docs/setup-local-files.md)。
+Skill と、Skill が Read する規約（`shared-rules`）は [yug1224/skills](https://github.com/yug1224/skills) にある。`make mise` が `[bootstrap.repos]` で yug1224/skills を `~/Workspaces/yug1224/skills` に clone し、`skills:update` が `gh skill` で `~/.claude/skills/` と `~/.gemini/config/skills/` を作り直す。外部の Skill は `--pin` で commit を固定する。Git 外の Skill と規約の足し方は [docs/setup-local-files.md](./docs/setup-local-files.md)。
 
 ```
 packages/shared/ai/
@@ -13,14 +13,14 @@ packages/shared/ai/
 
 ## 各ツールからの見え方
 
-| 素材                   | Cursor                                                           | Claude Code                                                 | Antigravity                                                       |
-| ---------------------- | ---------------------------------------------------------------- | ----------------------------------------------------------- | ----------------------------------------------------------------- |
-| 常時ロード（カーネル） | `~/.cursor/rules/kernel.mdc`（`alwaysApply: true`）              | `~/.claude/CLAUDE.md`                                       | `~/.gemini/GEMINI.md`（`packages/claude/CLAUDE.md` への symlink） |
-| Skill                  | `~/.claude/skills/`（`gh skill` のコピー）を読む                 | 同左                                                        | `~/.gemini/config/skills/`（`gh skill` のコピー）を読む           |
-| 規約                   | `~/.claude/skills/shared-rules/references/...` を絶対パスで Read | 同左                                                        | 同左                                                              |
-| docs                   | `~/.config/shared/ai/docs/...` を絶対パスで Read                 | 同左                                                        | 同左                                                              |
-| シェルガード           | Third-Party Imports で Claude Code のフックを実行                | `settings.json` の `PreToolUse`（matcher `Bash`）           | —                                                                 |
-| 権限                   | `permissions.json`                                               | `settings.json`（端末ごとの上書きは `settings.local.json`） | UI 側の設定                                                       |
+| 素材                   | Cursor                                                           | Claude Code                                                 | Antigravity                                                                          |
+| ---------------------- | ---------------------------------------------------------------- | ----------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| 常時ロード（カーネル） | `~/.cursor/rules/kernel.mdc`（`alwaysApply: true`）              | `~/.claude/CLAUDE.md`                                       | `~/.gemini/GEMINI.md`（`packages/claude/CLAUDE.md` への symlink）                    |
+| Skill                  | `~/.claude/skills/`（`gh skill` のコピー）を読む                 | 同左                                                        | `~/.gemini/config/skills/`（`gh skill` のコピー。端末固有の Skill は入れない）を読む |
+| 規約                   | `~/.claude/skills/shared-rules/references/...` を絶対パスで Read | 同左                                                        | 同左                                                                                 |
+| docs                   | `~/.config/shared/ai/docs/...` を絶対パスで Read                 | 同左                                                        | 同左                                                                                 |
+| シェルガード           | Third-Party Imports で Claude Code のフックを実行                | `settings.json` の `PreToolUse`（matcher `Bash`）           | —                                                                                    |
+| 権限                   | `permissions.json`                                               | `settings.json`（端末ごとの上書きは `settings.local.json`） | UI 側の設定                                                                          |
 
 - ツール別のラッパーは持たない。Skill を 1 本足せば全ツールに同じ名前（`/<name>`）で出る
 - `~/.claude/skills/` と `~/.gemini/config/skills/` はコピーで、`skills:update` のたびに作り直すので直接直さない（手で置いたものも消える）。入手元のリポジトリを直して `mise -C ~/.dotfiles run skills:update` で反映する

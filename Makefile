@@ -46,6 +46,11 @@ check-lint:
 check-typecheck:
 	pnpm run type:check
 
+# CLAUDE.md から Cursor の kernel.mdc を作り直す
+.PHONY: kernel
+kernel:
+	./scripts/check-kernel-sync.sh --write
+
 .PHONY: check-sync
 check-sync:
 	./scripts/check-context-bloat.sh --fail
