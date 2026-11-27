@@ -368,6 +368,10 @@ _.code-workspace
 
 .codegraph/
 
+# yomiyasu local artifacts
+
+.yomiyasu/
+
 # Serena local directory
 
 .serena/project.yml

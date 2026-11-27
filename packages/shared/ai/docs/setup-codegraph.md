@@ -24,7 +24,7 @@ dotfiles 側で持っている CodeGraph 関連の設定:
 
 | ツール      | ファイル                           | 内容                                                                         |
 | ----------- | ---------------------------------- | ---------------------------------------------------------------------------- |
-| Cursor      | `packages/cursor/permissions.json` | `mcpAllowlist: ["*:*"]`                                                      |
+| Cursor      | `packages/cursor/permissions.json` | `autoRun` で読み取り専用 MCP を許可寄りに指示（Run Mode は Auto-review）     |
 | Claude Code | `packages/claude/settings.json`    | allow `mcp__codegraph__*`、`UserPromptSubmit` フック `codegraph prompt-hook` |
 
 使い方の要約は MCP の server instructions と `codegraph prompt-hook` が注入するので、カーネル（`CLAUDE.md` / `kernel.mdc`）には書かない。`codegraph install` が `CLAUDE.md` に `CODEGRAPH_START` 〜 `CODEGRAPH_END` ブロックを足した場合は削除する。

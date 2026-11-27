@@ -5,7 +5,7 @@ Cursor のホスト固有設定。`make mise` で `~/.cursor/` 配下に symlink
 ```
 packages/cursor/
 ├── rules/kernel.mdc  # 常時カーネル（alwaysApply: true）。rules/ に置ける .mdc はこれだけ
-└── permissions.json  # mcpAllowlist / terminalAllowlist
+└── permissions.json  # Auto-review 向けの autoRun 指示
 ```
 
 skills の参照先は [shared README](../shared/ai/README.md)「各ツールからの見え方」。
@@ -18,16 +18,14 @@ Cursor 公式 docs が記載するグローバル指示は User Rules（Customiz
 
 ## 権限
 
-- **MCP**: `*:*` を許可
-- **端末**: `terminalAllowlist` に日常的に使うコマンドを列挙して自動承認する
-- **拒否**: `git push` / 破壊的な `gh` / `rm -rf` は `guard-shell.sh` がハード拒否する（allowlist より優先）
+- **Run Mode**: **Auto-review**（Sandbox 有効）を使う。`Run Everything` はサンドボックス・分類器・MCP 書き込み審査が外れるため使わない
+- **自動承認の誘導**: `permissions.json` には `autoRun`（`allow_instructions` / `block_instructions`）だけを置く。`terminalAllowlist` / `mcpAllowlist` を定義すると Cursor が Run Mode を `Allowlist` に固定し `Auto-review` を選べなくなるため、allowlist キーは置かない。旧構成から移行した端末では、IDE 設定（`Settings > Agents > Approvals & Execution`）側に残った allowlist が再び有効になるため、意図しない項目が無いか確認して消す
+- **拒否**: `git push` / 破壊的な `gh` / `rm -rf` は `guard-shell.sh` がハード拒否する（`Auto-review` でもそのまま動作する）
 
 ## シェルガード
 
 Cursor 用の `hooks.json` は置かない。Cursor は Third-Party Imports で `~/.claude/settings.json` のフックを読み、`preToolUse` として [Claude Code 用のアダプタ](../claude/hooks/guard-shell.sh) を実行する（Cursor の hooks ログに `Executing hook 1/1 from claude-user config` と出る）。Cursor 用にも置くと、1 コマンドでガードが 2 回動く。Third-Party Imports を切るとガードも外れるので、切るときは `hooks.json` を戻す。
 
 旧 `hooks.json` の `failClosed` は無い。アダプタが動けば失敗時も deny を返すが、`~/.claude/hooks` が無いなどでアダプタ自体が起動しないときは、コマンドは止まらない。以前の dotfiles を適用した端末には、行き先の無い `~/.cursor/hooks.json` と `~/.cursor/hooks` の symlink が残るので消す（mise は管理から外したリンクを消さない）。
-
-`permissions.json` が効くのは Run Mode が **Allowlist** / **Auto-review** のときだけ。Run Everything ではサンドボックスも承認もかからないので使わない。
 
 セットアップ・運用フローの索引は [shared/ai/docs/README.md](../shared/ai/docs/README.md)。業務リポジトリ側 Skill の置き場は [project-skills.md](../shared/ai/docs/project-skills.md)。
