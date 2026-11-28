@@ -34,6 +34,7 @@ dotfiles.default_mode = "symlink"
 "brew:librsvg" = "latest"
 "brew:mas" = "latest"
 "brew:mise" = "latest"
+"brew:pinentry-mac" = "latest"
 "brew:switchaudio-osx" = "latest"
 "brew:tig" = "latest"
 "brew:tgrep" = "latest"
@@ -322,6 +323,9 @@ done
 "~/.ssh/config" = { source = "packages/ssh/config", mode = "symlink" }
 "~/.ssh/00_global/config" = { source = "packages/ssh/00_global/config", mode = "symlink" }
 "~/.ssh/01_github/config" = { source = "packages/ssh/01_github/config", mode = "symlink" }
+
+# packages/gnupg — .gnupg 全体は紐付けない（鍵・trustdb は非管理）
+"~/.gnupg/gpg-agent.conf" = { source = "packages/gnupg/gpg-agent.conf", mode = "symlink" }
 
 # packages/mise — [tools] 正本（config.local.toml / .gitignore は非管理）
 "~/.config/mise/config.toml" = { source = "packages/mise/config.toml", mode = "symlink" }
