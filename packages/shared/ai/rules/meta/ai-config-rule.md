@@ -10,6 +10,8 @@ dotfiles の `packages/shared/ai/`・カーネル・ホスト設定（`packages/
 
 docs は `docs/` に `setup-<tool>.md` / `<topic>-playbook.md`（kebab-case）で置き、[docs/README.md](../../docs/README.md) の一覧に行を足す。
 
+Skill・プラグイン・MCP を足すとき、作業ディレクトリに出力先のディレクトリ（`.archify/` など）を作るものは、[packages/git/ignore](../../../../git/ignore)（`~/.config/git/ignore` の正本）に行を足す。リポジトリごとの `.gitignore` には足さない。そのディレクトリをコミットするリポジトリがあるもの（`.serena/` など）は、ディレクトリ全体ではなく生成物のパスだけを足す（グローバル ignore は全リポジトリにかかり、新しく作られたファイルが未追跡にも出なくなる）。
+
 ## カーネル
 
 正本は `packages/claude/CLAUDE.md`。`packages/cursor/rules/kernel.mdc` は直接直さず、`CLAUDE.md` を直して `make kernel` で作り直す（frontmatter を足し、`# CLAUDE.md` の見出しを落とす）。`make check-sync`（`scripts/check-kernel-sync.sh`）が作り直した結果とのずれを FAIL にする。

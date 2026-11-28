@@ -376,4 +376,8 @@ _.code-workspace
 
 .serena/project.yml
 
+# archify local artifacts
+
+.archify/
+
 **/.claude/settings.local.json
